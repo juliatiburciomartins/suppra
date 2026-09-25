@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Entrar | hub_fecc
+{% endblock %}
+
+{% block body_class %}
+  login-layout-clean
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/usuarios/auth.css' %}">
+  <link rel="stylesheet" href="{% static 'css/registration/login.css' %}">
+{% endblock %}
+
+{% block navigation %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block messages %}
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+  <div class="auth-page-inner">
+
+    <a href="{% url 'home' %}" class="back-control">
+      <span aria-hidden="true">&lt;</span>
+      Voltar
+    </a>
+
+    <div class="auth-card">
+      <h1 class="auth-title">Entrar na sua conta</h1>
+
+      <p class="auth-subtitle">
+        Bem-vindo(a) de volta, informe seus dados
+      </p>
+
+      {% include 'componentes/messages.html' %}
+
+      <form method="post" class="auth-form" novalidate>
+        {% csrf_token %}
+
+        <div class="auth-field">
+          <label for="id_username">E-mail</label>
+
+          <div class="auth-input-wrap">
+            <input
+              type="email"
+              name="username"
+              id="id_username"
+              placeholder="exemplo@gmail.com"
+              class="{% if field_errors.username %}input-has-error{% endif %}"
+              value="{{ request.POST.username|default:'' }}"
+              autocomplete="username"
+              required
+            >
+          </div>
+
+          {% include 'componentes/messages.html' with errors=field_errors.username only %}
+        </div>
+
+        <div class="auth-field">
+          <label for="id_password">Senha</label>
+
+          <div class="auth-input-wrap">
+            <input
+              type="password"
+              name="password"
+              id="id_password"
+              placeholder="Digite sua senha"
+              class="{% if field_errors.password %}input-has-error{% endif %}"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+
+          {% include 'componentes/messages.html' with errors=field_errors.password only %}
+        </div>
+
+        <p class="auth-forgot">
+          <a href="{% url 'recuperar_senha' %}">
+            Esqueci minha senha
+          </a>
+        </p>
+
+        <button type="submit" class="auth-submit">
+          Entrar
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        Não tem conta?
+        <a href="{% url 'cadastro' %}">
+          Cadastre-se
+        </a>
+      </p>
+    </div>
+  </div>
+
+  {% if conta_suspensa %}
+    <div class="suspended-overlay">
+      <div class="auth-card suspended-card">
+
+        <a
+          href="{% url 'login' %}"
+          class="back-control"
+          aria-label="Fechar alerta"
+        >
+          <span aria-hidden="true">&lt;</span>
+          Voltar
+        </a>
+
+        <div class="suspended-alert-box">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>Sua conta está Suspensa</span>
+        </div>
+
+        <p class="suspended-text">
+          Acesse o contato com o suporte
+        </p>
+
+        <a
+          href="mailto:suporte@hubfecc.com.br"
+          class="auth-submit suspended-btn"
+        >
+          Acesse Aqui
+        </a>
+
+      </div>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

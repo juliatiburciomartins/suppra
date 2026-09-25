@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Política de Privacidade | hub_fecc{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/politicas/politicas.css' %}" />
+{% endblock %}
+{% block content %}
+<section class="login-page" aria-labelledby="privacy-title">
+  <article class="login-card">
+    <a class="form-back-control" href="{% url 'cadastro' %}"><span aria-hidden="true">&lt;</span> Voltar</a>
+    <h1 id="privacy-title">Política de Privacidade</h1>
+    <div class="legal-content">
+      {% include 'usuario/_politica_privacidade_conteudo.html' %}
+    </div>
+  </article>
+</section>
+{% endblock %}

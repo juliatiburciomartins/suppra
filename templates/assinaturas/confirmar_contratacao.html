@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Confirmar contratação{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/assinaturas/confirmar_contratacao.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="checkout-page">
+
+    <a href="/planos/" class="back-link">
+        <i class="bi bi-arrow-left"></i>
+        Voltar aos planos
+    </a>
+
+    <section class="checkout-card">
+
+        <div class="checkout-header">
+
+            <h1>Confirme sua contratação</h1>
+
+            <p>
+                Revise os dados do plano e escolha a forma de pagamento.
+            </p>
+
+        </div>
+
+
+        <div class="checkout-content">
+
+            <section class="selected-plan">
+
+                <h2>Plano selecionado</h2>
+
+                {% if plano.classe == "plan-gold" %}
+
+                    <h3 class="plan-gold">
+                        {{ plano.nome }}
+                    </h3>
+
+                {% else %}
+
+                    <h3 class="plan-silver">
+                        {{ plano.nome }}
+                    </h3>
+
+                {% endif %}
+
+
+                <div class="plan-price">
+
+                    <strong>
+                        R$ {{ plano.valor }}
+                    </strong>
+
+                    <span>
+                        /mês
+                    </span>
+
+                </div>
+
+
+                <div class="divider"></div>
+
+
+                <div class="benefits">
+
+                    {% for beneficio in plano.beneficios %}
+
+                        <p>
+                            <i class="bi bi-check-circle-fill benefit-check"></i>
+                            {{ beneficio }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+
+            <section class="payment-section">
+
+                <h2>Forma de pagamento</h2>
+
+                <p class="payment-description">
+                    Selecione a forma de pagamento para continuar.
+                </p>
+
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+
+                    <label class="pix-option">
+
+                        <div class="pix-content">
+
+                            <div class="pix-icon">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill="currentColor" d="M5.283 18.36a3.505 3.505 0 002.493-1.032l3.6-3.6a.684.684 0 01.946 0l3.613 3.613a3.504 3.504 0 002.493 1.032h.71l-4.56 4.56a3.647 3.647 0 01-5.156 0L4.85 18.36ZM18.428 5.627a3.505 3.505 0 00-2.493 1.032l-3.613 3.614a.67.67 0 01-.946 0l-3.6-3.6A3.505 3.505 0 005.283 5.64h-.434l4.573-4.572a3.646 3.646 0 015.156 0l4.559 4.559ZM1.068 9.422 3.79 6.699h1.492a2.483 2.483 0 011.744.722l3.6 3.6a1.73 1.73 0 002.443 0l3.614-3.613a2.482 2.482 0 011.744-.723h1.767l2.737 2.737a3.646 3.646 0 010 5.156l-2.736 2.736h-1.768a2.482 2.482 0 01-1.744-.722l-3.613-3.613a1.77 1.77 0 00-2.444 0l-3.6 3.6a2.483 2.483 0 01-1.744.722H3.791l-2.723-2.723a3.646 3.646 0 010-5.156"/>
+                                </svg>
+                            </div>
+
+                            <div class="pix-text">
+
+                                <h3>Pix</h3>
+
+                                <p>
+                                    Após a confirmação, um QR Code será
+                                    gerado para realizar o pagamento.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <input
+                            type="radio"
+                            name="forma_pagamento"
+                            value="pix"
+                            checked
+                        >
+
+                    </label>
+
+
+                    <div class="pix-info">
+
+                        <i class="bi bi-info-circle"></i>
+
+                        <span>
+                            O QR Code será gerado após a confirmação da contratação.
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary">
+
+                        <h2>Resumo da contratação</h2>
+
+
+                        <div class="summary-content">
+
+                            <div class="summary-item">
+
+                                <span>
+                                    Plano
+                                </span>
+
+                                {% if plano.classe == "plan-gold" %}
+
+                                    <strong class="plan-gold">
+                                        {{ plano.nome }}
+                                    </strong>
+
+                                {% else %}
+
+                                    <strong class="plan-silver">
+                                        {{ plano.nome }}
+                                    </strong>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="summary-item">
+
+                                <span>
+                                    Valor
+                                </span>
+
+                                <strong class="summary-price">
+                                    R$ {{ plano.valor }}/mês
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="actions">
+
+                        <button
+                            type="submit"
+                            class="confirm-button"
+                        >
+                            Confirmar contratação
+                        </button>
+
+
+                        <a
+                            href="/planos/"
+                            class="back-button"
+                        >
+                            Voltar aos planos
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}

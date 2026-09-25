@@ -1,0 +1,174 @@
+/* ===========================
+   Página
+=========================== */
+
+.cadastro-background {
+    min-height: 100vh;
+    background: #eef3ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    position: relative;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ===========================
+   Card
+=========================== */
+
+.product-modal {
+    width: 100%;
+    max-width: 470px;
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* ===========================
+   Cabeçalho
+=========================== */
+
+.registration-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.registration-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    color: #111827;
+    font-weight: 700;
+}
+
+.registration-header p {
+    margin: 0;
+    color: #6B7280;
+    font-size: 15px;
+}
+
+/* ===========================
+   Formulário
+=========================== */
+
+.product-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+/* Campos */
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid #D1D5DB;
+    border-radius: 14px;
+    background: #FFFFFF;
+    font-size: 15px;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.form-field textarea {
+    resize: vertical;
+    min-height: 110px;
+}
+
+/* Apenas foco azul */
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    outline: none;
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Erro: NÃO muda a borda do campo */
+
+.has-error input,
+.has-error select,
+.has-error textarea {
+    border-color: #D1D5DB;
+    background: #FFFFFF;
+    box-shadow: none;
+}
+
+/* Mensagem abaixo */
+
+.field-error-msg {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    color: #DC2626;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.field-error-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid #DC2626;
+    color: #DC2626;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* ===========================
+   Botão Publicar
+=========================== */
+
+.register-button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 15px;
+    border: none;
+    border-radius: 14px;
+    background: #2f68ed;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.register-button:hover {
+    background: #245bd8;
+}
+
+/* ===========================
+   Responsivo
+=========================== */
+
+@media (max-width: 520px) {
+
+    .cadastro-background {
+        padding: 16px;
+    }
+
+    .product-modal {
+        padding: 24px;
+        border-radius: 20px;
+    }
+
+}

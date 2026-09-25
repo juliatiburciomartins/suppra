@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Perfil | hub_fecc{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/usuarios/auth.css' %}">
+  <link rel="stylesheet" href="{% static 'css/usuarios/perfil.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+  <a href="{% if request.user.tipo_perfil == 'fornecedor' %}{% url 'dashboard_fornecedor' %}{% else %}{% url 'dashboard_comerciante' %}{% endif %}" class="back-control"><span aria-hidden="true">&lt;</span> Voltar</a>
+  <div class="auth-card perfil-card">
+    <h1 class="auth-title">Editar Perfil</h1>
+    <p class="auth-subtitle">Atualize suas informações de cadastro</p>
+
+    <form method="POST" class="auth-form profile-form" novalidate>
+      {% csrf_token %}
+
+      <div class="auth-field">
+        <label for="email-readonly">E-mail</label>
+        <div class="auth-input-wrap">
+          <input type="email" id="email-readonly" value="{{ request.user.email }}" disabled readonly>
+        </div>
+        <span class="field-hint field-hint--locked"><i class="bi bi-lock-fill" aria-hidden="true"></i> O e-mail não pode ser alterado.</span>
+      </div>
+
+      {% for field in form %}
+        <div class="auth-field{% if field.errors %} has-error{% endif %}">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          <div class="auth-input-wrap">
+            {{ field }}
+          </div>
+          {% if field.errors %}
+            <div class="field-error-msg">
+              <i class="bi bi-exclamation-circle"></i> {{ field.errors.0 }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="perfil-actions">
+        <button type="submit" class="auth-submit">Salvar Alterações</button>
+        <button type="reset" class="auth-discard">Descartar alterações</button>
+      </div>
+    </form>
+
+    <a href="{% url 'excluir_conta' %}" class="perfil-danger-link">
+      <i class="bi bi-trash"></i> Excluir minha conta
+    </a>
+  </div>
+</section>
+{% endblock %}

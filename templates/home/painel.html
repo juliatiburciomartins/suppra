@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Meu painel | hub_fecc{% endblock %}
+{% block content %}
+<section class="login-page" aria-labelledby="dashboard-title">
+  <div class="login-card">
+    <h1 id="dashboard-title">Olá, {{ user.nome|default:user.email }}</h1>
+    <p class="login-description">Seu painel está pronto. Em breve você poderá gerenciar suas atividades por aqui.</p>
+    <a href="{% url 'home' %}" class="btn-primary">Voltar ao início</a>
+  </div>
+</section>
+{% endblock %}

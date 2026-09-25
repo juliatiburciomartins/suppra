@@ -1,0 +1,949 @@
+/* =========================================================
+   HOME DO FORNECEDOR
+========================================================= */
+
+.supplier-home {
+    width: 100%;
+    min-height: calc(100vh - 78px);
+
+    padding: 30px 20px 60px;
+
+    background: #ffffff;
+}
+
+.supplier-home__container {
+    width: min(100%, 1220px);
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   HERO / BOAS-VINDAS
+========================================================= */
+
+.supplier-hero {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+
+    min-height: 120px;
+
+    padding: 24px 30px;
+
+    overflow: hidden;
+
+    border: 1px solid #dce7f5;
+    border-left: 5px solid #2d6cf7;
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            110deg,
+            #ffffff 0%,
+            #f5f9ff 100%
+        );
+
+    box-shadow:
+        0 10px 28px rgba(29, 40, 117, 0.05);
+}
+
+.supplier-hero::after {
+    position: absolute;
+
+    top: -65px;
+    right: -45px;
+
+    width: 180px;
+    height: 180px;
+
+    border-radius: 50%;
+
+    background: rgba(45, 108, 247, 0.05);
+
+    content: "";
+}
+
+.supplier-hero__icon {
+    position: relative;
+    z-index: 1;
+
+    display: grid;
+    flex: 0 0 auto;
+
+    width: 58px;
+    height: 58px;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: #edf4ff;
+
+    color: #2d6cf7;
+
+    font-size: 1.35rem;
+}
+
+.supplier-hero__content {
+    position: relative;
+    z-index: 1;
+}
+
+.supplier-hero__eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #2d6cf7;
+
+    font-size: 0.58rem;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
+.supplier-hero h1 {
+    margin: 0;
+
+    color: #182033;
+
+    font-size: clamp(1.35rem, 2vw, 1.75rem);
+
+    font-weight: 800;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.035em;
+}
+
+.supplier-hero h1 span {
+    color: #2d6cf7;
+}
+
+.supplier-hero p {
+    margin: 7px 0 0;
+
+    color: #7b8496;
+
+    font-size: 0.72rem;
+}
+
+
+/* =========================================================
+   GRID PRINCIPAL
+========================================================= */
+
+.supplier-home__grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.65fr)
+        minmax(340px, 0.9fr);
+
+    gap: 20px;
+
+    margin-top: 22px;
+}
+
+
+/* =========================================================
+   PAINÉIS
+========================================================= */
+
+.supplier-panel {
+    min-width: 0;
+
+    padding: 21px;
+
+    border: 1px solid #dfe6ef;
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 8px 24px rgba(29, 40, 117, 0.045);
+}
+
+.supplier-panel--portfolio {
+    margin-top: 20px;
+}
+
+.supplier-panel__header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 17px;
+}
+
+.supplier-panel__eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #2d6cf7;
+
+    font-size: 0.53rem;
+
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
+.supplier-panel__header h2 {
+    margin: 0;
+
+    color: #1a2132;
+
+    font-size: 1rem;
+
+    font-weight: 800;
+
+    line-height: 1.2;
+}
+
+.supplier-panel__link {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    flex-shrink: 0;
+
+    color: #2d6cf7;
+
+    font-size: 0.61rem;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.supplier-panel__link:hover {
+    color: #1e5ae8;
+    transform: translateX(1px);
+}
+
+
+/* =========================================================
+   DEMANDAS
+========================================================= */
+
+.supplier-demand-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.supplier-demand {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+
+    padding: 13px;
+
+    border: 1px solid #e3e9f1;
+
+    border-radius: 13px;
+
+    background: #fbfcfe;
+
+    transition:
+        border-color 0.18s ease,
+        background-color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.supplier-demand:hover {
+    border-color: #c9dafc;
+    background: #f8fbff;
+    transform: translateY(-1px);
+}
+
+.supplier-demand__icon {
+    display: grid;
+
+    flex: 0 0 auto;
+
+    width: 39px;
+    height: 39px;
+
+    place-items: center;
+
+    border-radius: 11px;
+
+    background: #edf4ff;
+
+    color: #2d6cf7;
+
+    font-size: 0.85rem;
+}
+
+.supplier-demand__content {
+    min-width: 0;
+
+    flex: 1 1 auto;
+}
+
+.supplier-demand__category {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #2d6cf7;
+
+    font-size: 0.52rem;
+
+    font-weight: 800;
+}
+
+.supplier-demand h3 {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: #252c3d;
+
+    font-size: 0.73rem;
+
+    font-weight: 750;
+
+    line-height: 1.35;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.supplier-demand__meta {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-top: 5px;
+
+    color: #8a93a3;
+
+    font-size: 0.52rem;
+}
+
+.supplier-demand__meta span {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 4px;
+}
+
+.supplier-demand__meta i {
+    color: #2d6cf7;
+}
+
+.supplier-demand__right {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    flex: 0 0 auto;
+}
+
+.supplier-demand__status {
+    padding: 4px 8px;
+
+    border-radius: 999px;
+
+    background: #e8f7e1;
+
+    color: #55a63c;
+
+    font-size: 0.49rem;
+
+    font-weight: 800;
+}
+
+.supplier-demand__arrow {
+    display: grid;
+
+    width: 27px;
+    height: 27px;
+
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: #edf4ff;
+
+    color: #2d6cf7;
+
+    font-size: 0.65rem;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.18s ease,
+        color 0.18s ease;
+}
+
+.supplier-demand__arrow:hover {
+    background: #2d6cf7;
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   ESTADO VAZIO
+========================================================= */
+
+.supplier-empty {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    min-height: 106px;
+
+    padding: 16px;
+
+    border: 1px dashed #d6dfeb;
+
+    border-radius: 13px;
+
+    background: #fafcff;
+}
+
+.supplier-empty__icon {
+    display: grid;
+
+    flex: 0 0 auto;
+
+    width: 42px;
+    height: 42px;
+
+    place-items: center;
+
+    border-radius: 12px;
+
+    background: #edf4ff;
+
+    color: #2d6cf7;
+
+    font-size: 0.9rem;
+}
+
+.supplier-empty__content {
+    min-width: 0;
+}
+
+.supplier-empty__content h3 {
+    margin: 0;
+
+    color: #272f41;
+
+    font-size: 0.75rem;
+
+    font-weight: 750;
+}
+
+.supplier-empty__content p {
+    margin: 3px 0 0;
+
+    color: #8993a4;
+
+    font-size: 0.58rem;
+}
+
+
+/* =========================================================
+   CATEGORIAS
+========================================================= */
+
+.supplier-category-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+.supplier-category {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 0;
+
+    min-height: 64px;
+
+    padding: 10px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 12px;
+
+    background: #fbfcfe;
+
+    text-decoration: none;
+
+    transition:
+        border-color 0.18s ease,
+        background-color 0.18s ease,
+        transform 0.18s ease;
+}
+
+.supplier-category:hover {
+    border-color: #c8dafd;
+
+    background: #f7faff;
+
+    transform: translateY(-1px);
+}
+
+.supplier-category__icon {
+    display: grid;
+
+    flex: 0 0 auto;
+
+    width: 34px;
+    height: 34px;
+
+    place-items: center;
+
+    border-radius: 10px;
+
+    background: #edf4ff;
+
+    color: #2d6cf7;
+
+    font-size: 0.72rem;
+}
+
+.supplier-category__name {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color: #323a4a;
+
+    font-size: 0.62rem;
+
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.supplier-category__arrow {
+    margin-left: auto;
+
+    flex: 0 0 auto;
+
+    color: #2d6cf7;
+
+    font-size: 0.62rem;
+}
+
+
+/* =========================================================
+   PRODUTOS / PORTFÓLIO
+========================================================= */
+
+.supplier-product-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 11px;
+}
+
+.supplier-product {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+
+    padding: 14px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 13px;
+
+    background: #fbfcfe;
+}
+
+.supplier-product__icon {
+    display: grid;
+
+    flex: 0 0 auto;
+
+    width: 40px;
+    height: 40px;
+
+    place-items: center;
+
+    border-radius: 11px;
+
+    background: #edf4ff;
+
+    color: #2d6cf7;
+
+    font-size: 0.82rem;
+}
+
+.supplier-product__content {
+    min-width: 0;
+
+    flex: 1 1 auto;
+}
+
+.supplier-product__category {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #2d6cf7;
+
+    font-size: 0.5rem;
+
+    font-weight: 800;
+}
+
+.supplier-product__content h3 {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: #242c3d;
+
+    font-size: 0.72rem;
+
+    font-weight: 750;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.supplier-product__content strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #2d6cf7;
+
+    font-size: 0.62rem;
+
+    font-weight: 800;
+}
+
+.supplier-product__side {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 7px;
+
+    flex: 0 0 auto;
+}
+
+.supplier-product__status {
+    padding: 3px 7px;
+
+    border-radius: 999px;
+
+    background: #e8f7e1;
+
+    color: #55a63c;
+
+    font-size: 0.46rem;
+
+    font-weight: 800;
+}
+
+.supplier-product__edit {
+    color: #2d6cf7;
+
+    font-size: 0.52rem;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.supplier-product__edit:hover {
+    color: #1e5ae8;
+}
+
+
+/* =========================================================
+   PORTFÓLIO VAZIO
+========================================================= */
+
+.supplier-portfolio-empty {
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    min-height: 165px;
+
+    padding: 23px 25px;
+
+    border: 1px solid #e0e7f0;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            105deg,
+            #ffffff 0%,
+            #f7faff 100%
+        );
+}
+
+
+/* visual */
+.supplier-portfolio-empty__visual {
+    position: relative;
+
+    display: grid;
+
+    flex: 0 0 auto;
+
+    width: 105px;
+    height: 90px;
+
+    place-items: center;
+}
+
+.supplier-portfolio-empty__box {
+    display: grid;
+
+    width: 65px;
+    height: 65px;
+
+    place-items: center;
+
+    border-radius: 18px;
+
+    background: #edf4ff;
+
+    color: #2d6cf7;
+
+    font-size: 1.6rem;
+}
+
+.supplier-portfolio-empty__visual span {
+    position: absolute;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #b7cffd;
+}
+
+.supplier-portfolio-empty__visual span:first-of-type {
+    top: 6px;
+    right: 10px;
+}
+
+.supplier-portfolio-empty__visual span:last-of-type {
+    bottom: 4px;
+    left: 10px;
+}
+
+
+/* conteúdo */
+.supplier-portfolio-empty__content {
+    min-width: 0;
+}
+
+.supplier-portfolio-empty__content h3 {
+    margin: 0;
+
+    color: #20283a;
+
+    font-size: 0.92rem;
+
+    font-weight: 800;
+}
+
+.supplier-portfolio-empty__content p {
+    max-width: 500px;
+
+    margin: 5px 0 14px;
+
+    color: #8791a2;
+
+    font-size: 0.62rem;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   BOTÃO
+========================================================= */
+
+.supplier-primary-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    min-height: 34px;
+
+    padding: 0 14px;
+
+    border-radius: 999px;
+
+    background: #2d6cf7;
+
+    color: #ffffff;
+
+    font-size: 0.58rem;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    box-shadow:
+        0 5px 12px rgba(45, 108, 247, 0.2);
+
+    transition:
+        background-color 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.supplier-primary-button:hover {
+    background: #1e5ae8;
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 7px 15px rgba(45, 108, 247, 0.25);
+}
+
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .supplier-home__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .supplier-product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .supplier-category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .supplier-home {
+        padding: 18px 12px 40px;
+    }
+
+    .supplier-hero {
+        padding: 20px;
+
+        gap: 13px;
+    }
+
+    .supplier-hero__icon {
+        width: 48px;
+        height: 48px;
+
+        font-size: 1.1rem;
+    }
+
+    .supplier-hero h1 {
+        font-size: 1.2rem;
+    }
+
+    .supplier-hero p {
+        font-size: 0.61rem;
+    }
+
+    .supplier-panel {
+        padding: 16px;
+    }
+
+    .supplier-category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .supplier-demand__right {
+        gap: 5px;
+    }
+
+    .supplier-demand__status {
+        display: none;
+    }
+
+    .supplier-portfolio-empty {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 14px;
+
+        padding: 20px;
+    }
+
+    .supplier-portfolio-empty__visual {
+        width: 70px;
+        height: 62px;
+    }
+
+    .supplier-portfolio-empty__box {
+        width: 52px;
+        height: 52px;
+
+        font-size: 1.25rem;
+    }
+}

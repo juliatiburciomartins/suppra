@@ -1,0 +1,83 @@
+/* ==========================================================================
+   HOME - secoes de conteudo da home (visitante e autenticado)
+   Usado por: home_visitante.html, home_autenticado.html
+   ========================================================================== */
+
+.reserved-content {
+  width: min(1920px, calc(100% - 32px));
+  min-height: 470px;
+  margin: 0 auto 40px;
+  padding: 90px;
+  border: 1px solid rgba(29, 40, 117, 0.08);
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  background: var(--color-surface);
+}
+
+.home-content-section.logged-home {
+  margin-top: 0;
+  padding-top: 15px;
+  background-color: #ffffff;
+  min-height: 500px;
+}
+
+.demandas-home-section {
+  position: relative;
+  margin-top: -60px;
+  z-index: 10;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+}
+
+.home-content-section {
+  position: relative;
+  margin-top: -60px;
+  z-index: 10;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding: 0;
+}
+
+.card-placeholder {
+  width: 100%;
+  min-height: 450px;
+  border-radius: 36px 36px 0 0;
+  border: none;
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+.home-content-section.visitor-home {
+  position: relative;
+  margin-top: -60px;
+  z-index: 5;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  background-color: #ffffff;
+  min-height: 600px;
+  border-radius: 36px 36px 0 0;
+  box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.08);
+  padding: 40px 20px;
+}
+
+.home-content-section-logged {
+  width: 100%;
+  min-height: 70vh;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 767px) {
+    .reserved-content {
+      padding: 40px 20px;
+    }
+
+    .demandas-home-section,
+    .home-content-section,
+    .home-content-section.visitor-home {
+      margin-top: -40px;
+    }
+}

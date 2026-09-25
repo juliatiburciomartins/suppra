@@ -1,0 +1,17 @@
+{% if errors %}
+  <div class="field-error-msg">
+    {% for error in errors %}
+      <span><i class="bi bi-exclamation-circle-fill"></i> {{ error }}</span>
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        <i class="bi bi-exclamation-circle-fill"></i> {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

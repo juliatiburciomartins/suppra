@@ -1,0 +1,186 @@
+.perfil-card {
+    max-width: 480px;
+}
+
+.field-hint {
+    color: var(--color-text-muted);
+    font-size: 0.78rem;
+}
+
+.field-hint--locked {
+    color: var(--color-danger);
+    font-weight: 700;
+}
+
+.auth-input-wrap input:disabled {
+    background: #f0f1f5;
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.perfil-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+.auth-discard {
+    appearance: none;
+    width: 100%;
+    background: transparent;
+    cursor: pointer;
+    text-align: center;
+
+    padding: 12px 0;
+
+    color: var(--color-text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+}
+
+.auth-discard:hover {
+    background: var(--color-background);
+}
+
+.auth-input-wrap input:invalid:not(:placeholder-shown),
+.auth-input-wrap input:user-invalid,
+.auth-field:has(.field-error-msg) .auth-input-wrap input,
+.auth-field.has-error .auth-input-wrap input {
+    border-color: var(--color-danger);
+    background: #fff8f7;
+}
+
+.auth-input-wrap input:invalid:not(:placeholder-shown):focus,
+.auth-input-wrap input:user-invalid:focus,
+.auth-field:has(.field-error-msg) .auth-input-wrap input:focus,
+.auth-field.has-error .auth-input-wrap input:focus {
+    outline: 3px solid rgba(168, 59, 45, 0.16);
+}
+
+.field-error-msg {
+    color: var(--color-danger);
+    font-size: 0.82rem;
+}
+
+.password-match-error {
+    display: none;
+}
+
+.password-form:has(#nova-senha:not(:placeholder-shown)):has(#confirmar-nova-senha:not(:placeholder-shown)) #nova-senha:not(:focus):invalid ~ .password-match-error {
+    display: block;
+}
+
+.perfil-danger-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    margin-top: 24px;
+
+    color: var(--color-danger);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.perfil-danger-link:hover {
+    text-decoration: underline;
+}
+
+
+/* Tela de exclusão de conta */
+
+.danger-card {
+    max-width: 480px;
+}
+
+.lgpd-alert {
+    display: flex;
+    gap: 10px;
+
+    background: var(--color-danger-background);
+    border: 1px solid #f3c8c2;
+    border-radius: var(--radius-small);
+
+    padding: 14px 16px;
+    margin-bottom: 24px;
+
+    color: var(--color-danger);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.lgpd-alert i {
+    font-size: 1.1rem;
+    margin-top: 2px;
+}
+
+.danger-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.danger-submit {
+    width: 100%;
+    min-height: 48px;
+
+    border: 0;
+    border-radius: var(--radius-pill);
+
+    background: var(--color-danger);
+    color: var(--color-surface);
+
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.danger-submit:hover {
+    background: #8a3024;
+}
+
+.danger-submit:focus-visible,
+.danger-cancel:focus-visible,
+.auth-discard:focus-visible {
+    outline: 3px solid rgba(45, 108, 247, 0.25);
+    outline-offset: 2px;
+}
+
+.danger-form .auth-field {
+    margin-bottom: 18px;
+}
+
+@media (max-width: 560px) {
+    .auth-card {
+        padding: 28px 20px;
+    }
+
+    .perfil-actions,
+    .danger-actions {
+        gap: 12px;
+    }
+}
+
+.danger-cancel {
+    text-align: center;
+
+    padding: 12px 0;
+
+    color: var(--color-text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+}
+
+.danger-cancel:hover {
+    background: var(--color-background);
+}

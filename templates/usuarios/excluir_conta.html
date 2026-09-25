@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Excluir Conta | hub_fecc{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/usuarios/auth.css' %}">
+  <link rel="stylesheet" href="{% static 'css/usuarios/perfil.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+  <a href="{% if request.user.tipo_perfil == 'fornecedor' %}{% url 'dashboard_fornecedor' %}{% else %}{% url 'dashboard_comerciante' %}{% endif %}" class="back-control"><span aria-hidden="true">&lt;</span> Voltar</a>
+  <div class="auth-card danger-card">
+    <h1 class="auth-title">Excluir Minha Conta</h1>
+    <p class="auth-subtitle">Esta ação não pode ser desfeita</p>
+
+    <div class="lgpd-alert">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span>
+        Ao confirmar, sua conta será excluída permanentemente para fins de uso da
+        plataforma e seus dados pessoais serão anonimizados, em conformidade com a
+        Lei Geral de Proteção de Dados (LGPD).
+      </span>
+    </div>
+
+    <form method="POST" class="auth-form danger-form" novalidate>
+      {% csrf_token %}
+
+      <div class="auth-field{% if messages %} has-error{% endif %}">
+        <label for="senha">Confirme sua senha atual</label>
+        <div class="auth-input-wrap">
+          <input
+            type="password"
+            name="senha"
+            id="senha"
+            class="{% if messages %}input-has-error{% endif %}"
+            placeholder=""
+            required
+          >
+        </div>
+        <span class="field-hint">Digite sua senha atual para confirmar a exclusão.</span>
+      </div>
+
+      <div class="danger-actions">
+        <button type="submit" class="danger-submit">Sim, quero excluir minha conta</button>
+        <a
+          href="{% if request.user.tipo_perfil == 'fornecedor' %}{% url 'dashboard_fornecedor' %}{% else %}{% url 'dashboard_comerciante' %}{% endif %}"
+          class="danger-cancel"
+        >
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

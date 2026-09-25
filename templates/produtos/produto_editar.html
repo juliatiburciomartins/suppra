@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/portifolio/cadastro_produto.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="cadastro-background">
+  <div class="product-modal">
+    <a href="{% url 'gerenciar_portfolio' %}" class="form-back-control" aria-label="Voltar para o portfólio"><span aria-hidden="true">&lt;</span> Voltar</a>
+      <i class="bi bi-x-lg"></i>
+    </a>
+
+    <div class="registration-header">
+      <h1>Editar Produto</h1>
+      <p>Atualize as informações</p>
+    </div>
+
+    <form method="POST" class="product-form" novalidate>
+      {% csrf_token %}
+
+      <!-- NOME DO PRODUTO/SERVIÇO -->
+      <div class="form-field product-name-field{% if form.nome.errors %} has-error{% endif %}">
+        <label for="{{ form.nome.id_for_label }}">Nome do produto/serviço</label>
+        {{ form.nome }}
+
+        {% if form.nome.errors %}
+          <div class="field-error-msg" role="alert">
+            <span class="field-error-icon" aria-hidden="true">!</span>
+            <span>{{ form.nome.errors.0 }}</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- CATEGORIA DE INSUMO -->
+      <div class="form-field{% if form.id_categoria.errors %} has-error{% endif %}">
+        <label for="{{ form.id_categoria.id_for_label }}">Categoria de insumo</label>
+        {{ form.id_categoria }}
+
+        {% if form.id_categoria.errors %}
+          <div class="field-error-msg" role="alert">
+            <span class="field-error-icon" aria-hidden="true">!</span>
+            <span>{{ form.id_categoria.errors.0 }}</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- PREÇO -->
+      <div class="form-field{% if form.preco.errors %} has-error{% endif %}">
+        <label for="{{ form.preco.id_for_label }}">Preço unitário</label>
+        <div class="price-field">
+          <span aria-hidden="true">R$</span>
+          {{ form.preco }}
+        </div>
+
+        {% if form.preco.errors %}
+          <div class="field-error-msg" role="alert">
+            <span class="field-error-icon" aria-hidden="true">!</span>
+            <span>{{ form.preco.errors.0 }}</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- TELEFONE PARA CONTATO -->
+      <div class="form-field{% if form.telefone_contato.errors %} has-error{% endif %}">
+        <label for="{{ form.telefone_contato.id_for_label }}">Telefone para contato</label>
+        {{ form.telefone_contato }}
+
+        {% if form.telefone_contato.errors %}
+          <div class="field-error-msg" role="alert">
+            <span class="field-error-icon" aria-hidden="true">!</span>
+            <span>{{ form.telefone_contato.errors.0 }}</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- WHATSAPP PARA CONTATO -->
+      <div class="form-field{% if form.whatsapp_contato.errors %} has-error{% endif %}">
+        <label for="{{ form.whatsapp_contato.id_for_label }}">WhatsApp de contato</label>
+        {{ form.whatsapp_contato }}
+
+        {% if form.whatsapp_contato.errors %}
+          <div class="field-error-msg" role="alert">
+            <span class="field-error-icon" aria-hidden="true">!</span>
+            <span>{{ form.whatsapp_contato.errors.0 }}</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="register-button">Salvar Alterações</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

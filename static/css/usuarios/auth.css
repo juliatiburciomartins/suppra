@@ -1,0 +1,494 @@
+/* =========================================
+   PÁGINAS DE AUTENTICAÇÃO: FUNDO LIMPO
+   ========================================= */
+
+html {
+  background: var(--color-background);
+}
+
+body.login-layout-clean {
+  background: var(--color-background);
+}
+
+/* =========================================
+   AUTH PAGE
+   ========================================= */
+
+.auth-page {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 48px 16px;
+  overflow-x: hidden;
+  background: var(--color-background);
+}
+
+
+/* =========================================
+   CONTAINER INTERNO
+   ========================================= */
+
+.auth-page-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  gap: 16px;
+}
+
+
+/* =========================================
+   BOTÃO VOLTAR
+   ========================================= */
+
+.back-control {
+  position: absolute;
+  top: 14px;
+  left: 12px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: auto;
+  min-width: 109px;
+  height: 52px;
+  padding: 0 16px;
+  background: #ffffff;
+  border: none;
+  border-radius: 17px;
+  color: var(--color-blue);
+  font-size: 1.05rem;
+  font-weight: 700;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.back-control:hover {
+  background: #f8faff;
+}
+
+.back-control:focus-visible {
+  outline: 3px solid rgba(39, 149, 196, 0.18);
+  outline-offset: 2px;
+}
+
+
+/* =========================================
+   CARD
+   ========================================= */
+
+.auth-card {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 36px;
+  border: 1px solid rgba(29, 40, 117, 0.1);
+  border-radius: var(--radius-large);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: var(--shadow-soft);
+  text-align: left;
+}
+
+
+/* =========================================
+   TÍTULOS
+   ========================================= */
+
+.auth-card h1 {
+  margin: 8px 0 12px;
+  color: var(--color-navy);
+  font-size: 1.8rem;
+  line-height: 1.2;
+}
+
+.auth-title {
+  margin: 0 0 4px;
+  color: var(--color-navy);
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.auth-subtitle {
+  margin: 0 0 24px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.auth-description {
+  margin: 0 0 24px;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+
+/* =========================================
+   AVATAR
+   ========================================= */
+
+.auth-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+  color: var(--color-blue);
+  font-size: 2.5rem;
+}
+
+
+/* =========================================
+   FORMULÁRIO
+   ========================================= */
+
+.auth-form {
+  text-align: left;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.form-field label {
+  color: var(--color-navy);
+  font-weight: 700;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  outline: none;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: var(--color-cerulean);
+  outline: 3px solid rgba(39, 149, 196, 0.15);
+}
+
+/* Campo gerado pelo Django no formulário de recuperação de senha */
+
+.auth-field > input {
+  display: block;
+  width: 100%;
+  min-height: 50px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+
+  /* ALTERADO: campo arredondado */
+  border-radius: var(--radius-pill);
+
+  outline: none;
+  background: var(--color-surface);
+  color: var(--color-text);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.auth-field > input:focus {
+  border-color: var(--color-cerulean);
+  outline: 3px solid rgba(39, 149, 196, 0.15);
+}
+
+.auth-field > input::placeholder {
+  color: #8a92a3;
+}
+
+.form-input::placeholder {
+  color: #8a92a3;
+}
+
+.form-input.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--color-coral);
+  outline: 3px solid rgba(236, 103, 86, 0.12);
+}
+
+.form-error {
+  margin-top: 2px;
+  color: var(--color-danger);
+  font-size: 0.82rem;
+}
+
+
+/* =========================================
+   LOGIN
+   ========================================= */
+
+.login-form .form-field {
+  margin-top: 18px;
+}
+
+.login-form .form-field:first-child {
+  margin-top: 0;
+}
+
+
+/* =========================================
+   CAMPOS DE AUTENTICAÇÃO
+   ========================================= */
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.auth-field label {
+  color: var(--color-navy);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.auth-required {
+  color: var(--color-coral);
+}
+
+
+/* =========================================
+   INPUT COM ÍCONE
+   ========================================= */
+
+.auth-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+}
+
+.auth-input-wrap input {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  outline: none;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.auth-input-wrap input.input-has-error {
+  border-color: var(--color-coral);
+  background-color: #fff8f8;
+}
+
+.auth-input-wrap input.input-has-error:focus {
+  outline: 3px solid rgba(236, 103, 86, 0.2);
+}
+
+
+/* =========================================
+   BOTÕES
+   ========================================= */
+
+.register-submit,
+.login-submit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 10px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-blue);
+  color: var(--color-surface);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.register-submit:hover,
+.login-submit:hover,
+.register-submit:focus-visible,
+.login-submit:focus-visible {
+  background: var(--color-blue-dark);
+  transform: translateY(-1px);
+}
+
+.auth-submit {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-blue);
+  color: var(--color-surface);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.auth-submit:hover {
+  background: var(--color-blue-dark);
+  transform: translateY(-1px);
+}
+
+
+/* =========================================
+   RECUPERAÇÃO DE SENHA
+   ========================================= */
+
+.forgot-password {
+  display: inline-block;
+  margin-top: 18px;
+  color: var(--color-blue);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.forgot-password:hover,
+.forgot-password:focus-visible,
+.auth-secondary a:hover,
+.auth-secondary a:focus-visible {
+  text-decoration: underline;
+}
+
+.auth-forgot {
+  margin: 8px 0 16px;
+  text-align: right;
+}
+
+.auth-forgot a {
+  color: var(--color-blue);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.auth-forgot a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   LINKS SECUNDÁRIOS
+   ========================================= */
+
+.auth-secondary {
+  margin: 22px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.auth-secondary a {
+  color: var(--color-blue);
+  font-weight: 700;
+}
+
+.auth-switch {
+  margin-top: 20px;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.auth-switch a {
+  color: var(--color-blue);
+  font-weight: 700;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   ALERTAS
+   ========================================= */
+
+.login-alert {
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  border-radius: var(--radius-small);
+  background: var(--color-danger-background);
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.auth-alert-error {
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(236, 103, 86, 0.3);
+  border-radius: var(--radius-small);
+  background: var(--color-danger-background);
+  color: var(--color-danger);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.auth-alert-error p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+   ========================================= */
+
+@media (max-width: 767px) {
+
+  .auth-page {
+    padding: 28px 12px;
+  }
+
+  .auth-card {
+    padding: 28px 18px;
+    border-radius: var(--radius-medium);
+  }
+
+  .back-control {
+    top: 14px;
+    left: 12px;
+    min-width: 109px;
+    height: 52px;
+    padding: 0 16px;
+  }
+
+}
+
+
+@media (max-width: 420px) {
+
+  .auth-card {
+    padding: 24px 14px;
+  }
+
+  .back-control {
+    min-width: 105px;
+    height: 50px;
+    padding: 0 15px;
+    gap: 9px;
+    font-size: 1rem;
+  }
+
+}

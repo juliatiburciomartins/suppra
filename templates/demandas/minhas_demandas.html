@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Minhas Demandas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/demandas/minhas_demandas.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container demandas-page">
+
+    <div class="demandas-header">
+        <div>
+            <h1 class="demandas-title">Minhas demandas</h1>
+            <p class="demandas-subtitle">
+                Gerencie as demandas publicadas pelo seu comércio
+            </p>
+        </div>
+
+        <a href="{% url 'publicar_demanda' %}" class="btn-primary demandas-cta">
+            <i class="bi bi-plus-lg"></i>
+            Nova demanda
+        </a>
+    </div>
+
+    {% if demandas %}
+
+    <div class="demand-grid">
+
+        {% for demanda in demandas %}
+
+        <article class="demand-card">
+
+            <div class="demand-card-top">
+                <div class="demand-card-heading">
+                    <h2 class="demand-title">{{ demanda.descricao_produto }}</h2>
+                    <span class="demand-category">
+                        <i class="bi bi-tag"></i>
+                        {{ demanda.id_categoria.nome }}
+                    </span>
+                </div>
+
+                <span class="demand-status demand-status--{{ demanda.status|lower }}">
+                    {{ demanda.get_status_display }}
+                </span>
+            </div>
+
+            <div class="demand-card-meta">
+                <span>
+                    <i class="bi bi-box-seam"></i>
+                    {{ demanda.quantidade_produto }}
+                </span>
+                <span>
+                    <i class="bi bi-calendar3"></i>
+                    {{ demanda.data_publicacao|date:"d/m/Y" }}
+                </span>
+            </div>
+
+            <div class="demand-card-footer">
+                <a href="{% url 'editar_demanda' demanda.pk %}" class="demand-action">
+                    <i class="bi bi-pencil"></i>
+                    Editar
+                </a>
+
+                <a href="{% url 'encerrar_demanda' demanda.pk %}" class="demand-action demand-action--danger">
+                    <i class="bi bi-x-circle"></i>
+                    Encerrar
+                </a>
+            </div>
+
+        </article>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="demandas-empty">
+        <div class="demandas-empty-icon">
+            <i class="bi bi-inbox"></i>
+        </div>
+
+        <h2>Nenhuma demanda publicada</h2>
+
+        <p>
+            Publique sua primeira demanda e conecte-se com fornecedores locais.
+        </p>
+
+        <a href="{% url 'publicar_demanda' %}" class="btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            Publicar demanda
+        </a>
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

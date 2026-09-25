@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Publicar Demanda | Hub FECC
+{% endblock %}
+{% block body_class %}
+  demand-registration-page
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/demandas/demanda_form.css' %}" />
+{% endblock %}
+
+{% block navigation %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+
+{% block content %}
+  <div class="cadastro-background">
+    <a href="{% url 'minhas_demandas' %}" class="close-button" aria-label="Voltar">X</a>
+
+    <div class="product-modal">
+      <header class="registration-header">
+        <h1>
+          {% if modo == 'editar' %}
+            Editar Demanda
+          {% else %}
+            Publicar Demanda
+          {% endif %}
+        </h1>
+
+        <p>Complete as informações</p>
+      </header>
+
+      <form method="POST" class="product-form" novalidate>
+        {% csrf_token %}
+
+        <!-- CATEGORIA -->
+        <div class="form-field{% if form.id_categoria.errors %} has-error{% endif %}">
+          <label for="{{ form.id_categoria.id_for_label }}">Categoria de insumo</label>
+
+          {{ form.id_categoria }}
+
+          {% if form.id_categoria.errors %}
+            <div class="field-error-msg" role="alert">
+              <span class="field-error-icon">!</span>
+              <span>{{ form.id_categoria.errors.0 }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- DESCRIÇÃO -->
+        <div class="form-field{% if form.descricao_produto.errors %} has-error{% endif %}">
+          <label for="{{ form.descricao_produto.id_for_label }}">Descrição do produto desejado</label>
+
+          {{ form.descricao_produto }}
+
+          {% if form.descricao_produto.errors %}
+            <div class="field-error-msg" role="alert">
+              <span class="field-error-icon">!</span>
+              <span>{{ form.descricao_produto.errors.0 }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- QUANTIDADE -->
+        <div class="form-field{% if form.quantidade_produto.errors %} has-error{% endif %}">
+          <label for="{{ form.quantidade_produto.id_for_label }}">Quantidade aproximada</label>
+
+          {{ form.quantidade_produto }}
+
+          {% if form.quantidade_produto.errors %}
+            <div class="field-error-msg" role="alert">
+              <span class="field-error-icon">!</span>
+              <span>{{ form.quantidade_produto.errors.0 }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="register-button">
+          {% if modo == 'editar' %}
+            Salvar Alterações
+          {% else %}
+            Publicar Demanda
+          {% endif %}
+        </button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
