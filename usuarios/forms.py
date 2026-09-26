@@ -28,6 +28,12 @@ class CadastroForm(forms.ModelForm):
         error_messages={"required": "É preciso aceitar os Termos de Uso e a Política de Privacidade."},
     )
 
+    # Para deixar o campo obrigatorio
+    telefone = forms.CharField(
+        required=True,
+    )
+
+
     class Meta:
         model = Usuario
         fields = [
@@ -78,6 +84,11 @@ class EditarPerfilForm(forms.ModelForm):
     Edição de perfil (RF-003). O e-mail é somente leitura no template
     (renderizado fora deste form), então não faz parte dos campos aqui.
     """
+
+    # Para deixar o campo obrigatorio
+    telefone = forms.CharField(
+        required=True,
+    )
 
     class Meta:
         model = Usuario
