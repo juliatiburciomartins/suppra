@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    FAQ | suppra
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/core/faq.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="faq-page">
+
+    <header class="faq-header">
+        <div class="faq-container">
+
+            <h1>Perguntas frequentes</h1>
+
+            <p>
+                Encontre respostas para as principais dúvidas sobre a Suppra,
+                sua conta e a utilização da plataforma.
+            </p>
+
+            <nav class="faq-navigation" aria-label="Categorias do FAQ">
+
+                <button
+                    type="button"
+                    class="faq-nav-item active"
+                    data-category="sobre">
+                    Sobre a Suppra
+                </button>
+
+                <button
+                    type="button"
+                    class="faq-nav-item"
+                    data-category="comerciantes">
+                    Comerciantes
+                </button>
+
+                <button
+                    type="button"
+                    class="faq-nav-item"
+                    data-category="fornecedores">
+                    Fornecedores
+                </button>
+
+                <button
+                    type="button"
+                    class="faq-nav-item"
+                    data-category="conta">
+                    Conta e segurança
+                </button>
+
+                <button
+                    type="button"
+                    class="faq-nav-item"
+                    data-category="suporte">
+                    Suporte
+                </button>
+
+            </nav>
+
+        </div>
+    </header>
+
+
+    <main class="faq-content">
+
+        <div class="faq-container">
+
+            <div class="faq-shell">
+
+                <section
+                    class="faq-category"
+                    data-category-content="sobre">
+
+                    <div class="faq-category-header">
+                        <div>
+                            <h2>Sobre a Suppra</h2>
+
+                            <p>
+                                Entenda o que é a plataforma e como ela funciona.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-list">
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>O que é a Suppra?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    A Suppra é uma plataforma que conecta
+                                    microempreendedores e fornecedores locais,
+                                    facilitando a busca por produtos e serviços
+                                    necessários para os negócios.
+                                </p>
+                            </div>
+
+                        </details>
+
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>Para quem a Suppra foi criada?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    A plataforma foi desenvolvida para comerciantes
+                                    e fornecedores, especialmente para pequenos
+                                    negócios que buscam facilitar suas relações
+                                    comerciais.
+                                </p>
+                            </div>
+
+                        </details>
+
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>A Suppra realiza pagamentos?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    Não. A Suppra funciona como uma plataforma de
+                                    conexão entre comerciantes e fornecedores.
+                                    Negociações e pagamentos são realizados entre
+                                    as partes.
+                                </p>
+                            </div>
+
+                        </details>
+
+                    </div>
+                </section>
+
+
+                <section
+                    class="faq-category"
+                    data-category-content="comerciantes">
+
+                    <div class="faq-category-header">
+                        <div>
+                            <h2>Comerciantes</h2>
+
+                            <p>
+                                Dúvidas sobre encontrar fornecedores e publicar demandas.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-list">
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>Como um comerciante encontra fornecedores?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    O comerciante pode utilizar a plataforma
+                                    para consultar fornecedores e conhecer
+                                    seus produtos, serviços e informações
+                                    de contato.
+                                </p>
+                            </div>
+
+                        </details>
+
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>O que é uma demanda?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    Uma demanda é uma necessidade publicada pelo
+                                    comerciante para encontrar fornecedores que
+                                    possam atender ao que seu negócio precisa.
+                                </p>
+                            </div>
+
+                        </details>
+
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>Posso entrar em contato com um fornecedor?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    Sim. Os dados disponibilizados pelo fornecedor
+                                    podem ser utilizados para iniciar o contato
+                                    e realizar uma negociação.
+                                </p>
+                            </div>
+
+                        </details>
+
+                    </div>
+                </section>
+
+
+                <section
+                    class="faq-category"
+                    data-category-content="fornecedores">
+
+                    <div class="faq-category-header">
+                        <div>
+                            <h2>Fornecedores</h2>
+
+                            <p>
+                                Saiba como apresentar seus produtos e serviços.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-list">
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>Como cadastrar produtos ou serviços?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    Depois de criar sua conta como fornecedor,
+                                    você poderá cadastrar produtos ou serviços
+                                    para apresentar seu portfólio na plataforma.
+                                </p>
+                            </div>
+
+                        </details>
+
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>O que posso colocar no meu portfólio?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    Você pode apresentar os produtos ou serviços
+                                    oferecidos, além das informações necessárias
+                                    para que comerciantes possam entrar em contato.
+                                </p>
+                            </div>
+
+                        </details>
+
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>Como comerciantes entram em contato comigo?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    Os comerciantes podem utilizar as informações
+                                    de contato disponibilizadas no seu perfil
+                                    para iniciar uma negociação.
+                                </p>
+                            </div>
+
+                        </details>
+
+                    </div>
+                </section>
+
+
+                <section
+                    class="faq-category"
+                    data-category-content="conta">
+
+                    <div class="faq-category-header">
+                        <div>
+                            <h2>Conta e segurança</h2>
+
+                            <p>
+                                Informações sobre cadastro, acesso e segurança.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-list">
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>Quem pode criar uma conta?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    A plataforma possui cadastro específico
+                                    para comerciantes e fornecedores.
+                                </p>
+                            </div>
+
+                        </details>
+
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>Posso alterar meus dados?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    Sim. Os dados editáveis podem ser alterados
+                                    diretamente nas configurações do seu perfil.
+                                </p>
+                            </div>
+
+                        </details>
+
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>Como faço para excluir minha conta?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    A exclusão da conta pode ser realizada pela
+                                    área de gerenciamento do perfil.
+                                </p>
+                            </div>
+
+                        </details>
+
+                    </div>
+                </section>
+
+
+                <section
+                    class="faq-category"
+                    data-category-content="suporte">
+
+                    <div class="faq-category-header">
+                        <div>
+                            <h2>Suporte</h2>
+
+                            <p>
+                                Encontre ajuda para utilizar a plataforma.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-list">
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>O que faço se encontrar um problema?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    Caso encontre algum problema durante o uso
+                                    da plataforma, utilize os canais de suporte
+                                    disponibilizados pela Suppra.
+                                </p>
+                            </div>
+
+                        </details>
+
+
+                        <details class="faq-item">
+
+                            <summary>
+                                <span>Como denunciar um conteúdo ou usuário?</span>
+
+                                <span class="faq-icon">
+                                    <i class="bi bi-chevron-down"></i>
+                                </span>
+                            </summary>
+
+                            <div class="faq-answer">
+                                <p>
+                                    Conteúdos ou comportamentos que violem as
+                                    regras da plataforma podem ser encaminhados
+                                    para análise pela equipe responsável.
+                                </p>
+                            </div>
+
+                        </details>
+
+                    </div>
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/faq.js' %}"></script>
+{% endblock %}

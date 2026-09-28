@@ -1,0 +1,163 @@
+{% load static %}
+
+
+{% with current_url=request.resolver_match.url_name %}
+{% url 'listar_fornecedores' as url_fornecedores %}
+{% url 'listar_demandas' as url_demandas %}
+{% url 'faq' as url_faq %}
+
+<div class="mobile-drawer" id="mobile-drawer" data-mobile-drawer aria-hidden="true">
+
+    <div class="mobile-drawer__backdrop" data-mobile-drawer-backdrop></div>
+
+    <div class="mobile-drawer__panel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+
+        <div class="mobile-drawer__header">
+            <a href="{% url 'home' %}" class="mobile-drawer__logo" aria-label="Ir para a página inicial">
+                <img src="{% static 'images/logotipo.png' %}" alt="suppra">
+            </a>
+
+            <button type="button" class="mobile-drawer__close" data-mobile-nav-close aria-label="Fechar menu">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <ul class="mobile-drawer__nav">
+
+            {% if tipo_menu == "admin" %}
+
+                <li class="navigation-item {% if current_url == 'home' %}is-active{% endif %}">
+                    <a href="{% url 'home' %}">Início</a>
+                </li>
+                <li class="navigation-item {% if current_url == 'listar_fornecedores' or current_url == 'detalhes_fornecedor' or current_url == 'lista_favoritos' %}is-active{% endif %}">
+                    <a href="{{ url_fornecedores|default:'#' }}">Fornecedores</a>
+                </li>
+                <li class="navigation-item {% if current_url == 'listar_demandas' %}is-active{% endif %}">
+                    <a href="{{ url_demandas|default:'#' }}">Demandas</a>
+                </li>
+                <li class="navigation-item {% if request.resolver_match.namespace == 'admin' and current_url == 'index' %}is-active{% endif %}">
+                    <a href="{% url 'admin:index' %}">Meu Painel</a>
+                </li>
+                <li class="navigation-item {% if request.resolver_match.namespace == 'admin' and current_url == 'assinaturas_assinatura_changelist' %}is-active{% endif %}">
+                    <a href="{% url 'admin:assinaturas_assinatura_changelist' %}">Assinaturas</a>
+                </li>
+                <li class="navigation-item {% if request.resolver_match.namespace == 'admin' and current_url == 'core_denuncia_changelist' %}is-active{% endif %}">
+                    <a href="{% url 'admin:core_denuncia_changelist' %}">Denúncias</a>
+                </li>
+                <li class="navigation-item {% if current_url == 'editar_perfil' %}is-active{% endif %}">
+                    <a href="{% url 'editar_perfil' %}">Configurações</a>
+                </li>
+
+            {% elif tipo_menu == "comerciante" %}
+
+                <li class="navigation-item {% if current_url == 'home' %}is-active{% endif %}">
+                    <a href="{% url 'home' %}">Início</a>
+                </li>
+                <li class="navigation-item nav-dropdown-item {% if current_url == 'dashboard_comerciante' or current_url == 'dashboard' %}is-active{% endif %}">
+                    <details class="nav-dropdown">
+                        <summary> Painel <i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="nav-dropdown__menu">
+                            <a href="{% url 'dashboard_comerciante' %}">Meu Painel</a>
+                            <a href="#">Minhas Demandas</a>
+                            <a href="#">Favoritos</a>
+                        </div>
+                    </details>
+                </li>
+                <li class="navigation-item {% if current_url == 'listar_fornecedores' or current_url == 'detalhes_fornecedor' or current_url == 'lista_favoritos' %}is-active{% endif %}">
+                    <a href="{{ url_fornecedores|default:'#' }}">Fornecedores</a>
+                </li>
+                <li class="navigation-item {% if current_url == 'listar_demandas' %}is-active{% endif %}">
+                    <a href="{{ url_demandas|default:'#' }}">Demandas</a>
+                </li>
+                <li class="navigation-item {% if current_url == 'faq' %}is-active{% endif %}">
+                    <a href="{{ url_faq|default:'#' }}">FAQ</a>
+                </li>
+
+            {% elif tipo_menu == "fornecedor" %}
+
+                <li class="navigation-item {% if current_url == 'home' %}is-active{% endif %}">
+                    <a href="{% url 'home' %}">Início</a>
+                </li>
+                <li class="navigation-item nav-dropdown-item {% if current_url == 'dashboard_fornecedor' or current_url == 'dashboard' or current_url == 'gerenciar_portfolio' or current_url == 'cadastrar_produto' or current_url == 'editar_produto' %}is-active{% endif %}">
+                    <details class="nav-dropdown">
+                        <summary> Painel <i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="nav-dropdown__menu">
+                            <a href="{% url 'dashboard_fornecedor' %}">Meu Painel</a>
+                            <a href="{% url 'gerenciar_portfolio' %}">Meu Portfólio</a>
+                            <a href="#">Planos</a>
+                        </div>
+                    </details>
+                </li>
+                <li class="navigation-item {% if current_url == 'listar_fornecedores' or current_url == 'detalhes_fornecedor' or current_url == 'lista_favoritos' %}is-active{% endif %}">
+                    <a href="{{ url_fornecedores|default:'#' }}">Fornecedores</a>
+                </li>
+                <li class="navigation-item {% if current_url == 'listar_demandas' %}is-active{% endif %}">
+                    <a href="{{ url_demandas|default:'#' }}">Demandas</a>
+                </li>
+                <li class="navigation-item {% if current_url == 'faq' %}is-active{% endif %}">
+                    <a href="{{ url_faq|default:'#' }}">FAQ</a>
+                </li>
+                {% url 'planos_assinatura' as url_planos %}
+                <li class="navigation-item {% if current_url == 'planos_assinatura' %}is-active{% endif %}">
+                    <a href="{{ url_planos|default:'#' }}">Planos</a>
+                </li>
+
+            {% else %}
+
+                <li class="navigation-item {% if current_url == 'home' %}is-active{% endif %}">
+                    <a href="{% url 'home' %}">Início</a>
+                </li>
+                <li class="navigation-item {% if current_url == 'listar_fornecedores' or current_url == 'detalhes_fornecedor' or current_url == 'lista_favoritos' %}is-active{% endif %}">
+                    <a href="{{ url_fornecedores|default:'#' }}">Fornecedores</a>
+                </li>
+                <li class="navigation-item {% if current_url == 'listar_demandas' %}is-active{% endif %}">
+                    <a href="{{ url_demandas|default:'#' }}">Demandas</a>
+                </li>
+                <li class="navigation-item {% if current_url == 'faq' %}is-active{% endif %}">
+                    <a href="{{ url_faq|default:'#' }}">FAQ</a>
+                </li>
+
+            {% endif %}
+
+        </ul>
+
+        <div class="mobile-drawer__actions">
+
+            {% if tipo_menu == "admin" %}
+
+                <a href="{% url 'editar_perfil' %}" class="drawer-link">
+                    <i class="bi bi-person" aria-hidden="true"></i> <span>Meu Perfil</span>
+                </a>
+                <a href="{% url 'logout' %}" class="drawer-link drawer-link--danger">
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i> <span>Sair</span>
+                </a>
+
+            {% elif user.is_authenticated %}
+
+                {% if tipo_menu == "fornecedor" %}
+                    <a href="{% url 'cadastrar_produto' %}" class="header-cta">Publicar Produto</a>
+                {% elif tipo_menu == "comerciante" %}
+                    <a href="{% url 'publicar_demanda' %}" class="header-cta">Publicar Demanda</a>
+                {% endif %}
+
+                <a href="{% url 'editar_perfil' %}" class="drawer-link">
+                    <i class="bi bi-person" aria-hidden="true"></i> <span>Meu Perfil</span>
+                </a>
+                <a href="{% url 'logout' %}" class="drawer-link drawer-link--danger">
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i> <span>Sair</span>
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'cadastro' %}" class="header-cta">Criar Conta</a>
+                <a href="{% url 'login' %}" class="login-link">Entrar</a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endwith %}

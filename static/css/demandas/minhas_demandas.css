@@ -1,0 +1,247 @@
+/* ==========================================================================
+   MINHAS DEMANDAS - painel do comerciante para gerenciar demandas publicadas
+   ========================================================================== */
+
+.demandas-page {
+  padding: 40px 16px 64px;
+}
+
+/* Cabeçalho ----------------------------------------------------------- */
+
+.demandas-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.demandas-title {
+  margin: 0 0 6px;
+  color: var(--color-navy);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.demandas-subtitle {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+.demandas-cta {
+  flex-shrink: 0;
+}
+
+.btn-primary i {
+  font-size: 0.95em;
+}
+
+/* Grid de cards --------------------------------------------------------- */
+
+.demand-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.demand-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease;
+}
+
+.demand-card:hover {
+  box-shadow: 0 16px 40px rgba(29, 40, 117, 0.12);
+  transform: translateY(-2px);
+}
+
+.demand-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.demand-card-heading {
+  min-width: 0;
+}
+
+.demand-title {
+  margin: 0 0 8px;
+  overflow: hidden;
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demand-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-blue-dark);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.demand-category i {
+  font-size: 0.85rem;
+}
+
+/* Status --------------------------------------------------------------- */
+
+.demand-status {
+  flex-shrink: 0;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.demand-status--publicada {
+  background: var(--color-success-background);
+  color: var(--color-success);
+}
+
+.demand-status--encerrada {
+  background: #ececf1;
+  color: #565b6b;
+}
+
+/* Meta (quantidade / data) ---------------------------------------------- */
+
+.demand-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+}
+
+.demand-card-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.demand-card-meta i {
+  color: var(--color-cerulean);
+}
+
+/* Ações ------------------------------------------------------------------ */
+
+.demand-card-footer {
+  display: flex;
+  gap: 10px;
+}
+
+.demand-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-navy);
+  font-size: 0.86rem;
+  font-weight: 650;
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+    color 0.18s ease, transform 0.18s ease;
+}
+
+.demand-action:hover,
+.demand-action:focus-visible {
+  border-color: var(--color-blue);
+  background: rgba(45, 108, 247, 0.08);
+  color: var(--color-blue-dark);
+  transform: translateY(-1px);
+}
+
+.demand-action--danger {
+  border-color: transparent;
+  color: var(--color-danger);
+}
+
+.demand-action--danger:hover,
+.demand-action--danger:focus-visible {
+  border-color: transparent;
+  background: var(--color-danger-background);
+  color: var(--color-danger);
+}
+
+/* Estado vazio ------------------------------------------------------------ */
+
+.demandas-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 420px;
+  margin: 48px auto;
+  padding: 48px 32px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.demandas-empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 8px;
+  border-radius: 50%;
+  background: rgba(45, 108, 247, 0.1);
+  color: var(--color-blue);
+  font-size: 1.6rem;
+}
+
+.demandas-empty h2 {
+  margin: 0;
+  color: var(--color-navy);
+  font-size: 1.25rem;
+  font-weight: 750;
+}
+
+.demandas-empty p {
+  margin: 0 0 12px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Responsivo -------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .demandas-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .demandas-cta {
+    justify-content: center;
+  }
+
+  .demand-grid {
+    grid-template-columns: 1fr;
+  }
+}

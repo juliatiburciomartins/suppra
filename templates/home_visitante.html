@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  hub_fecc
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/componentes/hero.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/home/home.css' %}" />
+{% endblock %}
+
+{% block content %}
+  {% include 'componentes/hero.html' %}
+
+  <section class="home-content-section visitor-home">
+    <div class="container-fluid"></div>
+  </section>
+{% endblock %}

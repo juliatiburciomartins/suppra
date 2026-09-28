@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mudar Senha | hub_fecc{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/usuarios/auth.css' %}">
+  <link rel="stylesheet" href="{% static 'css/usuarios/perfil.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+  <a href="{% if request.user.tipo_perfil == 'fornecedor' %}{% url 'dashboard_fornecedor' %}{% else %}{% url 'dashboard_comerciante' %}{% endif %}" class="back-control"><span aria-hidden="true">&lt;</span> Voltar</a>
+  <div class="auth-card password-card">
+    <h1 class="auth-title">Mudar senha</h1>
+    <p class="auth-subtitle">Atualize sua senha para manter sua conta protegida.</p>
+
+    <form method="POST" action="" class="auth-form password-form" novalidate>
+      {% csrf_token %}
+
+      <div class="auth-field{% if form.senha_atual.errors %} has-error{% endif %}">
+        <label for="senha-atual">Senha atual <span class="auth-required">*</span></label>
+        <div class="auth-input-wrap">
+          <input type="password" name="senha_atual" id="senha-atual" autocomplete="current-password" required>
+        </div>
+        {% if form.senha_atual.errors %}
+          <div class="field-error-msg" role="alert">{{ form.senha_atual.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="auth-field{% if form.nova_senha.errors %} has-error{% endif %}">
+        <label for="nova-senha">Nova senha <span class="auth-required">*</span></label>
+        <div class="auth-input-wrap">
+          <input type="password" name="nova_senha" id="nova-senha" minlength="8" autocomplete="new-password" required>
+        </div>
+        {% if form.nova_senha.errors %}
+          <div class="field-error-msg" role="alert">{{ form.nova_senha.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="auth-field{% if form.confirmar_nova_senha.errors %} has-error{% endif %}">
+        <label for="confirmar-nova-senha">Confirmar nova senha <span class="auth-required">*</span></label>
+        <div class="auth-input-wrap">
+          <input type="password" name="confirmar_nova_senha" id="confirmar-nova-senha" autocomplete="new-password" required>
+        </div>
+        <div class="field-error-msg password-match-error" role="alert">
+          As senhas não coincidem.
+        </div>
+        {% if form.confirmar_nova_senha.errors %}
+          <div class="field-error-msg" role="alert">{{ form.confirmar_nova_senha.errors.0 }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="auth-submit">Salvar nova senha</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,423 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Planos{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/assinaturas/lista_planos.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="plans-page">
+
+    <div class="page-title">
+
+        <h1>Escolha o plano ideal para o seu negócio</h1>
+
+        <p>
+            Mais visibilidade, mais oportunidades e todo o suporte que você precisa.
+        </p>
+
+    </div>
+
+
+    <section class="plans-container">
+
+        <!-- PLANO GRATUITO -->
+
+        <div class="plan-card free-plan">
+
+            <h2>Gratuito</h2>
+
+            <div class="plan-badge-slot">
+            {% if plano_atual == "gratuito" %}
+                <span class="current-plan">
+                    Plano atual
+                </span>
+            {% endif %}
+            </div>
+
+            <div class="price">
+
+                <strong>R$ 0,00</strong>
+
+                <span>/mês</span>
+
+            </div>
+
+            <div class="line"></div>
+
+            <div class="features">
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Cadastro de perfil de fornecedor
+                </p>
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Visualização de demandas
+                </p>
+
+            </div>
+
+            {% if plano_atual == "gratuito" %}
+                <button
+                    class="plan-button current-button"
+                    type="button"
+                    disabled
+                >
+                    Plano atual
+                </button>
+            {% else %}
+                <button
+                    class="plan-button current-button"
+                    type="button"
+                >
+                    Plano atual
+                </button>
+            {% endif %}
+
+        </div>
+
+
+        <!-- PLANO SILVER -->
+
+        <div class="plan-card silver-plan">
+
+            <h2>Fornecedor Silver</h2>
+
+            <div class="plan-badge-slot">
+            {% if plano_atual == "silver" %}
+                <span class="current-plan">
+                    Plano atual
+                </span>
+            {% endif %}
+            </div>
+
+            <div class="price">
+
+                <strong>R$ 29,90</strong>
+
+                <span>/mês</span>
+
+            </div>
+
+            <div class="line"></div>
+
+            <div class="features">
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Cadastro de perfil de fornecedor
+                </p>
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Visualização de demandas
+                </p>
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Relatórios básicos de visualizações
+                </p>
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Selo de verificado
+                </p>
+
+            </div>
+
+            {% if plano_atual == "silver" %}
+                <button
+                    class="plan-button current-button"
+                    type="button"
+                    disabled
+                >
+                    Plano atual
+                </button>
+            {% else %}
+                <a
+                    href="{% url 'confirmar_contratacao' 'silver' %}"
+                    class="plan-button silver-button"
+                >
+                    Contratar
+                </a>
+            {% endif %}
+
+        </div>
+
+
+        <!-- PLANO GOLD -->
+
+        <div class="plan-card gold-plan">
+
+            <h2>Fornecedor Gold</h2>
+
+            <div class="plan-badge-slot">
+            {% if plano_atual == "gold" %}
+                <span class="current-plan">
+                    Plano atual
+                </span>
+            {% endif %}
+            </div>
+
+            <div class="price">
+
+                <strong>R$ 59,90</strong>
+
+                <span>/mês</span>
+
+            </div>
+
+            <div class="line"></div>
+
+            <div class="features">
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Cadastro de perfil de fornecedor
+                </p>
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Visualização de demandas
+                </p>
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Relatórios completos
+                </p>
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Selo premium
+                </p>
+
+                <p>
+                    <i class="bi bi-check-circle-fill check"></i>
+                    Suporte dedicado
+                </p>
+
+            </div>
+
+            {% if plano_atual == "gold" %}
+                <button
+                    class="plan-button current-button"
+                    type="button"
+                    disabled
+                >
+                    Plano atual
+                </button>
+            {% else %}
+                <a
+                    href="{% url 'confirmar_contratacao' 'gold' %}"
+                    class="plan-button gold-button"
+                >
+                    Contratar
+                </a>
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <div class="compare-area">
+
+        <a
+            href="#comparacao"
+            class="compare-link"
+        >
+            Comparar planos
+        </a>
+
+    </div>
+
+
+    <section
+        class="comparison"
+        id="comparacao"
+    >
+
+        <h2>Planos Comparados</h2>
+
+        <div class="comparison-table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Recurso</th>
+                        <th>Gratuito</th>
+                        <th>Silver</th>
+                        <th>Gold</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    <tr>
+
+                        <td>
+                            Cadastro de perfil de fornecedor
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Visualização de demandas
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Relatórios básicos de visualizações
+                        </td>
+
+                        <td>
+                            <i class="bi bi-dash-lg table-empty"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Relatórios completos
+                        </td>
+
+                        <td>
+                            <i class="bi bi-dash-lg table-empty"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-dash-lg table-empty"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Selo de verificado
+                        </td>
+
+                        <td>
+                            <i class="bi bi-dash-lg table-empty"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Selo premium
+                        </td>
+
+                        <td>
+                            <i class="bi bi-dash-lg table-empty"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-dash-lg table-empty"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Suporte dedicado
+                        </td>
+
+                        <td>
+                            <i class="bi bi-dash-lg table-empty"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-dash-lg table-empty"></i>
+                        </td>
+
+                        <td>
+                            <i class="bi bi-check-circle-fill table-check"></i>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}

@@ -1,0 +1,158 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  Cadastrar Produto | supppra
+{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/usuarios/auth.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/portifolio/cadastro_produto.css' %}" />
+{% endblock %}
+
+{% block navigation %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block messages %}
+{% endblock %}
+
+{% block content %}
+  <section class="cadastro-background" >
+
+    <a href="{% url 'gerenciar_portfolio' %}" class="back-control">
+      <span aria-hidden="true">&lt;</span> Voltar
+    </a>
+
+    <div class="product-modal">
+
+      <header class="registration-header">
+        <h1>Cadastrar Produto</h1>
+        <p>Complete as informações</p>
+      </header>
+
+      <form method="POST" class="product-form" novalidate>
+        {% csrf_token %}
+
+        <!-- NOME DO PRODUTO/SERVIÇO -->
+        <div class="form-field product-name-field{% if form.nome.errors %} has-error{% endif %}">
+          <label for="{{ form.nome.id_for_label }}">
+            Nome do produto/serviço
+          </label>
+
+          {{ form.nome }}
+
+          {% if form.nome.errors %}
+            <div class="field-error-msg" role="alert">
+              <span class="field-error-icon" aria-hidden="true">!</span>
+              <span>{{ form.nome.errors.0 }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- CATEGORIA DE INSUMO -->
+        <div class="form-field{% if form.id_categoria.errors %} has-error{% endif %}">
+          <label for="{{ form.id_categoria.id_for_label }}">
+            Categoria de insumo
+          </label>
+
+          {{ form.id_categoria }}
+
+          {% if form.id_categoria.errors %}
+            <div class="field-error-msg" role="alert">
+              <span class="field-error-icon" aria-hidden="true">!</span>
+              <span>{{ form.id_categoria.errors.0 }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- PREÇO -->
+        <div class="form-field{% if form.preco.errors %} has-error{% endif %}">
+          <label for="{{ form.preco.id_for_label }}">
+            Preço unitário
+          </label>
+
+          <div class="price-field">
+            <span aria-hidden="true">R$</span>
+            {{ form.preco }}
+          </div>
+
+          {% if form.preco.errors %}
+            <div class="field-error-msg" role="alert">
+              <span class="field-error-icon" aria-hidden="true">!</span>
+              <span>{{ form.preco.errors.0 }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- TELEFONE -->
+        <div class="form-field{% if form.telefone_contato.errors %} has-error{% endif %}">
+          <label for="{{ form.telefone_contato.id_for_label }}">
+            Telefone para contato
+          </label>
+
+          {{ form.telefone_contato }}
+
+          {% if form.telefone_contato.errors %}
+            <div class="field-error-msg" role="alert">
+              <span class="field-error-icon" aria-hidden="true">!</span>
+              <span>{{ form.telefone_contato.errors.0 }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- WHATSAPP -->
+        <div class="form-field{% if form.whatsapp_contato.errors %} has-error{% endif %}">
+          <label for="{{ form.whatsapp_contato.id_for_label }}">
+            WhatsApp de contato
+          </label>
+
+          {{ form.whatsapp_contato }}
+
+          {% if form.whatsapp_contato.errors %}
+            <div class="field-error-msg" role="alert">
+              <span class="field-error-icon" aria-hidden="true">!</span>
+              <span>{{ form.whatsapp_contato.errors.0 }}</span>
+            </div>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="register-button">
+          Cadastrar Produto
+        </button>
+
+      </form>
+
+      {% if meus_produtos %}
+        <section class="current-portfolio" aria-labelledby="portfolio-title">
+
+          <h2 id="portfolio-title">Meu portfólio atual</h2>
+
+          <ul class="current-portfolio-list">
+            {% for produto in meus_produtos %}
+              <li>
+                <span class="produto-nome">
+                  {{ produto.nome }}
+                </span>
+
+                <span class="produto-categoria">
+                  {{ produto.id_categoria.nome }}
+                </span>
+
+                <span class="produto-preco">
+                  R$ {{ produto.preco }}
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+
+        </section>
+      {% endif %}
+
+    </div>
+  </section>
+{% endblock %}
+

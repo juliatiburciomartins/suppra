@@ -1,0 +1,6 @@
+Django==6.1.1
+mysqlclient==2.2.8
+python-decouple==3.8
+django-simple-history==3.13.0
+Pillow==12.3.0
+django-widget-tweaks==1.5.1

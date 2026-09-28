@@ -1,0 +1,172 @@
+.register-page {
+  position: relative;
+  align-items: flex-start;
+  padding-top: 88px;
+}
+
+.register-card {
+  max-width: 720px;
+}
+
+.register-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.register-form .form-field:nth-child(1),
+.register-form .form-field:nth-child(2),
+.register-form .terms-section,
+.register-form .register-submit,
+.register-form .register-login {
+  grid-column: 1 / -1;
+}
+
+.register-form .auth-field {
+  grid-column: span 1;
+}
+
+.register-form input,
+.register-form select {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  outline: none;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.register-form input:focus,
+.register-form select:focus {
+  border-color: var(--color-cerulean);
+  outline: 3px solid rgba(39, 149, 196, 0.15);
+}
+
+.register-form input[type="checkbox"] {
+  width: 18px !important;
+  min-height: unset !important;
+  height: 18px !important;
+  padding: 0 !important;
+  margin-top: 3px;
+}
+
+.terms-section {
+  margin-top: 4px;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--color-text);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.terms-checkbox input {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+.terms-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-blue);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.terms-link:hover,
+.terms-link:focus-visible {
+  color: var(--color-blue-dark);
+}
+
+.custom-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+.custom-modal-overlay.open {
+  display: flex;
+}
+
+.custom-modal-box {
+  background-color: #fff;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 12px;
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.close-modal-btn:hover {
+  color: #000;
+}
+
+.modal-content-text {
+  margin-top: 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #444;
+  padding-right: 10px;
+}
+
+@media (max-width: 767px) {
+    .register-card {
+      max-width: 100%;
+    }
+
+    .register-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .register-form > * {
+      width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .register-page {
+      padding: 78px 12px 28px;
+    }
+}
+
+@media (max-width: 420px) {
+    .terms-checkbox {
+      font-size: 0.78rem;
+    }
+}

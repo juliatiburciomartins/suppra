@@ -1,0 +1,23 @@
+{% extends 'base/index.html' %}
+{% load static %}
+
+{% block title %}Termos de Uso | hub_fecc{% endblock %}
+
+{% block navigation %}  {% endblock %}
+{% block footer %}  {% endblock %}
+{% block scripts %} {% endblock %} 
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/politicas/politicas.css' %}" />
+{% endblock %}
+
+{% block content %}
+<section class="login-page" aria-labelledby="terms-title">
+  <article class="login-card" style="max-width: 800px; width: 100%;">
+    <a class="form-back-control" href="{% url 'cadastro' %}"><span aria-hidden="true">&lt;</span> Voltar</a>
+    <h1 id="terms-title">Termos de Uso</h1>
+    <div class="legal-content">
+      {% include 'usuario/_termo_uso_conteudo.html' %}
+    </div>
+  </article>
+</section>
+{% endblock %}

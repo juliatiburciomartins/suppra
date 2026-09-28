@@ -1,0 +1,131 @@
+/* =================================================_
+   1. LAYOUT GERAL DO PAINEL
+   ================================================= */
+.dashboard-bg {
+    background-color: #f4f6f9;
+    min-height: calc(100vh - 80px);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Cores e Variáveis Padrão */
+.text-dark-blue { color: #1e3a8a !important; }
+.bg-dark-blue { background-color: #1e3a8a !important; }
+.text-primary { color: #2563eb !important; }
+
+.btn-outline-primary {
+    color: #2563eb;
+    border-color: #2563eb;
+}
+.btn-outline-primary:hover {
+    background-color: #2563eb;
+    color: white;
+}
+
+/* Fundos temáticos para ícones */
+.bg-light-blue { background-color: #e0e7ff; }
+.bg-light-green { background-color: #dcfce7; }
+.text-success { color: #16a34a !important; }
+.bg-light-purple { background-color: #f3e8ff; }
+.text-purple { color: #9333ea !important; }
+.bg-light-danger { background-color: #fee2e2; border: 1px solid #fecaca; }
+
+/* =================================================_
+   2. CARDS E COMPONENTES
+   ================================================= */
+.dash-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.welcome-card {
+    padding: 1.5rem 2rem;
+}
+
+.stat-card {
+    padding: 1.5rem;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Círculos para ícones */
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.icon-circle-large {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Cabeçalhos de Seções */
+.header-acoes {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+/* Listas de Ações e Configurações */
+.action-item, .config-item {
+    transition: background-color 0.2s ease;
+}
+
+.action-item:hover, .config-item:hover:not(.bg-light-danger) {
+    background-color: #f8fafc;
+}
+
+/* =================================================_
+   3. MODAL CUSTOMIZADO (COM DESFOQUE DE FUNDO)
+   ================================================= */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.custom-modal-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.custom-modal-box {
+    background: #ffffff;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.custom-modal-overlay.is-open .custom-modal-box {
+    transform: translateY(0);
+}

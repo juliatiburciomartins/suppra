@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Criar Conta | Hub FECC{% endblock %}
+{% block body_class %}login-layout-clean{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/usuarios/auth.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/usuarios/cadastro.css' %}" />
+{% endblock %}
+{% block navigation %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block messages %}{% endblock %}
+
+{% block content %}
+<section class="auth-page register-page" style="position: relative;">
+  
+  <a href="{% url 'login' %}" class="back-control"><span aria-hidden="true">&lt;</span> Voltar</a>
+
+  <div class="auth-card register-card">
+    <h1 class="auth-title">Criar Sua Conta</h1>
+    <p class="auth-subtitle">Complete suas informações</p>
+
+    {% include 'componentes/messages.html' %}
+
+    <form method="post" class="auth-form register-form" novalidate>
+      {% csrf_token %}
+      
+      {% for field in form %}
+        {% if field.name != 'aceite_termos' %}
+          <div class="auth-field">
+            {{ field.label_tag }}
+            <div class="auth-input-wrap">
+              {{ field }}
+            </div>
+            {% if field.errors %}
+              <div class="field-error-msg">
+                <i class="bi bi-exclamation-circle"></i> {{ field.errors.0 }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <!-- Checkbox de Termos e Privacidade -->
+      <div class="terms-section" style="grid-column: 1 / -1;">
+        <label class="terms-checkbox">
+          {{ form.aceite_termos }}
+          <span>
+            Li e Aceito os 
+            <button type="button" id="abrir-termos" class="terms-link">Termos de Uso vigentes</button> e a 
+            <button type="button" id="abrir-politica" class="terms-link">Política de Privacidade</button>
+          </span>
+        </label>
+        {% if form.aceite_termos.errors %}
+          <div class="field-error-msg">
+            <i class="bi bi-exclamation-circle"></i> {{ form.aceite_termos.errors.0 }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div style="grid-column: 1 / -1;">
+        <button type="submit" class="auth-submit" style="margin-top: 10px;">Criar Conta</button>
+      </div>
+      
+      <div class="auth-switch" style="grid-column: 1 / -1;">
+        Já tem conta? <a href="{% url 'login' %}">Entrar</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+
+<div id="termos-modal" class="custom-modal-overlay" aria-hidden="true">
+  <div class="custom-modal-box">
+    <button id="fechar-termos" class="close-modal-btn"><i class="bi bi-x-lg"></i></button>
+    <h2>Termos de Uso</h2>
+    <div class="modal-content-text" style="text-align: left;">
+      {% include 'politicas/termos_uso_conteudo.html' %}
+    </div>
+  </div>
+</div>
+
+
+<div id="politica-modal" class="custom-modal-overlay" aria-hidden="true">
+  <div class="custom-modal-box">
+    <button id="fechar-politica" class="close-modal-btn"><i class="bi bi-x-lg"></i></button>
+    <h2>Política de Privacidade</h2>
+    <div class="modal-content-text" style="text-align: left;">
+      {% include 'politicas/politica_privacidade_conteudo.html' %}
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'js/termos.js' %}"></script>
+{% endblock %}

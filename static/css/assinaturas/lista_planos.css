@@ -1,0 +1,392 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #eef1fb;
+    color: #102b67;
+}
+
+.plans-page {
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 0 70px;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.page-title h1 {
+    font-size: 28px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #092b75;
+    margin-bottom: 8px;
+}
+
+.page-title p {
+    font-size: 12px;
+    color: #1671c7;
+}
+
+.plans-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.plan-card {
+    width: 100%;
+    height: 400px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 28px 32px 26px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.free-plan {
+    border-top: 8px solid #52bb70;
+}
+
+.silver-plan {
+    border-top: 8px solid #0875c9;
+}
+
+.gold-plan {
+    border-top: 8px solid #f5aa16;
+}
+
+.plan-card h2 {
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #082e76;
+    margin-bottom: 8px;
+}
+
+.plan-badge-slot {
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.current-plan {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    background: #e6f7ee;
+    color: #1671c7;
+    border-radius: 15px;
+    padding: 5px 11px;
+    font-size: 10px;
+}
+
+.price {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+}
+
+.price strong {
+    font-size: 31px;
+    line-height: 1;
+    color: #11121b;
+    font-weight: 700;
+}
+
+.price span {
+    font-size: 11px;
+    color: #1671c7;
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    background: #dce5f1;
+    margin: 20px 0 18px;
+}
+
+.features {
+    flex: 1;
+    min-height: 0;
+}
+
+.features p {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #176dc0;
+    font-size: 10px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+
+.check {
+    color: #51bc79;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.plan-button {
+    width: 100%;
+    height: 40px;
+    min-height: 40px;
+    margin-top: auto;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: 0.2s ease;
+    flex-shrink: 0;
+}
+
+.current-button {
+    border: 1px solid #80cda0;
+    background: #ffffff;
+    color: #111111;
+}
+
+.current-button:hover {
+    background: #80cda0;
+    color: #ffffff;
+}
+
+.current-button:disabled {
+    cursor: default;
+    opacity: 0.85;
+}
+
+.current-button:disabled:hover {
+    background: #ffffff;
+    color: #111111;
+}
+
+.silver-button {
+    border: none;
+    background: #29a5d1;
+    color: #ffffff;
+}
+
+.silver-button:hover {
+    background: #218fb8;
+    color: #ffffff;
+}
+
+.gold-button {
+    border: none;
+    background: #f8a614;
+    color: #ffffff;
+}
+
+.gold-button:hover {
+    background: #df9209;
+    color: #ffffff;
+}
+
+.compare-area {
+    display: flex;
+    justify-content: center;
+    margin: 34px 0 38px;
+}
+
+.compare-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 40px;
+    border: 1px solid #9fc2f4;
+    border-radius: 22px;
+    background: transparent;
+    color: #0873cc;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.compare-link:hover {
+    background: #e2eaff;
+}
+
+.comparison {
+    width: 100%;
+    border-top: 1px solid #e0e5f0;
+    padding-top: 34px;
+    scroll-margin-top: 20px;
+}
+
+.comparison h2 {
+    text-align: center;
+    font-size: 23px;
+    font-weight: 700;
+    color: #092b75;
+    margin-bottom: 28px;
+}
+
+.comparison-table-wrapper {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 7px;
+    padding: 14px 18px;
+    overflow-x: auto;
+}
+
+.comparison table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.comparison th,
+.comparison td {
+    border-bottom: 1px solid #e7ebf2;
+    padding: 12px 10px;
+    font-size: 13px;
+    color: #60779d;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.comparison th {
+    color: #36547f;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.comparison th:first-child,
+.comparison td:first-child {
+    text-align: left;
+    width: 55%;
+}
+
+.comparison tr:last-child td {
+    border-bottom: none;
+}
+
+.table-check {
+    color: #38b76d;
+    font-size: 16px;
+}
+
+.table-empty {
+    color: #bcc2cc;
+    font-size: 16px;
+}
+
+@media (max-width: 1100px) {
+    .plans-page {
+        width: 92%;
+    }
+
+    .plan-card {
+        padding: 24px 26px;
+    }
+
+    .plan-card h2 {
+        font-size: 18px;
+    }
+
+    .price strong {
+        font-size: 28px;
+    }
+
+    .features p {
+        font-size: 9px;
+    }
+
+    .comparison th,
+    .comparison td {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 800px) {
+    .plans-container {
+        grid-template-columns: 1fr;
+    }
+
+    .plan-card {
+        height: auto;
+        min-height: 350px;
+    }
+
+    .page-title h1 {
+        font-size: 24px;
+    }
+
+    .comparison-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .comparison table {
+        min-width: 700px;
+    }
+}
+
+@media (max-width: 600px) {
+    .plans-page {
+        width: 92%;
+        padding-top: 22px;
+    }
+
+    .page-title {
+        margin-bottom: 24px;
+    }
+
+    .page-title h1 {
+        font-size: 21px;
+    }
+
+    .page-title p {
+        font-size: 10px;
+    }
+
+    .plan-card {
+        padding: 23px 24px;
+    }
+
+    .plan-card h2 {
+        font-size: 18px;
+    }
+
+    .price strong {
+        font-size: 27px;
+    }
+
+    .comparison h2 {
+        font-size: 20px;
+    }
+
+    .comparison th,
+    .comparison td {
+        font-size: 12px;
+        padding: 11px 8px;
+    }
+
+    .compare-link {
+        width: 185px;
+        height: 38px;
+    }
+}

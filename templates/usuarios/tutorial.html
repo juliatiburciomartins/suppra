@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Tutorial{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/usuarios/onboarding.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="onboarding-overlay">
+    <div class="onboarding-modal-card">
+        <!-- Botão X para fechar / pular o tutorial -->
+        {% if user.tipo_perfil == "fornecedor" %}
+        <a href="{% url 'dashboard_fornecedor' %}" class="onboarding-close-btn" title="Pular tutorial">&times;</a>
+        {% else %}
+        <a href="{% url 'dashboard_comerciante' %}" class="onboarding-close-btn" title="Pular tutorial">&times;</a>
+        {% endif %}
+
+        <div>
+            <!-- Passo 1 -->
+            <div class="onboarding-step active" data-step="1">
+                <div class="icon-wrapper">
+                    <i class="bi bi-shop"></i>
+                </div>
+                <h4 class="onboarding-title">Bem-vindo ao Hub_fecc!</h4>
+                <p class="onboarding-text">Uma plataforma inovadora que conecta comerciantes e fornecedores em Araras/SP. Aqui você encontra produtos, compara preços e publica suas necessidades com facilidade.</p>
+            </div>
+
+            {% if user.tipo_perfil == 'fornecedor' %}
+            <!-- Passo 2 (Fornecedor) -->
+            <div class="onboarding-step" data-step="2">
+                <div class="icon-wrapper">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <h4 class="onboarding-title">Gerencie seu Portfólio</h4>
+                <p class="onboarding-text">Cadastre seus produtos com preços, descrições e categorias. Mantenha seu catálogo sempre atualizado para atrair mais comerciantes locais.</p>
+            </div>
+            <!-- Passo 3 (Fornecedor) -->
+            <div class="onboarding-step" data-step="3">
+                <div class="icon-wrapper">
+                    <i class="bi bi-megaphone"></i>
+                </div>
+                <h4 class="onboarding-title">Monitore Demandas</h4>
+                <p class="onboarding-text">Os comerciantes publicam o que precisam em tempo real. Visualize as demandas em aberto e faça contato direto para fechar novos negócios.</p>
+            </div>
+            {% else %}
+            <!-- Passo 2 (Comerciante) -->
+            <div class="onboarding-step" data-step="2">
+                <div class="icon-wrapper">
+                    <i class="bi bi-search"></i>
+                </div>
+                <h4 class="onboarding-title">Busque Fornecedores</h4>
+                <p class="onboarding-text">Navegue por fornecedores cadastrados na região, aplique filtros por categoria e compare preços de forma simples e rápida.</p>
+            </div>
+            <!-- Passo 3 (Comerciante) -->
+            <div class="onboarding-step" data-step="3">
+                <div class="icon-wrapper">
+                    <i class="bi bi-megaphone"></i>
+                </div>
+                <h4 class="onboarding-title">Publique Demandas</h4>
+                <p class="onboarding-text">Diga exatamente o que você precisa e a quantidade desejada. Os fornecedores qualificados poderão entrar em contato com você.</p>
+            </div>
+            {% endif %}
+
+            <!-- Rodapé do Card com os Botões Alinhados -->
+            <div class="onboarding-footer">
+                <button class="btn-tutorial-prev" onclick="prevStep()" id="prevBtn" disabled>Anterior</button>
+                <span class="onboarding-indicator" id="stepIndicator">1 de 3</span>
+                <button class="btn-tutorial-next" onclick="nextStep()" id="nextBtn">Próximo</button>
+            </div>
+
+            <form method="post" id="tutorialForm" class="d-none">
+                {% csrf_token %}
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/tutorial.js' %}"></script>
+{% endblock %}

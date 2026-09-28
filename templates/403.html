@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Acesso negado | hub_fecc{% endblock %}
+
+{% block content %}
+<section class="auth-page">
+  <div class="auth-card">
+    <h1 class="auth-title">Acesso negado</h1>
+    <p class="auth-subtitle">Você não tem permissão para acessar esta página.</p>
+    <a href="{% url 'home' %}" class="auth-submit" style="text-align:center;text-decoration:none;">Voltar para o início</a>
+  </div>
+</section>
+{% endblock %}
