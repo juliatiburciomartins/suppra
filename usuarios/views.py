@@ -8,6 +8,8 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode, urlsafe_base64_encode
 from portfolio.models import Produto
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 from core.services import registrar_log
 from usuarios.decorators import (
@@ -142,8 +144,16 @@ def redefinir_senha_view(request, uidb64, token):
     return render(request, "registration/password_reset_confirm.html", {"validlink": True})
 
 
+
 def redefinicao_senha_concluida_view(request):
     return render(request, "registration/password_reset_complete.html")
+
+
+def redefinir_senha_preview_view(request):
+    return render(request, "registration/password_reset_confirm.html", {"validlink": True})
+
+def link_expirado_view(request):
+    return render(request, "registration/password_reset_confirm.html", {"validlink": False})
 
 
 # --------------------------------------------------------------------------

@@ -1,137 +1,90 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}
-  Entrar | hub_fecc
-{% endblock %}
-
-{% block body_class %}
-  login-layout-clean
-{% endblock %}
+{% block title %}Entrar | suppra{% endblock %}
+{% block body_class %}login-layout-clean login-page-layout{% endblock %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/usuarios/auth.css' %}">
-  <link rel="stylesheet" href="{% static 'css/registration/login.css' %}">
+<link rel="stylesheet" href="{% static 'css/usuarios/auth_registration_base.css' %}">
+<link rel="stylesheet" href="{% static 'css/registration/forms.css' %}">
+<link rel="stylesheet" href="{% static 'css/registration/login.css' %}">
 {% endblock %}
 
-{% block navigation %}
-{% endblock %}
-
-{% block footer %}
-{% endblock %}
-
-{% block messages %}
-{% endblock %}
+{% block navigation %}{% endblock %}
+{% block footer %}{% endblock %}
+{% block messages %}{% endblock %}
 
 {% block content %}
-<section class="auth-page">
-  <div class="auth-page-inner">
-
-    <a href="{% url 'home' %}" class="back-control">
-      <span aria-hidden="true">&lt;</span>
-      Voltar
-    </a>
-
-    <div class="auth-card">
-      <h1 class="auth-title">Entrar na sua conta</h1>
-
-      <p class="auth-subtitle">
-        Bem-vindo(a) de volta, informe seus dados
-      </p>
-
-      {% include 'componentes/messages.html' %}
-
-      <form method="post" class="auth-form" novalidate>
-        {% csrf_token %}
-
-        <div class="auth-field">
-          <label for="id_username">E-mail</label>
-
-          <div class="auth-input-wrap">
-            <input
-              type="email"
-              name="username"
-              id="id_username"
-              placeholder="exemplo@gmail.com"
-              class="{% if field_errors.username %}input-has-error{% endif %}"
-              value="{{ request.POST.username|default:'' }}"
-              autocomplete="username"
-              required
-            >
-          </div>
-
-          {% include 'componentes/messages.html' with errors=field_errors.username only %}
-        </div>
-
-        <div class="auth-field">
-          <label for="id_password">Senha</label>
-
-          <div class="auth-input-wrap">
-            <input
-              type="password"
-              name="password"
-              id="id_password"
-              placeholder="Digite sua senha"
-              class="{% if field_errors.password %}input-has-error{% endif %}"
-              autocomplete="current-password"
-              required
-            >
-          </div>
-
-          {% include 'componentes/messages.html' with errors=field_errors.password only %}
-        </div>
-
-        <p class="auth-forgot">
-          <a href="{% url 'recuperar_senha' %}">
-            Esqueci minha senha
-          </a>
-        </p>
-
-        <button type="submit" class="auth-submit">
-          Entrar
-        </button>
-      </form>
-
-      <p class="auth-switch">
-        Não tem conta?
-        <a href="{% url 'cadastro' %}">
-          Cadastre-se
+<div class="auth-split auth-split--reset auth-split--login">
+    <aside class="auth-aside auth-aside--photo">
+        <a href="{% url 'home' %}" class="auth-logo" aria-label="Voltar para a página inicial">
+            <img src="{% static 'media/logotipo_principal.svg' %}" alt="suppra">
         </a>
-      </p>
-    </div>
-  </div>
+    </aside>
 
-  {% if conta_suspensa %}
-    <div class="suspended-overlay">
-      <div class="auth-card suspended-card">
-
-        <a
-          href="{% url 'login' %}"
-          class="back-control"
-          aria-label="Fechar alerta"
-        >
-          <span aria-hidden="true">&lt;</span>
-          Voltar
+    <main class="auth-main">
+        <a href="{% url 'home' %}" class="auth-back" aria-label="Voltar para a página inicial">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i>
         </a>
 
-        <div class="suspended-alert-box">
-          <i class="bi bi-exclamation-triangle-fill"></i>
-          <span>Sua conta está Suspensa</span>
+        <div class="auth-card">
+            {% include 'componentes/messages.html' %}
+
+            <header class="auth-header">
+                <h1 class="auth-title">Bem-vindo de volta!</h1>
+                <p class="auth-subtitle">Informe seus dados para entrar</p>
+            </header>
+
+            <form method="post" class="login-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% firstof request.POST.next request.GET.next '' %}">
+
+                <div class="auth-field">
+                    <label for="id_username" class="auth-label">E-mail</label>
+
+                    <div class="auth-input-wrap{% if field_errors.username %} has-error{% endif %}">
+                        <i class="bi bi-envelope auth-icon" aria-hidden="true"></i>
+                        <input id="id_username" name="username" type="email" placeholder="nome@empresa.com" autocomplete="username" value="{{ request.POST.username|default:'' }}" required {% if field_errors.username %}aria-invalid="true" aria-describedby="username-error"{% endif %}>
+                    </div>
+
+                    {% if field_errors.username %}
+                    <p class="auth-error" id="username-error" role="alert">{{ field_errors.username|first }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="auth-field">
+                    <label for="id_password" class="auth-label">Senha</label>
+
+                    <div class="auth-input-wrap{% if field_errors.password %} has-error{% endif %}">
+                        <i class="bi bi-lock auth-icon" aria-hidden="true"></i>
+
+                        <input id="id_password" name="password" type="password" placeholder="Digite sua senha" autocomplete="current-password" required {% if field_errors.password %}aria-invalid="true" aria-describedby="password-error"{% endif %}>
+
+          
+                        <button type="button" class="auth-eye" data-login-eye aria-label="Mostrar senha" aria-controls="id_password" aria-pressed="false">
+                            <i class="bi bi-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    {% if field_errors.password %}
+                    <p class="auth-error" id="password-error" role="alert">{{ field_errors.password|first }}</p>
+                    {% endif %}
+                </div>
+
+                <p class="auth-forgot">
+                    <a href="{% url 'recuperar_senha' %}">Esqueci minha senha</a>
+                </p>
+
+                <button type="submit" class="auth-button">Entrar</button>
+            </form>
+
+            <p class="auth-foot">Não tem conta? <a href="{% url 'cadastro' %}">Cadastre-se</a></p>
         </div>
+    </main>
+</div>
+{% endblock %}
 
-        <p class="suspended-text">
-          Acesse o contato com o suporte
-        </p>
-
-        <a
-          href="mailto:suporte@hubfecc.com.br"
-          class="auth-submit suspended-btn"
-        >
-          Acesse Aqui
-        </a>
-
-      </div>
-    </div>
-  {% endif %}
-</section>
+{% block scripts %}
+{{ block.super }}
+<script src="{% static 'js/password_reset.js' %}" defer></script>
 {% endblock %}

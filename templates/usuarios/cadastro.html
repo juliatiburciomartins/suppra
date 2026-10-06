@@ -2,94 +2,171 @@
 {% load static %}
 
 {% block title %}Criar Conta | Hub FECC{% endblock %}
-{% block body_class %}login-layout-clean{% endblock %}
+{% block body_class %}login-layout-clean login-page-layout{% endblock %}
+
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'css/usuarios/auth.css' %}" />
-  <link rel="stylesheet" href="{% static 'css/usuarios/cadastro.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/usuarios/auth_registration_base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/registration/forms.css' %}">
+  <link rel="stylesheet" href="{% static 'css/registration/login.css' %}">
+  <link rel="stylesheet" href="{% static 'css/usuarios/cadastro.css' %}">
 {% endblock %}
+
 {% block navigation %}{% endblock %}
 {% block footer %}{% endblock %}
 {% block messages %}{% endblock %}
 
 {% block content %}
-<section class="auth-page register-page" style="position: relative;">
-  
-  <a href="{% url 'login' %}" class="back-control"><span aria-hidden="true">&lt;</span> Voltar</a>
 
-  <div class="auth-card register-card">
-    <h1 class="auth-title">Criar Sua Conta</h1>
-    <p class="auth-subtitle">Complete suas informações</p>
+<div class="auth-split auth-split--reset auth-split--login auth-split--cadastro">
+  <aside class="auth-aside">
+    <a href="{% url 'home' %}" class="auth-logo" aria-label="Voltar para a página inicial">
+      <img src="{% static 'media/logotipo_principal.svg' %}" alt="suppra">
+    </a>
+  </aside>
 
-    {% include 'componentes/messages.html' %}
+  <div class="auth-main">
+    <a href="{% url 'login' %}" class="auth-back" aria-label="Voltar para o login">
+      <i class="bi bi-arrow-left" aria-hidden="true"></i>
+    </a>
 
-    <form method="post" class="auth-form register-form" novalidate>
-      {% csrf_token %}
-      
-      {% for field in form %}
-        {% if field.name != 'aceite_termos' %}
-          <div class="auth-field">
-            {{ field.label_tag }}
-            <div class="auth-input-wrap">
-              {{ field }}
-            </div>
-            {% if field.errors %}
-              <div class="field-error-msg">
-                <i class="bi bi-exclamation-circle"></i> {{ field.errors.0 }}
-              </div>
+    <div class="auth-card">
+      <header class="auth-header">
+        <h1 class="auth-title">Criar conta</h1>
+      </header>
+
+      {% include 'componentes/messages.html' %}
+
+      <form method="post" class="reset-form" novalidate>
+        {% csrf_token %}
+
+        <div class="auth-seg" role="radiogroup" aria-label="Tipo de perfil">
+          {% for value, label in form.tipo_perfil.field.choices %}
+            {% if value %}
+              <input type="radio"
+                     id="perfil-{{ value }}"
+                     name="{{ form.tipo_perfil.html_name }}"
+                     value="{{ value }}"
+                     {% if form.tipo_perfil.value|stringformat:"s" == value|stringformat:"s" %}checked
+                     {% elif not form.tipo_perfil.value and value == 'fornecedor' %}checked{% endif %}>
+              <label for="perfil-{{ value }}">
+                <i class="bi {% if value == 'fornecedor' %}bi-truck{% else %}bi-shop{% endif %}" aria-hidden="true"></i>
+                {{ label }}
+              </label>
             {% endif %}
-          </div>
+          {% endfor %}
+          <span class="auth-seg-slider" aria-hidden="true"></span>
+        </div>
+        {% if form.tipo_perfil.errors %}
+          <p class="auth-error">{{ form.tipo_perfil.errors.0 }}</p>
         {% endif %}
-      {% endfor %}
 
-      <!-- Checkbox de Termos e Privacidade -->
-      <div class="terms-section" style="grid-column: 1 / -1;">
-        <label class="terms-checkbox">
-          {{ form.aceite_termos }}
-          <span>
-            Li e Aceito os 
-            <button type="button" id="abrir-termos" class="terms-link">Termos de Uso vigentes</button> e a 
-            <button type="button" id="abrir-politica" class="terms-link">Política de Privacidade</button>
-          </span>
-        </label>
+        <div class="auth-form-grid">
+          <div class="auth-field">
+            <label class="auth-label" for="{{ form.nome.id_for_label }}">Nome ou razão social</label>
+            <div class="auth-input-wrap auth-input-wrap--plain{% if form.nome.errors %} has-error{% endif %}">
+              {{ form.nome }}
+            </div>
+            {% if form.nome.errors %}<p class="auth-error">{{ form.nome.errors.0 }}</p>{% endif %}
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="{{ form.cpf_cnpj.id_for_label }}">CNPJ ou CPF</label>
+            <div class="auth-input-wrap auth-input-wrap--plain{% if form.cpf_cnpj.errors %} has-error{% endif %}">
+              {{ form.cpf_cnpj }}
+              <button type="button" class="auth-eye" data-target="{{ form.cpf_cnpj.id_for_label }}" aria-label="Mostrar ou ocultar">
+                <i class="bi bi-eye" aria-hidden="true"></i>
+              </button>
+            </div>
+            {% if form.cpf_cnpj.errors %}<p class="auth-error">{{ form.cpf_cnpj.errors.0 }}</p>{% endif %}
+          </div>
+
+          <div class="auth-field auth-field--full">
+            <label class="auth-label" for="{{ form.email.id_for_label }}">E-mail</label>
+            <div class="auth-input-wrap{% if form.email.errors %} has-error{% endif %}">
+              <span class="auth-icon"><i class="bi bi-envelope" aria-hidden="true"></i></span>
+              {{ form.email }}
+            </div>
+            {% if form.email.errors %}<p class="auth-error">{{ form.email.errors.0 }}</p>{% endif %}
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="{{ form.telefone.id_for_label }}">Telefone</label>
+            <div class="auth-input-wrap{% if form.telefone.errors %} has-error{% endif %}">
+              <span class="auth-icon"><i class="bi bi-telephone" aria-hidden="true"></i></span>
+              {{ form.telefone }}
+            </div>
+            {% if form.telefone.errors %}<p class="auth-error">{{ form.telefone.errors.0 }}</p>{% endif %}
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="{{ form.whatsapp.id_for_label }}">WhatsApp</label>
+            <div class="auth-input-wrap{% if form.whatsapp.errors %} has-error{% endif %}">
+              <span class="auth-icon"><i class="bi bi-whatsapp" aria-hidden="true"></i></span>
+              {{ form.whatsapp }}
+            </div>
+            {% if form.whatsapp.errors %}<p class="auth-error">{{ form.whatsapp.errors.0 }}</p>{% endif %}
+          </div>
+
+          {% for field in form %}
+            {% if field.field.widget.input_type == 'password' %}
+            <div class="auth-field">
+              <label class="auth-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+              <div class="auth-input-wrap{% if field.errors %} has-error{% endif %}">
+                <span class="auth-icon"><i class="bi bi-lock" aria-hidden="true"></i></span>
+                {{ field }}
+                <button type="button" class="auth-eye" data-target="{{ field.id_for_label }}" aria-label="Mostrar ou ocultar senha">
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              {% if field.errors %}<p class="auth-error">{{ field.errors.0 }}</p>{% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      <label class="auth-check">
+      {{ form.aceite_termos }}
+      <span>
+        Li e aceito os
+        <a href="#" class="auth-terms-link">Termos de Uso</a>
+        e a
+        <a href="#" class="auth-terms-link">Política de Privacidade</a>
+      </span>
+    </label>
+ 
         {% if form.aceite_termos.errors %}
-          <div class="field-error-msg">
-            <i class="bi bi-exclamation-circle"></i> {{ form.aceite_termos.errors.0 }}
-          </div>
+          <p class="auth-error">{{ form.aceite_termos.errors.0 }}</p>
         {% endif %}
-      </div>
 
-      <div style="grid-column: 1 / -1;">
-        <button type="submit" class="auth-submit" style="margin-top: 10px;">Criar Conta</button>
-      </div>
-      
-      <div class="auth-switch" style="grid-column: 1 / -1;">
-        Já tem conta? <a href="{% url 'login' %}">Entrar</a>
-      </div>
-    </form>
+        <button type="submit" class="auth-button">Criar conta</button>
+      </form>
+
+      <p class="auth-foot">Já tem conta? <a href="{% url 'login' %}">Entrar</a></p>
+    </div>
   </div>
-</section>
+</div>
 
 
-<div id="termos-modal" class="custom-modal-overlay" aria-hidden="true">
+<div class="custom-modal-overlay" id="modal-termos" role="dialog" aria-modal="true" aria-labelledby="titulo-termos">
   <div class="custom-modal-box">
-    <button id="fechar-termos" class="close-modal-btn"><i class="bi bi-x-lg"></i></button>
-    <h2>Termos de Uso</h2>
-    <div class="modal-content-text" style="text-align: left;">
+    <button type="button" class="close-modal-btn" data-fechar-modal aria-label="Fechar">&times;</button>
+    <h2 id="titulo-termos">Termos de Uso</h2>
+    <div class="modal-content-text">
       {% include 'politicas/termos_uso_conteudo.html' %}
     </div>
   </div>
 </div>
 
-
-<div id="politica-modal" class="custom-modal-overlay" aria-hidden="true">
+<div class="custom-modal-overlay" id="modal-privacidade" role="dialog" aria-modal="true" aria-labelledby="titulo-privacidade">
   <div class="custom-modal-box">
-    <button id="fechar-politica" class="close-modal-btn"><i class="bi bi-x-lg"></i></button>
-    <h2>Política de Privacidade</h2>
-    <div class="modal-content-text" style="text-align: left;">
+    <button type="button" class="close-modal-btn" data-fechar-modal aria-label="Fechar">&times;</button>
+    <h2 id="titulo-privacidade">Política de Privacidade</h2>
+    <div class="modal-content-text">
       {% include 'politicas/politica_privacidade_conteudo.html' %}
     </div>
   </div>
 </div>
 
-<script src="{% static 'js/termos.js' %}"></script>
+
+<script src="{% static 'js/cadastro_toggle.js' %}"></script>
+
 {% endblock %}

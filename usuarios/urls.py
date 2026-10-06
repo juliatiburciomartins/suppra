@@ -14,8 +14,9 @@ urlpatterns = [
     # Recuperação de senha
     path("recuperar-senha/", views.recuperar_senha_view, name="recuperar_senha"),
     path("recuperar-senha/enviado/", views.redefinicao_senha_enviado_view, name="recuperar_senha_enviado"),
-    path("recuperar-senha/confirmar/<uidb64>/<token>/", views.redefinir_senha_view, name="redefinir_senha"),
     path("recuperar-senha/completo/", views.redefinicao_senha_concluida_view, name="password_reset_complete"),
+    path("recuperar-senha/confirmar/", views.redefinir_senha_preview_view, name="redefinir_senha_preview"),
+    path("link-expirado/", views.link_expirado_view, name="link_expirado"),
 
     # Painéis
     path("painel/fornecedor/", views.dashboard_fornecedor_view, name="dashboard_fornecedor"),
@@ -24,4 +25,6 @@ urlpatterns = [
     # Perfil e conta
     path("perfil/editar/", views.editar_perfil_view, name="editar_perfil"),
     path("conta/excluir/", views.excluir_conta_view, name="excluir_conta"),
+
+    
 ]

@@ -1,124 +1,46 @@
-/* =========================================================
-   LOGIN
-   ========================================================= */
-
-.auth-page,
-.auth-page-inner,
-.auth-card {
-  color: var(--color-text);
+/* Background com cor sólida opaca (#2054df) sobre a imagem */
+.auth-split--login .auth-aside {
+    background:
+        linear-gradient(rgba(32, 84, 223, 0.85), rgba(32, 84, 223, 0.85)),
+        url("/static/media/fundo_lateral.svg") center / cover no-repeat;
+    background-color: #2054df;
 }
 
-.auth-page label {
-  color: var(--color-text) !important;
+/* Garante que o botão do olho seja clicável */
+.auth-split--reset .auth-eye {
+    z-index: 2;
 }
 
-.auth-page input {
-  color: var(--color-text) !important;
-  -webkit-text-fill-color: var(--color-text) !important;
+/* Link "Esqueci minha senha" */
+.auth-split--login .auth-forgot {
+    margin: -6px 0 24px;
+    text-align: right;
 }
 
-.auth-page input::placeholder {
-  color: var(--color-text-muted) !important;
-  opacity: 1;
+/* Link "Cadastre-se" no rodapé */
+.auth-split--login .auth-foot {
+    margin-top: 28px;
+    color: #737b94;
+    font-size: 15px;
+    text-align: center;
 }
 
-.auth-page input[type="password"] {
-  letter-spacing: normal;
-  font-family: inherit;
+/* Estilo dos links do login */
+.auth-split--login .auth-forgot a,
+.auth-split--login .auth-foot a {
+    color: #2054df;
+    font-weight: 600;
+    text-decoration: none;
 }
 
-.auth-page .back-control,
-.auth-page .back-control i {
-  color: var(--color-text) !important;
+.auth-split--login .auth-forgot a:hover,
+.auth-split--login .auth-foot a:hover {
+    text-decoration: underline;
 }
 
-
-/* =========================================================
-   CONTA SUSPENSA
-   ========================================================= */
-
-.suspended-card {
-  color: var(--color-text);
-}
-
-.suspended-alert-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-
-  margin-bottom: 28px;
-  padding: 16px 20px;
-
-  background-color: #ff3b30;
-  border-radius: 12px;
-
-  color: var(--color-text-light);
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.suspended-text {
-  color: var(--color-text-muted);
-}
-
-.suspended-card .back-control,
-.suspended-card .back-control i {
-  color: var(--color-text) !important;
-}
-
-.suspended-btn {
-  display: block;
-
-  line-height: 48px;
-  text-decoration: none;
-}
-
-
-/* =========================================================
-   FUNDO DA CONTA SUSPENSA
-   ========================================================= */
-
-.suspended-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 100vw;
-  height: 100vh;
-
-  background-color: rgba(33, 50, 117, 0.4);
-
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-
-/* =========================================================
-   ANIMAÇÃO
-   ========================================================= */
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-
-
-@media (max-width: 600px) {
-  .suspended-card {
-    padding: 32px 20px;
-  }
+/* Ajuste de espaço para o olho no celular */
+@media (max-width: 800px) {
+    .auth-split--reset .auth-input-wrap input {
+        padding-right: 48px;
+    }
 }

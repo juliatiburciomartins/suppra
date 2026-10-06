@@ -1,322 +1,56 @@
-/* =========================================================
-   MENSAGENS DO SISTEMA
-   ========================================================= */
+/* Mensagens de recuperação de senha */
 
-:root {
-  --messages-bg: #202875;
-  --message-success: #20a879;
-  --message-error: #d90429;
-  --message-warning: #f0a229;
-  --message-info: #2563eb;
-  --message-text: #171717;
-  --message-muted: #707070;
+.auth-split--reset .reset-message {
+    width: 100%;
+    text-align: left;
 }
 
-/* Faixa onde a mensagem aparece abaixo do menu */
-.messages {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 18px clamp(16px, 9vw, 140px);
-
-  background: var(--messages-bg);
+.auth-split--reset .reset-message .auth-status-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 24px;
+    border-radius: 50%;
+    font-size: 30px;
 }
 
-/* Card da mensagem */
-.messages .alert {
-  box-sizing: border-box;
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  gap: 18px;
-
-  width: 100%;
-  min-height: 72px;
-  margin: 0;
-  padding: 16px 24px 16px 42px;
-
-  overflow: hidden;
-
-  border: 1px solid #d7d7d7;
-  border-radius: 10px;
-
-  background: #ffffff;
-  color: var(--message-text);
-
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-
-  font-family: inherit;
-  text-align: left;
+.auth-split--reset .reset-status--success {
+    background: #eaf6ee;
+    color: #278347;
 }
 
-/* Linha colorida vertical à esquerda */
-.messages .alert::before {
-  content: "";
-
-  position: absolute;
-  top: 12px;
-  bottom: 12px;
-  left: 14px;
-
-  width: 5px;
-  border-radius: 999px;
-
-  background: var(--message-info);
+.auth-split--reset .reset-status--expired {
+    background: #fff0ed;
+    color: #d94b35;
 }
 
-/* Ícone circular */
-.messages .alert-icon {
-  display: grid;
-  flex: 0 0 38px;
-  place-items: center;
-
-  width: 38px;
-  height: 38px;
-
-  border-radius: 50%;
-
-  background: var(--message-info);
-  color: #ffffff;
-
-  font-size: 1rem;
-  line-height: 1;
+.auth-split--reset .reset-message .auth-title {
+    margin: 0;
+    color: #24263e;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.25;
 }
 
-/* Conteúdo textual */
-.messages .alert-content {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
+.auth-split--reset .reset-message .auth-subtitle {
+    margin: 16px 0 28px;
+    color: #707070;
+    font-size: 16px;
+    line-height: 1.5;
 }
 
-/* Título da mensagem */
-.messages .alert-title {
-  display: block;
-
-  margin: 0;
-
-  color: var(--message-text);
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.3;
+.auth-split--reset .reset-message .auth-button {
+    min-height: 52px;
+    height: auto;
+    padding: 12px 20px;
+    border-radius: 9px;
+    font-size: 16px;
 }
 
-/* Descrição da mensagem */
-.messages .alert-description {
-  display: block;
-
-  margin: 0;
-
-  color: var(--message-muted);
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.4;
-}
-
-/* Caso a mensagem tenha somente um texto, sem título */
-.messages .alert > :only-child:not(.alert-icon) {
-  color: var(--message-text);
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-/* =========================================================
-   MENSAGEM DE SUCESSO
-   ========================================================= */
-
-.messages .alert-success {
-  border-color: rgba(32, 168, 121, 0.55);
-}
-
-.messages .alert-success::before {
-  background: var(--message-success);
-}
-
-.messages .alert-success .alert-icon {
-  background: var(--message-success);
-}
-
-/* =========================================================
-   MENSAGEM DE ERRO
-   ========================================================= */
-
-.messages .alert-error,
-.messages .alert-danger {
-  border-color: rgba(217, 4, 41, 0.55);
-}
-
-.messages .alert-error::before,
-.messages .alert-danger::before {
-  background: var(--message-error);
-}
-
-.messages .alert-error .alert-icon,
-.messages .alert-danger .alert-icon {
-  background: var(--message-error);
-}
-
-/* =========================================================
-   MENSAGEM INFORMATIVA
-   ========================================================= */
-
-.messages .alert-info {
-  border-color: rgba(37, 99, 235, 0.45);
-}
-
-.messages .alert-info::before {
-  background: var(--message-info);
-}
-
-.messages .alert-info .alert-icon {
-  background: var(--message-info);
-}
-
-/* =========================================================
-   MENSAGEM DE AVISO
-   ========================================================= */
-
-.messages .alert-warning {
-  border-color: rgba(240, 162, 41, 0.6);
-}
-
-.messages .alert-warning::before {
-  background: var(--message-warning);
-}
-
-.messages .alert-warning .alert-icon {
-  background: var(--message-warning);
-}
-
-/* =========================================================
-   FECHAR A MENSAGEM
-   ========================================================= */
-
-.messages .alert-close {
-  display: flex;
-  flex: 0 0 28px;
-  align-items: center;
-  justify-content: center;
-
-  width: 28px;
-  height: 28px;
-  margin-left: auto;
-  padding: 0;
-
-  border: 0;
-  border-radius: 50%;
-
-  background: transparent;
-  color: #777777;
-
-  cursor: pointer;
-  font-size: 1.15rem;
-  line-height: 1;
-
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-
-.messages .alert-close:hover {
-  background: #f1f1f1;
-  color: #111111;
-}
-
-/* =========================================================
-   CASO A MENSAGEM NÃO USE .messages
-   ========================================================= */
-
-.alert {
-  box-sizing: border-box;
-}
-
-.alert.alert-success,
-.alert.alert-error,
-.alert.alert-danger,
-.alert.alert-info,
-.alert.alert-warning {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-
-  min-height: 72px;
-  padding: 16px 24px 16px 42px;
-
-  overflow: hidden;
-
-  border: 1px solid #d7d7d7;
-  border-radius: 10px;
-
-  background: #ffffff;
-  color: var(--message-text);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-/* =========================================================
-   RESPONSIVIDADE
-   ========================================================= */
-
-@media (max-width: 768px) {
-  .messages {
-    padding: 14px 16px;
-  }
-
-  .messages .alert {
-    gap: 12px;
-    min-height: 64px;
-    padding: 14px 16px 14px 34px;
-  }
-
-  .messages .alert::before {
-    top: 10px;
-    bottom: 10px;
-    left: 10px;
-    width: 4px;
-  }
-
-  .messages .alert-icon {
-    flex-basis: 32px;
-    width: 32px;
-    height: 32px;
-    font-size: 0.85rem;
-  }
-
-  .messages .alert-title {
-    font-size: 1rem;
-  }
-
-  .messages .alert-description {
-    font-size: 0.85rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .messages {
-    padding: 12px;
-  }
-
-  .messages .alert {
-    align-items: flex-start;
-    gap: 10px;
-    padding: 13px 12px 13px 28px;
-  }
-
-  .messages .alert::before {
-    left: 8px;
-  }
-
-  .messages .alert-icon {
-    flex-basis: 28px;
-    width: 28px;
-    height: 28px;
-  }
+@media (max-width: 800px) {
+    .auth-split--reset .reset-message .auth-title {
+        font-size: 28px;
+    }
 }

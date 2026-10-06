@@ -1,94 +1,103 @@
-.register-page {
+/* =========================================================
+   1. SELETOR ANIMAÇÃO (Fornecedor / Comerciante)
+   ========================================================= */
+
+.auth-seg {
   position: relative;
-  align-items: flex-start;
-  padding-top: 88px;
+  display: flex;
+  margin-bottom: 20px;
+  padding: 4px;
+  background: #f1f4f9;
+  border-radius: 8px;
 }
 
-.register-card {
-  max-width: 720px;
+.auth-seg input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.register-form {
+.auth-seg-slider {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.auth-seg label {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #707889;
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.auth-seg input[type="radio"]:checked + label {
+  color: #18202d;
+}
+
+/* =========================================================
+   2. GRELHA DE FORMULÁRIO (2 Colunas)
+   ========================================================= */
+
+.auth-form-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
-.register-form .form-field:nth-child(1),
-.register-form .form-field:nth-child(2),
-.register-form .terms-section,
-.register-form .register-submit,
-.register-form .register-login {
+.auth-field--full {
   grid-column: 1 / -1;
 }
 
-.register-form .auth-field {
-  grid-column: span 1;
-}
+/* =========================================================
+   3. CHECKBOX DE TERMOS E LINKS
+   ========================================================= */
 
-.register-form input,
-.register-form select {
-  width: 100%;
-  min-height: 48px;
-  padding: 10px 16px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-small);
-  outline: none;
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.register-form input:focus,
-.register-form select:focus {
-  border-color: var(--color-cerulean);
-  outline: 3px solid rgba(39, 149, 196, 0.15);
-}
-
-.register-form input[type="checkbox"] {
-  width: 18px !important;
-  min-height: unset !important;
-  height: 18px !important;
-  padding: 0 !important;
-  margin-top: 3px;
-}
-
-.terms-section {
-  margin-top: 4px;
-}
-
-.terms-checkbox {
+.auth-check {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  color: var(--color-text);
-  font-size: 0.85rem;
-  line-height: 1.5;
+  gap: 8px;
+  margin: 16px 0 20px 0;
+  font-size: 13px;
   cursor: pointer;
 }
 
-.terms-checkbox input {
+.auth-check input[type="checkbox"] {
   width: 16px;
   height: 16px;
   margin-top: 2px;
-  flex: 0 0 auto;
-  cursor: pointer;
+  flex-shrink: 0;
 }
 
-.terms-link {
+.auth-terms-link {
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--color-blue);
+  color: #2054df;
   font: inherit;
-  font-weight: 600;
-  text-decoration: underline;
+  font-weight: 700;
   cursor: pointer;
 }
 
-.terms-link:hover,
-.terms-link:focus-visible {
-  color: var(--color-blue-dark);
+.auth-terms-link:hover {
+  text-decoration: underline;
 }
+
+/* =========================================================
+   4. MODAIS
+   ========================================================= */
 
 .custom-modal-overlay {
   display: none;
@@ -97,8 +106,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 9999;
   justify-content: center;
   align-items: center;
@@ -109,12 +117,12 @@
 }
 
 .custom-modal-box {
-  background-color: #fff;
+  position: relative;
   width: 90%;
   max-width: 600px;
-  border-radius: 12px;
   padding: 30px;
-  position: relative;
+  border-radius: 12px;
+  background: #ffffff;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
@@ -122,51 +130,128 @@
   position: absolute;
   top: 15px;
   right: 15px;
+  border: 0;
   background: none;
-  border: none;
-  font-size: 1.2rem;
+  font-size: 18px;
+  color: #666666;
   cursor: pointer;
-  color: #666;
-}
-
-.close-modal-btn:hover {
-  color: #000;
 }
 
 .modal-content-text {
   margin-top: 20px;
   max-height: 60vh;
   overflow-y: auto;
-  font-size: 0.95rem;
+  font-size: 14px;
   line-height: 1.6;
-  color: #444;
-  padding-right: 10px;
+  color: #444444;
 }
 
-@media (max-width: 767px) {
-    .register-card {
-      max-width: 100%;
-    }
-
-    .register-form {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .register-form > * {
-      width: 100%;
-    }
-}
-
+/* Adaptativo para telas pequenas */
 @media (max-width: 600px) {
-    .register-page {
-      padding: 78px 12px 28px;
-    }
+  .auth-form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-@media (max-width: 420px) {
-    .terms-checkbox {
-      font-size: 0.78rem;
-    }
+/* =========================================================
+   5. AJUSTES DA TELA DE CADASTRO
+   ========================================================= */
+
+.auth-split--cadastro .auth-main {
+  padding-top: 96px;
+  padding-bottom: 48px;
+}
+
+.auth-split--cadastro .auth-card {
+  max-width: 520px;
+}
+
+.auth-split--cadastro .auth-header {
+  margin-bottom: 24px;
+}
+
+.auth-split--cadastro .auth-label {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.auth-split--cadastro .auth-field {
+  margin-bottom: 0;
+}
+
+/* Inputs compactos para caber em 2 colunas */
+.auth-split--cadastro .auth-input-wrap input {
+  height: 50px;
+  padding: 0 44px 0 46px;
+  font-size: 15px;
+}
+
+/* Campos sem ícone (nome e CNPJ/CPF) */
+.auth-split--cadastro .auth-input-wrap--plain input {
+  padding-left: 16px;
+}
+
+.auth-split--cadastro .auth-icon {
+  left: 16px;
+  height: 50px;
+  font-size: 18px;
+}
+
+.auth-split--cadastro .auth-eye {
+  width: 44px;
+  height: 50px;
+}
+
+.auth-split--cadastro .auth-eye i {
+  font-size: 18px;
+}
+
+/* Ícone + texto no seletor Fornecedor / Comerciante */
+.auth-split--cadastro .auth-seg label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Perfil selecionado: ícone e texto em azul */
+.auth-split--cadastro .auth-seg input[type="radio"]:checked + label {
+  color: #2054df;
+}
+
+/* Desliza o fundo branco para o segundo botão */
+.auth-split--cadastro .auth-seg input:nth-of-type(2):checked ~ .auth-seg-slider {
+  transform: translateX(100%);
+}
+
+.auth-split--cadastro .auth-button {
+  margin-top: 4px;
+}
+
+/* =========================================================
+   6. SEM O AZUL AO CLICAR NOS CAMPOS
+   ========================================================= */
+
+.auth-split--cadastro .auth-input-wrap,
+.auth-split--cadastro .auth-input-wrap:focus-within,
+.auth-split--cadastro .auth-input-wrap input,
+.auth-split--cadastro .auth-input-wrap input:focus,
+.auth-split--cadastro .auth-input-wrap input:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.auth-split--cadastro .auth-input-wrap:focus-within {
+  border-color: #cbd5e1 !important;
+}
+
+.auth-split--cadastro .auth-input-wrap.has-error,
+.auth-split--cadastro .auth-input-wrap.has-error:focus-within {
+  border-color: #dc2626 !important;
+}
+
+/* Tira o azul do toque em celular e do botão do olhinho */
+.auth-split--cadastro .auth-eye {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }

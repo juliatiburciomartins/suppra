@@ -1,0 +1,375 @@
+/* ==========================================================================
+   Recuperação de senha | suppra
+   Telas: esqueceu a senha, verifique o e-mail, redefinir senha, link expirado
+   e senha redefinida.
+
+   Regras deste arquivo:
+   - Nenhum valor em porcentagem: só px, vh e números sem unidade (flex, line-height).
+   - Breakpoint segue o "md" do Bootstrap (768px).
+   - Tudo fica dentro do bloco .recovery, então não interfere em login/cadastro.
+   ========================================================================== */
+
+.recovery {
+  --recovery-primary: #2f68f5;
+  --recovery-primary-hover: #2459dc;
+  --recovery-primary-light: #5a8cff;
+  --recovery-text: #18202d;
+  --recovery-muted: #707889;
+  --recovery-border: #d5dbe5;
+  --recovery-danger: #d90429;
+  --recovery-focus-ring: rgba(47, 104, 245, 0.2);
+
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #ffffff;
+  color: var(--recovery-text);
+}
+
+
+/* --------------------------------------------------------------------------
+   Card azul (lateral esquerda)
+   -------------------------------------------------------------------------- */
+
+.recovery-aside {
+  position: relative;
+  display: flex;
+  flex: 1 1 0px;
+  flex-direction: column;
+  min-width: 0;
+  padding: 36px 40px;
+  background: linear-gradient(
+    160deg,
+    var(--recovery-primary),
+    var(--recovery-primary-light)
+  );
+  color: #ffffff;
+}
+
+.recovery-logo {
+  display: inline-block;
+  align-self: flex-start;
+}
+
+/* O logotipo_principal.svg tem um canvas quadrado com bastante margem
+   transparente em cima e embaixo. Recortamos a caixa (height + object-fit)
+   para o logo ficar rente ao topo, como no layout. Se trocar o SVG por um
+   recortado rente ao desenho, volte para height: auto e remova o object-fit. */
+.recovery-logo img {
+  display: block;
+  width: 150px;
+  height: 48px;
+  object-fit: cover;
+}
+
+.recovery-aside-content {
+  margin-top: auto;
+  margin-bottom: 12vh;
+}
+
+.recovery-aside-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 28px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 26px;
+}
+
+.recovery-aside-title {
+  max-width: 340px;
+  margin: 0 0 14px;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.recovery-aside-text {
+  max-width: 280px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+
+/* --------------------------------------------------------------------------
+   Lado direito (seta de voltar + card com o conteúdo)
+   -------------------------------------------------------------------------- */
+
+.recovery-main {
+  position: relative;
+  display: flex;
+  flex: 1 1 0px;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 72px 24px 32px;
+}
+
+.recovery-card {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 420px;
+}
+
+.recovery-back {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--recovery-primary);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--recovery-primary);
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.recovery-back:hover {
+  background: #f3f6ff;
+}
+
+.recovery-back:focus-visible {
+  outline: 3px solid var(--recovery-focus-ring);
+  outline-offset: 2px;
+}
+
+
+/* --------------------------------------------------------------------------
+   Ícone de status (envelope verde / relógio)
+   -------------------------------------------------------------------------- */
+
+.recovery-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 20px;
+  border-radius: 44px;
+  font-size: 20px;
+}
+
+.recovery-status-icon--success {
+  background: #e7f8e5;
+  color: #43b84a;
+}
+
+.recovery-status-icon--warning {
+  background: #fdf0d5;
+  color: #e8556d;
+}
+
+
+/* --------------------------------------------------------------------------
+   Título e texto
+   -------------------------------------------------------------------------- */
+
+.recovery-header {
+  margin-bottom: 28px;
+}
+
+.recovery-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--recovery-text);
+}
+
+.recovery-subtitle {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--recovery-muted);
+}
+
+
+/* --------------------------------------------------------------------------
+   Formulário
+   -------------------------------------------------------------------------- */
+
+.recovery-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.recovery-field {
+  margin-bottom: 20px;
+}
+
+.recovery-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--recovery-text);
+}
+
+.recovery-input-wrap {
+  position: relative;
+  display: flex;
+}
+
+.recovery-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 50px;
+  padding: 0 14px 0 40px;
+  border: 1px solid var(--recovery-border);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--recovery-text);
+  font-size: 15px;
+  outline: 0;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.recovery-input--password {
+  padding-right: 44px;
+}
+
+.recovery-input::placeholder {
+  color: #8a93a5;
+}
+
+.recovery-input:focus {
+  border-color: var(--recovery-primary);
+  box-shadow: 0 0 0 3px var(--recovery-focus-ring);
+}
+
+.recovery-input-icon {
+  position: absolute;
+  top: 0;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  color: var(--recovery-muted);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.recovery-eye {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--recovery-muted);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.recovery-eye:hover {
+  color: var(--recovery-text);
+}
+
+.recovery-eye:focus-visible {
+  outline: 3px solid var(--recovery-focus-ring);
+  outline-offset: -3px;
+}
+
+.recovery-input-wrap.is-invalid .recovery-input {
+  border-color: var(--recovery-danger);
+}
+
+.recovery-input-wrap.is-invalid .recovery-input:focus {
+  box-shadow: 0 0 0 3px rgba(217, 4, 41, 0.2);
+}
+
+.recovery-error {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--recovery-danger);
+}
+
+
+/* --------------------------------------------------------------------------
+   Botão (serve tanto para <button> quanto para <a>)
+   -------------------------------------------------------------------------- */
+
+.recovery-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--recovery-primary);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.recovery-btn:hover {
+  background: var(--recovery-primary-hover);
+}
+
+.recovery-btn:focus-visible {
+  outline: 3px solid var(--recovery-focus-ring);
+  outline-offset: 2px;
+}
+
+
+/* --------------------------------------------------------------------------
+   Tablet (abaixo de 992px, o "lg" do Bootstrap)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 991.98px) {
+  .recovery-aside {
+    padding: 32px 28px;
+  }
+
+  .recovery-aside-title {
+    font-size: 26px;
+  }
+}
+
+
+/* --------------------------------------------------------------------------
+   Mobile e tablet pequeno (abaixo de 768px, o "md" do Bootstrap)
+   O card azul vira uma faixa no topo, só com o logo.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 767.98px) {
+  .recovery {
+    flex-direction: column;
+  }
+
+  .recovery-aside {
+    flex: 0 0 auto;
+    padding: 20px 24px;
+  }
+
+  .recovery-aside-content {
+    display: none;
+  }
+
+  .recovery-main {
+    flex: 1 1 auto;
+    align-items: flex-start;
+    padding: 72px 24px 32px;
+  }
+
+  .recovery-title {
+    font-size: 24px;
+  }
+}

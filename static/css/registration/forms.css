@@ -1,0 +1,434 @@
+/* Estrutura */
+
+.password-reset-layout .page-content {
+    background: #fff;
+}
+
+.auth-split--reset,
+.auth-split--reset * {
+    box-sizing: border-box;
+}
+
+.auth-split--reset {
+    display: grid;
+    grid-template-columns: 41.2% 58.8%;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #171b42;
+    font-family: "Inter", Arial, sans-serif;
+}
+
+/* Lateral azul */
+
+.auth-split--reset .auth-aside {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    padding: 140px 12% 80px;
+    background: linear-gradient(145deg, #2862ff 45%, #4b7fff);
+    color: #fff;
+}
+
+.auth-split--reset .auth-logo {
+    position: absolute;
+    top: 64px;
+    left: 12%;
+    display: block;
+    width: 140px;
+    aspect-ratio: 1955 / 450;
+    overflow: hidden;
+}
+
+/* Recorta o espaço vazio do arquivo original do logo */
+
+.auth-split--reset .auth-logo img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 102.302%;
+    max-width: none;
+    height: auto;
+    transform: translateY(-41.5%);
+}
+
+.auth-split--reset .auth-aside-content {
+    position: static;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    transform: none;
+}
+
+.auth-split--reset .auth-aside-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90px;
+    height: 90px;
+    margin-bottom: 36px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.auth-split--reset .reset-key {
+    display: block;
+    color: #fff;
+    font-size: 48px;
+    line-height: 1;
+    transform: rotate(135deg);
+}
+
+.auth-split--reset .auth-aside-title {
+    max-width: 400px;
+    margin: 0 0 24px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -1px;
+}
+
+.auth-split--reset .auth-aside-text {
+    max-width: 310px;
+    margin: 0;
+    color: #fff;
+    font-size: 19px;
+    line-height: 1.5;
+    opacity: 1;
+}
+
+/* Área branca */
+
+.auth-split--reset .auth-main {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    padding: 140px 40px 80px;
+    background: #fff;
+}
+
+.auth-split--reset .auth-card {
+    width: 100%;
+    max-width: 508px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Voltar */
+
+.auth-split--reset .auth-back {
+    position: absolute;
+    top: 28px;
+    left: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border: 1px solid #d0d8f5;
+    border-radius: 11px;
+    background: #fff;
+    color: #2862ff;
+    text-decoration: none;
+}
+
+.auth-split--reset .auth-back i {
+    font-size: 24px;
+    line-height: 1;
+}
+
+.auth-split--reset .auth-back:hover {
+    border-color: #2862ff;
+    background: #f3f6ff;
+    text-decoration: none;
+}
+
+/* Cabeçalho */
+
+.auth-split--reset .auth-header {
+    margin: 0 0 36px;
+}
+
+.auth-split--reset .auth-title {
+    margin: 0;
+    color: #171b42;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.8px;
+}
+
+.auth-split--reset .auth-subtitle {
+    max-width: 380px;
+    margin: 20px 0 0;
+    color: #737b94;
+    font-size: 17px;
+    line-height: 1.5;
+}
+
+/* Campos */
+
+.auth-split--reset .reset-form {
+    width: 100%;
+    margin: 0;
+}
+
+.auth-split--reset .auth-field {
+    margin-bottom: 22px;
+}
+
+.auth-split--reset .auth-label {
+    display: block;
+    margin-bottom: 14px;
+    color: #171b42;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.auth-split--reset .auth-input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.auth-split--reset .auth-input-wrap input {
+    display: block;
+    width: 100%;
+    height: 62px;
+    padding: 0 52px 0 68px;
+    border: 1px solid #d1d6e3;
+    border-radius: 9px;
+    background: #fff;
+    color: #171b42;
+    font-family: inherit;
+    font-size: 18px;
+    outline: none;
+}
+
+.auth-split--reset .auth-input-wrap input::placeholder {
+    color: #737b94;
+    opacity: 1;
+}
+
+.auth-split--reset .auth-input-wrap input:focus {
+    border-color: #2862ff;
+    box-shadow: 0 0 0 3px rgba(40, 98, 255, 0.12);
+}
+
+/* Ícones dos campos */
+
+.auth-split--reset .auth-icon {
+    position: absolute;
+    top: 0;
+    left: 24px;
+    display: flex;
+    align-items: center;
+    height: 62px;
+    color: #737b94;
+    font-size: 25px;
+    pointer-events: none;
+}
+
+.auth-split--reset .auth-eye {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 62px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #737b94;
+    cursor: pointer;
+}
+
+.auth-split--reset .auth-eye i {
+    font-size: 22px;
+}
+
+.auth-split--reset .auth-icon svg,
+.auth-split--reset .auth-eye svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Erros de preenchimento */
+
+.auth-split--reset .auth-input-wrap.has-error input {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.auth-split--reset .auth-error {
+    margin: 8px 0 0;
+    color: #dc2626;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.auth-split--reset .reset-password-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: -8px 0 22px;
+}
+
+.auth-split--reset .reset-password-error i {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.auth-split--reset [hidden] {
+    display: none !important;
+}
+
+/* Botão principal */
+
+.auth-split--reset .auth-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 60px;
+    height: auto;
+    padding: 14px 20px;
+    border: 0;
+    border-radius: 9px;
+    background: #2862ff;
+    color: #fff;
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.auth-split--reset .auth-button:hover {
+    background: #2054df;
+    text-decoration: none;
+}
+
+.auth-split--reset a:focus-visible,
+.auth-split--reset button:focus-visible {
+    outline: 2px solid #2862ff;
+    outline-offset: 4px;
+}
+
+/* Tablet */
+
+@media (min-width: 801px) and (max-width: 1100px) {
+    .auth-split--reset .auth-aside {
+        padding-right: 32px;
+        padding-left: 32px;
+    }
+
+    .auth-split--reset .auth-logo {
+        left: 32px;
+    }
+
+    .auth-split--reset .auth-aside-title {
+        font-size: 32px;
+    }
+
+    .auth-split--reset .auth-aside-text {
+        font-size: 16px;
+    }
+
+    .auth-split--reset .auth-main {
+        padding-right: 32px;
+        padding-left: 32px;
+    }
+
+    .auth-split--reset .auth-title {
+        font-size: 28px;
+    }
+}
+
+/* Celular */
+
+@media (max-width: 800px) {
+    .auth-split--reset {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+
+    .auth-split--reset .auth-aside {
+        padding: 24px;
+    }
+
+    .auth-split--reset .auth-logo {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 130px;
+    }
+
+    .auth-split--reset .auth-aside-content {
+        display: none;
+    }
+
+    .auth-split--reset .auth-main {
+        padding: 104px 24px 48px;
+    }
+
+    .auth-split--reset .auth-back {
+        top: 24px;
+        left: 24px;
+        width: 44px;
+        height: 44px;
+    }
+
+    .auth-split--reset .auth-title {
+        font-size: 28px;
+    }
+
+    .auth-split--reset .auth-subtitle {
+        margin-top: 16px;
+        font-size: 16px;
+    }
+
+    .auth-split--reset .auth-header {
+        margin-bottom: 28px;
+    }
+
+    .auth-split--reset .auth-input-wrap input {
+        height: 56px;
+        padding-left: 52px;
+        font-size: 16px;
+    }
+
+    .auth-split--reset .auth-icon {
+        left: 18px;
+        height: 56px;
+        font-size: 22px;
+    }
+
+    .auth-split--reset .auth-eye {
+        height: 56px;
+    }
+
+    .auth-split--reset .auth-button {
+        min-height: 56px;
+        font-size: 16px;
+    }
+}

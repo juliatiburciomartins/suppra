@@ -1,18 +1,13 @@
-/* =========================================
-   PÁGINAS DE AUTENTICAÇÃO: FUNDO LIMPO
-   ========================================= */
-
-html {
-  background: var(--color-background);
+:root {
+  --auth-focus-ring: color-mix(in srgb, var(--color-cerulean) 15%, transparent);
+  --auth-error-ring: color-mix(in srgb, var(--color-coral) 15%, transparent);
+  --auth-boxed-border: #4a5876;
 }
 
+html,
 body.login-layout-clean {
   background: var(--color-background);
 }
-
-/* =========================================
-   AUTH PAGE
-   ========================================= */
 
 .auth-page {
   position: relative;
@@ -26,11 +21,6 @@ body.login-layout-clean {
   background: var(--color-background);
 }
 
-
-/* =========================================
-   CONTAINER INTERNO
-   ========================================= */
-
 .auth-page-inner {
   display: flex;
   flex-direction: column;
@@ -41,11 +31,6 @@ body.login-layout-clean {
   gap: 16px;
 }
 
-
-/* =========================================
-   BOTÃO VOLTAR
-   ========================================= */
-
 .back-control {
   position: absolute;
   top: 14px;
@@ -55,34 +40,27 @@ body.login-layout-clean {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  width: auto;
   min-width: 109px;
   height: 52px;
   padding: 0 16px;
-  background: #ffffff;
-  border: none;
+  border: 0;
   border-radius: 17px;
+  background: var(--color-surface);
   color: var(--color-blue);
   font-size: 1.05rem;
   font-weight: 700;
-  box-shadow: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .back-control:hover {
-  background: #f8faff;
+  background: color-mix(in srgb, var(--color-blue) 4%, var(--color-surface));
 }
 
 .back-control:focus-visible {
-  outline: 3px solid rgba(39, 149, 196, 0.18);
+  outline: 3px solid var(--auth-focus-ring);
   outline-offset: 2px;
 }
-
-
-/* =========================================
-   CARD
-   ========================================= */
 
 .auth-card {
   position: relative;
@@ -96,11 +74,6 @@ body.login-layout-clean {
   box-shadow: var(--shadow-soft);
   text-align: left;
 }
-
-
-/* =========================================
-   TÍTULOS
-   ========================================= */
 
 .auth-card h1 {
   margin: 8px 0 12px;
@@ -130,24 +103,14 @@ body.login-layout-clean {
   line-height: 1.55;
 }
 
-
-/* =========================================
-   AVATAR
-   ========================================= */
-
 .auth-avatar {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   margin-bottom: 12px;
   color: var(--color-blue);
   font-size: 2.5rem;
 }
-
-
-/* =========================================
-   FORMULÁRIO
-   ========================================= */
 
 .auth-form {
   text-align: left;
@@ -164,73 +127,6 @@ body.login-layout-clean {
   font-weight: 700;
 }
 
-.form-input,
-.form-select {
-  width: 100%;
-  min-height: 50px;
-  padding: 12px 16px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-small);
-  outline: none;
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.form-input:focus,
-.form-select:focus {
-  border-color: var(--color-cerulean);
-  outline: 3px solid rgba(39, 149, 196, 0.15);
-}
-
-/* Campo gerado pelo Django no formulário de recuperação de senha */
-
-.auth-field > input {
-  display: block;
-  width: 100%;
-  min-height: 50px;
-  padding: 12px 16px;
-  border: 1px solid var(--color-border);
-
-  /* ALTERADO: campo arredondado */
-  border-radius: var(--radius-pill);
-
-  outline: none;
-  background: var(--color-surface);
-  color: var(--color-text);
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.auth-field > input:focus {
-  border-color: var(--color-cerulean);
-  outline: 3px solid rgba(39, 149, 196, 0.15);
-}
-
-.auth-field > input::placeholder {
-  color: #8a92a3;
-}
-
-.form-input::placeholder {
-  color: #8a92a3;
-}
-
-.form-input.is-invalid,
-.form-select.is-invalid {
-  border-color: var(--color-coral);
-  outline: 3px solid rgba(236, 103, 86, 0.12);
-}
-
-.form-error {
-  margin-top: 2px;
-  color: var(--color-danger);
-  font-size: 0.82rem;
-}
-
-
-/* =========================================
-   LOGIN
-   ========================================= */
-
 .login-form .form-field {
   margin-top: 18px;
 }
@@ -238,11 +134,6 @@ body.login-layout-clean {
 .login-form .form-field:first-child {
   margin-top: 0;
 }
-
-
-/* =========================================
-   CAMPOS DE AUTENTICAÇÃO
-   ========================================= */
 
 .auth-field {
   display: flex;
@@ -261,11 +152,6 @@ body.login-layout-clean {
   color: var(--color-coral);
 }
 
-
-/* =========================================
-   INPUT COM ÍCONE
-   ========================================= */
-
 .auth-input-wrap {
   position: relative;
   display: flex;
@@ -279,10 +165,14 @@ body.login-layout-clean {
   font-size: 1.1rem;
 }
 
+.form-input,
+.form-select,
+.auth-field > input,
 .auth-input-wrap input {
+  display: block;
   width: 100%;
-  min-height: 48px;
-  padding: 10px 16px;
+  min-height: 50px;
+  padding: 12px 16px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-small);
   outline: none;
@@ -290,81 +180,145 @@ body.login-layout-clean {
   color: var(--color-text);
 }
 
+.auth-input-wrap input {
+  min-height: 48px;
+  padding: 10px 16px;
+}
+
+.auth-field > input {
+  border-radius: var(--radius-pill);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.form-input::placeholder,
+.auth-field > input::placeholder,
+.auth-input-wrap input::placeholder {
+  color: #8a92a3;
+  opacity: 1;
+}
+
+.form-input:focus,
+.form-select:focus,
+.auth-field > input:focus,
+.auth-input-wrap input:focus {
+  border-color: var(--color-cerulean);
+  outline: 3px solid var(--auth-focus-ring);
+}
+
+.form-input.is-invalid,
+.form-select.is-invalid,
 .auth-input-wrap input.input-has-error {
   border-color: var(--color-coral);
+  outline: 3px solid var(--auth-error-ring);
+}
+
+.auth-input-wrap input.input-has-error {
   background-color: #fff8f8;
 }
 
-.auth-input-wrap input.input-has-error:focus {
-  outline: 3px solid rgba(236, 103, 86, 0.2);
+.form-error {
+  margin-top: 2px;
+  color: var(--color-danger);
+  font-size: 0.82rem;
 }
 
+.auth-field--boxed .auth-input-wrap {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  padding: 8px 14px 10px;
+  border: 1.5px solid var(--auth-boxed-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
 
-/* =========================================
-   BOTÕES
-   ========================================= */
+.auth-field--boxed .auth-input-wrap:focus-within {
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-blue) 20%, transparent);
+}
+
+.auth-field--boxed.has-error .auth-input-wrap {
+  border-color: var(--color-coral);
+}
+
+.auth-field--boxed label {
+  font-size: 0.75rem;
+}
+
+.auth-field--boxed .auth-input-wrap input {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 1rem;
+}
+
+.auth-field--boxed .auth-input-wrap input:focus {
+  outline: none;
+}
+
+.auth-field--boxed .auth-input-wrap input:-webkit-autofill {
+  -webkit-text-fill-color: var(--color-text);
+}
 
 .register-submit,
-.login-submit {
+.login-submit,
+.auth-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   min-height: 48px;
-  margin-top: 10px;
   border: 0;
   border-radius: var(--radius-pill);
   background: var(--color-blue);
   color: var(--color-surface);
   font-weight: 700;
+  text-decoration: none;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.register-submit,
+.login-submit {
+  margin-top: 10px;
 }
 
 .register-submit:hover,
 .login-submit:hover,
+.auth-submit:hover,
 .register-submit:focus-visible,
-.login-submit:focus-visible {
+.login-submit:focus-visible,
+.auth-submit:focus-visible {
   background: var(--color-blue-dark);
   transform: translateY(-1px);
 }
 
-.auth-submit {
-  width: 100%;
-  min-height: 48px;
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: var(--color-blue);
-  color: var(--color-surface);
-  font-weight: 700;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.auth-submit:hover {
-  background: var(--color-blue-dark);
-  transform: translateY(-1px);
-}
-
-
-/* =========================================
-   RECUPERAÇÃO DE SENHA
-   ========================================= */
-
-.forgot-password {
-  display: inline-block;
-  margin-top: 18px;
+.forgot-password,
+.auth-forgot a,
+.auth-secondary a,
+.auth-switch a {
   color: var(--color-blue);
-  font-size: 0.9rem;
   font-weight: 700;
 }
 
 .forgot-password:hover,
 .forgot-password:focus-visible,
+.auth-forgot a:hover,
 .auth-secondary a:hover,
-.auth-secondary a:focus-visible {
+.auth-secondary a:focus-visible,
+.auth-switch a:hover {
   text-decoration: underline;
+}
+
+.forgot-password {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 0.9rem;
 }
 
 .auth-forgot {
@@ -373,61 +327,37 @@ body.login-layout-clean {
 }
 
 .auth-forgot a {
-  color: var(--color-blue);
   font-size: 0.85rem;
   font-weight: 600;
 }
 
-.auth-forgot a:hover {
-  text-decoration: underline;
-}
-
-
-/* =========================================
-   LINKS SECUNDÁRIOS
-   ========================================= */
-
-.auth-secondary {
-  margin: 22px 0 0;
+.auth-secondary,
+.auth-switch {
   color: var(--color-text-muted);
   font-size: 0.9rem;
   text-align: center;
 }
 
-.auth-secondary a {
-  color: var(--color-blue);
-  font-weight: 700;
+.auth-secondary {
+  margin: 22px 0 0;
 }
 
 .auth-switch {
   margin-top: 20px;
-  color: var(--color-text-muted);
-  font-size: 0.9rem;
-  text-align: center;
 }
 
-.auth-switch a {
-  color: var(--color-blue);
-  font-weight: 700;
+.login-alert,
+.auth-alert-error {
+  border-radius: var(--radius-small);
+  background: var(--color-danger-background);
+  color: var(--color-danger);
+  font-weight: 600;
 }
-
-.auth-switch a:hover {
-  text-decoration: underline;
-}
-
-
-/* =========================================
-   ALERTAS
-   ========================================= */
 
 .login-alert {
   padding: 10px 14px;
   margin-bottom: 16px;
-  border-radius: var(--radius-small);
-  background: var(--color-danger-background);
-  color: var(--color-danger);
   font-size: 0.85rem;
-  font-weight: 600;
   text-align: center;
 }
 
@@ -435,11 +365,7 @@ body.login-layout-clean {
   padding: 12px 16px;
   margin-bottom: 20px;
   border: 1px solid rgba(236, 103, 86, 0.3);
-  border-radius: var(--radius-small);
-  background: var(--color-danger-background);
-  color: var(--color-danger);
   font-size: 0.88rem;
-  font-weight: 600;
   text-align: left;
 }
 
@@ -450,13 +376,7 @@ body.login-layout-clean {
   margin: 0;
 }
 
-
-/* =========================================
-   RESPONSIVIDADE
-   ========================================= */
-
 @media (max-width: 767px) {
-
   .auth-page {
     padding: 28px 12px;
   }
@@ -465,20 +385,9 @@ body.login-layout-clean {
     padding: 28px 18px;
     border-radius: var(--radius-medium);
   }
-
-  .back-control {
-    top: 14px;
-    left: 12px;
-    min-width: 109px;
-    height: 52px;
-    padding: 0 16px;
-  }
-
 }
 
-
 @media (max-width: 420px) {
-
   .auth-card {
     padding: 24px 14px;
   }
@@ -490,5 +399,4 @@ body.login-layout-clean {
     gap: 9px;
     font-size: 1rem;
   }
-
 }
