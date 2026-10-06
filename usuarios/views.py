@@ -74,10 +74,11 @@ def cadastro_view(request):
 
     if request.method == "POST":
         form = CadastroForm(request.POST)
+
         if form.is_valid():
             usuario = form.save()
             login(request, usuario, backend=AUTH_BACKEND)
-            messages.success(request, "Conta criada com sucesso! Bem-vindo(a) ao hub_fecc.")
+            messages.success(request, "Conta criada com sucesso! Bem-vindo(a) ao suppra.")
             return redirect(_url_dashboard(usuario))
     else:
         form = CadastroForm()

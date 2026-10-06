@@ -34,7 +34,10 @@
         <p>Complete as informações</p>
       </header>
 
-      <form method="POST" class="product-form" novalidate>
+      {% comment %} Exemplo de validação sim ou não {% endcomment %}
+      <form method="POST" class="product-form"
+            data-confirmar="Você deseja cadastrar {id_categoria}?"
+            data-confirmar-sim="Sim, cadastrar">
         {% csrf_token %}
 
         <!-- NOME DO PRODUTO/SERVIÇO -->
@@ -155,4 +158,3 @@
     </div>
   </section>
 {% endblock %}
-

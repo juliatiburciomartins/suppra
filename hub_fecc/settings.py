@@ -1,7 +1,6 @@
 """
 Django settings for hub_fecc project.
 """
-
 from pathlib import Path
 from decouple import config
 from django.contrib.messages import constants as messages
@@ -166,3 +165,10 @@ SILENCED_SYSTEM_CHECKS = ['mysql.W002', 'mysql.E001']
 
 from django.db.backends.base.base import BaseDatabaseWrapper
 BaseDatabaseWrapper.check_database_version_supported = lambda self: None
+
+
+# Overrides locais (nao versionado). Ex.: usar sqlite em vez de MySQL.
+try:
+    from .local_settings import *
+except ImportError:
+    pass

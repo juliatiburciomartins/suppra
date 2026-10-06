@@ -40,20 +40,23 @@
         {% csrf_token %}
 
         <div class="auth-seg" role="radiogroup" aria-label="Tipo de perfil">
+          
+          
           {% for value, label in form.tipo_perfil.field.choices %}
             {% if value %}
-              <input type="radio"
-                     id="perfil-{{ value }}"
-                     name="{{ form.tipo_perfil.html_name }}"
-                     value="{{ value }}"
-                     {% if form.tipo_perfil.value|stringformat:"s" == value|stringformat:"s" %}checked
-                     {% elif not form.tipo_perfil.value and value == 'fornecedor' %}checked{% endif %}>
-              <label for="perfil-{{ value }}">
-                <i class="bi {% if value == 'fornecedor' %}bi-truck{% else %}bi-shop{% endif %}" aria-hidden="true"></i>
-                {{ label }}
+              <input type="radio" id="perfil-{{ value }}" name="{{ form.tipo_perfil.html_name }}" value="{{ value }}"
+              
+              {% if form.tipo_perfil.value|stringformat:"s" == value|stringformat:"s" %}
+                checked
+              {% elif not form.tipo_perfil.value and value == 'fornecedor' %}checked{% endif %}>
+                <label for="perfil-{{ value }}">
+                  <i class="bi {% if value == 'fornecedor' %}bi-truck{% else %}bi-shop{% endif %}" aria-hidden="true"></i>
+                  {{ label }}
               </label>
             {% endif %}
           {% endfor %}
+
+
           <span class="auth-seg-slider" aria-hidden="true"></span>
         </div>
         {% if form.tipo_perfil.errors %}

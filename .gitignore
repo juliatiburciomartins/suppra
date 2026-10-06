@@ -27,3 +27,6 @@ staticfiles/
 .idea/
 .DS_Store
 *.log
+
+# Overrides locais de settings
+hub_fecc/local_settings.py

@@ -1,0 +1,53 @@
+/* Modal de confirmação reutilizável (ver static/js/confirmar.js) */
+.confirmar-modal {
+  position: fixed;
+  inset: 0;
+  margin: auto !important; /* centraliza mesmo com resets "* { margin: 0 }" */
+  height: fit-content;
+  width: calc(100% - 32px);
+  max-width: 420px;
+  padding: 28px 24px 24px;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(11, 26, 84, 0.28);
+  text-align: center;
+  font-family: inherit;
+}
+
+.confirmar-modal::backdrop {
+  background: rgba(15, 22, 58, 0.45);
+}
+
+.confirmar-modal p {
+  margin: 0 0 24px;
+  color: var(--color-navy);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.confirmar-modal div {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.confirmar-modal button {
+  flex: 1;
+  min-height: 46px;
+  border: 2px solid var(--color-blue);
+  border-radius: 26px;
+  background: #fff;
+  color: var(--color-blue);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.confirmar-modal .confirmar-sim {
+  background: var(--color-blue);
+  color: #fff;
+}
+
+.confirmar-modal button:hover {
+  filter: brightness(0.95);
+}
