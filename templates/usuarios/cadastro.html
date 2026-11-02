@@ -130,9 +130,9 @@
       {{ form.aceite_termos }}
       <span>
         Li e aceito os
-        <a href="#" class="auth-terms-link">Termos de Uso</a>
+        <a href="#" class="auth-terms-link" data-modal="modal-termos">Termos de Uso</a>
         e a
-        <a href="#" class="auth-terms-link">Política de Privacidade</a>
+        <a href="#" class="auth-terms-link" data-modal="modal-privacidade">Política de Privacidade</a>
       </span>
     </label>
  
@@ -171,5 +171,6 @@
 
 
 <script src="{% static 'js/cadastro_toggle.js' %}"></script>
+<script src="{% static 'js/termos.js' %}"></script>
 
 {% endblock %}

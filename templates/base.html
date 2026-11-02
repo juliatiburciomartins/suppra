@@ -7,6 +7,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="{% block meta_description %}suppra — conecta microempreendedores e fornecedores locais de Araras/SP: veja produtos e preços, publique demandas e negocie diretamente, sem intermediários.{% endblock %}" />
 
     <title>
       {% block title %}|suppra{% endblock %}
@@ -56,7 +57,7 @@
           <div class="footer-main">
 
             <div class="footer-brand">
-              <a href="{% url 'home' %}" class="footer-logo"></a>
+              <a href="{% url 'home' %}" class="footer-logo" aria-label="suppra - ir para a página inicial"></a>
 
               <p class="footer-description">
                 Conectando microempreendedores e fornecedores locais.
@@ -67,16 +68,26 @@
               <h2>Navegação</h2>
 
               <a href="{% url 'home' %}">Início</a>
-              <a href="#">Fornecedores</a>
-              <a href="#">Demandas</a>
+              {% url 'listar_fornecedores' as url_fornecedores %}
+              {% url 'listar_demandas' as url_demandas %}
+              <a href="{{ url_fornecedores|default:'#' }}">Fornecedores</a>
+              <a href="{{ url_demandas|default:'#' }}">Demandas</a>
               <a href="{% url 'faq' %}">FAQ</a>
             </nav>
 
             <nav class="footer-column" aria-label="Suporte do rodapé">
               <h2>Suporte</h2>
 
-              <a href="#">Central de Ajuda</a>
-              <a href="#">Fale Conosco</a>
+              {% url 'suporte' as url_suporte %}
+              <a href="{{ url_suporte|default:'#' }}">Central de Ajuda</a>
+              <a href="{% url 'faq' %}">Fale Conosco</a>
+            </nav>
+
+            <nav class="footer-column" aria-label="Termos legais">
+              <h2>Legal</h2>
+
+              <a href="{% url 'termos_uso' %}">Termos de Uso</a>
+              <a href="{% url 'politica_privacidade' %}">Política de Privacidade</a>
             </nav>
 
           </div>

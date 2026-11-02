@@ -1,11 +1,22 @@
 from django.urls import path
 
-# from avaliacoes import views  # descomentar conforme as views forem implementadas
+from avaliacoes import views
 
-# Ainda sem views neste app -- urlpatterns vazio de propósito, só para o
-# include() em hub_fecc/urls.py não quebrar. Os links do menu que apontam
-# para cá (ver templates/menus/menus.html) usam o padrão
-# "{% url 'x' as url_x %} ... {{ url_x|default:'#' }}" para não estourar
-# NoReverseMatch enquanto as URLs abaixo não existem de verdade.
+
 urlpatterns = [
+    # CU09 — Registrar/editar avaliação de um fornecedor (RF-018)
+    path(
+        "fornecedores/<int:fornecedor_id>/avaliar/",
+        views.avaliar_fornecedor,
+        name="avaliar_fornecedor",
+    ),
+
+    # CU08 — Favoritos (RF-028, RF-029, RF-030)
+    path("favoritos/", views.lista_favoritos, name="lista_favoritos"),
+    path("favoritos/alternar/", views.alternar_favorito, name="alternar_favorito"),
+    path(
+        "favoritos/<int:fornecedor_id>/remover/",
+        views.remover_favorito,
+        name="remover_favorito",
+    ),
 ]

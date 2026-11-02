@@ -1,11 +1,11 @@
 from django.urls import path
 
-# from suporte import views  # descomentar conforme as views forem implementadas
+from suporte import views
 
-# Ainda sem views neste app -- urlpatterns vazio de propósito, só para o
-# include() em hub_fecc/urls.py não quebrar. Os links do menu que apontam
-# para cá (ver templates/menus/menus.html) usam o padrão
-# "{% url 'x' as url_x %} ... {{ url_x|default:'#' }}" para não estourar
-# NoReverseMatch enquanto as URLs abaixo não existem de verdade.
+
 urlpatterns = [
+    # RF-019 / CU19 — abrir chamado no canal de suporte interno
+    path("suporte/", views.suporte_view, name="suporte"),
+    # Pós-condição do CU19: acompanhar o andamento pelo canal indicado
+    path("suporte/chamados/", views.meus_chamados_view, name="meus_chamados"),
 ]

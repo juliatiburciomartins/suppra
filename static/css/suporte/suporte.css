@@ -1,0 +1,430 @@
+/* ==========================================================================
+   SUPORTE INTERNO (RF-019 / CU19) - abertura de chamado e acompanhamento
+   ========================================================================== */
+
+.suporte-page {
+  padding: 40px 16px 64px;
+}
+
+/* Layout: formulario + coluna de orientacoes --------------------------- */
+
+.suporte-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+  align-items: start;
+}
+
+.suporte-form-card {
+  padding: 30px 32px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.suporte-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.suporte-card__icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(45, 108, 247, 0.1);
+  color: var(--color-blue);
+  font-size: 1.3rem;
+}
+
+.suporte-card__titulo {
+  margin: 0 0 4px;
+  color: var(--color-navy);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.suporte-card__subtitulo {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+/* Formulario ------------------------------------------------------------- */
+
+.suporte-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.suporte-form .form-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-navy);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.suporte-obrigatorio {
+  color: var(--color-danger);
+}
+
+.suporte-form input[type="text"],
+.suporte-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.suporte-form input[type="text"]:focus,
+.suporte-form textarea:focus {
+  border-color: var(--color-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 108, 247, 0.15);
+}
+
+.suporte-form textarea {
+  resize: vertical;
+}
+
+.suporte-form input[type="file"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-small);
+  background: #f6f8ff;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.suporte-form input[type="file"]:hover,
+.suporte-form input[type="file"]:focus {
+  border-color: var(--color-blue);
+  background: rgba(45, 108, 247, 0.06);
+}
+
+.suporte-ajuda {
+  margin: 8px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.suporte-erro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0;
+  color: var(--color-danger);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.suporte-form__acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Coluna de orientacoes --------------------------------------------------- */
+
+.suporte-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.suporte-aside__card {
+  padding: 20px 22px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+}
+
+.suporte-aside__card--destaque {
+  background: #f6f8ff;
+  border-color: rgba(45, 108, 247, 0.25);
+}
+
+.suporte-aside__titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: var(--color-navy);
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.suporte-aside__titulo i {
+  color: var(--color-blue);
+}
+
+.suporte-aside__lista {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+
+.suporte-aside__lista a,
+.suporte-aside__texto a {
+  color: var(--color-blue);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.suporte-aside__texto {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+
+/* ==========================================================================
+   MEUS CHAMADOS - acompanhamento (pos-condicao do CU19)
+   ========================================================================== */
+
+.suporte-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.suporte-title {
+  margin: 0 0 6px;
+  color: var(--color-navy);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.suporte-subtitle {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+.chamado-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chamado-item {
+  padding: 22px 24px;
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-blue);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.chamado-item--em_atendimento {
+  border-left-color: var(--color-gold);
+}
+
+.chamado-item--encerrado {
+  border-left-color: var(--color-border);
+  background: #f9fafc;
+}
+
+.chamado-item__topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.chamado-item__assunto {
+  margin: 0;
+  color: var(--color-navy);
+  font-size: 1.08rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.chamado-status {
+  flex-shrink: 0;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.chamado-status--aberto {
+  background: rgba(45, 108, 247, 0.12);
+  color: var(--color-blue-dark);
+}
+
+.chamado-status--em_atendimento {
+  background: #fdf5d8;
+  color: #7a6410;
+}
+
+.chamado-status--encerrado {
+  background: var(--color-success-background);
+  color: var(--color-success);
+}
+
+.chamado-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0 0 12px;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.chamado-item__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chamado-item__descricao {
+  margin: 0 0 12px;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.chamado-item__evidencia {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-blue);
+  font-size: 0.84rem;
+  font-weight: 650;
+  text-decoration: underline;
+}
+
+.chamado-item__nota {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-success);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* Estado vazio ------------------------------------------------------------ */
+
+.suporte-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 440px;
+  margin: 48px auto;
+  padding: 48px 32px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.suporte-vazio__icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 6px;
+  border-radius: 50%;
+  background: rgba(45, 108, 247, 0.1);
+  color: var(--color-blue);
+  font-size: 1.6rem;
+}
+
+.suporte-vazio h2 {
+  margin: 0;
+  color: var(--color-navy);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.suporte-vazio p {
+  margin: 0 0 12px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* ==========================================================================
+   RESPONSIVO (RNF-001)
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .suporte-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .suporte-page {
+    padding: 24px 12px 48px;
+  }
+
+  .suporte-form-card {
+    padding: 22px 18px;
+  }
+
+  .suporte-card__titulo {
+    font-size: 1.2rem;
+  }
+
+  .suporte-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .suporte-form__acoes {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .suporte-form__acoes .btn-ghost,
+  .suporte-form__acoes .btn-primary {
+    width: 100%;
+  }
+
+  .chamado-item__topo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

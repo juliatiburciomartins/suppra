@@ -1,7 +1,7 @@
-:root {
-  --supplier-blue: #168bea;
+﻿:root {
+  --supplier-blue: #0a6fbe;
   --supplier-dark-blue: #14568f;
-  --supplier-muted: #829db7;
+  --supplier-muted: #5b7186;
   --supplier-border: #e2edf5;
   --supplier-shadow: 0 8px 24px rgba(63, 117, 163, 0.08);
 }
@@ -141,7 +141,7 @@
 .supplier-stat em {
   display: block;
   overflow-wrap: anywhere;
-  color: #91a8bd;
+  color: #5b7186;
   font-size: 0.72rem;
   font-style: normal;
   line-height: 1.4;
@@ -267,7 +267,7 @@
   display: block;
   margin-top: 7px;
   overflow-wrap: anywhere;
-  color: #7898b1;
+  color: #556f88;
   font-size: 0.72rem;
   line-height: 1.45;
 }
@@ -338,7 +338,7 @@
   flex-direction: column;
 }
 
-.supplier-profile__field small { color: #829db7; font-size: 0.74rem; }
+.supplier-profile__field small { color: #5b7186; font-size: 0.74rem; }
 .supplier-profile__field strong { margin-top: 3px; overflow-wrap: anywhere; color: #1d5a92; font-size: 0.82rem; line-height: 1.35; }
 
 .supplier-edit-link {
@@ -399,7 +399,7 @@
 }
 
 .supplier-portfolio-item__categoria {
-  color: #7898b1;
+  color: #556f88;
 }
 
 .supplier-portfolio-item__preco {

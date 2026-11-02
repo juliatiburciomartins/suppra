@@ -1,0 +1,47 @@
+/* ==========================================================================
+   LISTA DE FAVORITOS (RF-028 / CU-08 A1)
+   Complementa css/portfolio/fornecedores.css, que traz o grid de cards.
+   ========================================================================== */
+
+.favoritos-categorias {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 14px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface);
+}
+
+.favoritos-categorias__rotulo {
+  color: var(--color-navy);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.favorito-categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.favorito-categorias .categoria-chip {
+  min-height: 30px;
+  padding: 0 12px;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 640px) {
+  .favoritos-categorias {
+    padding: 12px 14px;
+  }
+
+  .favoritos-categorias__rotulo {
+    width: 100%;
+  }
+}

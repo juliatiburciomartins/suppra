@@ -1,0 +1,339 @@
+/* ==========================================================================
+   MEU PLANO - assinatura ativa do fornecedor (RF-022 / CU-13 A1)
+   ========================================================================== */
+
+.meu-plano-page {
+  padding: 32px 16px 64px;
+  max-width: 880px;
+}
+
+.meu-plano__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  color: var(--color-blue);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.meu-plano__voltar:hover,
+.meu-plano__voltar:focus-visible {
+  color: var(--color-blue-dark);
+  text-decoration: underline;
+}
+
+/* Cartao principal -------------------------------------------------------- */
+
+.plano-cartao {
+  position: relative;
+  overflow: hidden;
+  padding: 30px 32px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Faixa de nivel: o mesmo dourado/prateado dos cards de plano. */
+.plano-cartao::before {
+  display: block;
+  height: 5px;
+  margin: -30px -32px 24px;
+  content: "";
+}
+
+.plano-cartao--gold::before {
+  background: linear-gradient(90deg, #eed16b, #d9b93f);
+}
+
+.plano-cartao--silver::before {
+  background: linear-gradient(90deg, #d7dae4, #a9aec0);
+}
+
+.plano-cartao--free::before {
+  background: linear-gradient(90deg, #eef1f8, #d7dae4);
+}
+
+.plano-cartao__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.plano-cartao__rotulo {
+  margin: 0 0 4px;
+  color: var(--color-text-muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.plano-cartao__titulo {
+  margin: 0;
+  color: var(--color-navy);
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.plano-cartao__descricao {
+  margin: 0 0 24px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* Status da assinatura (RF-022) ------------------------------------------ */
+
+.plano-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.plano-status--ativa {
+  background: var(--color-success-background);
+  color: var(--color-success);
+}
+
+.plano-status--cancelada {
+  background: #ececf1;
+  color: #565b6b;
+}
+
+.plano-status--suspensa {
+  background: var(--color-danger-background);
+  color: var(--color-danger);
+}
+
+.plano-status--expirada {
+  background: #ececf1;
+  color: #565b6b;
+}
+
+/* Dados do plano ---------------------------------------------------------- */
+
+.plano-dados {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  padding-top: 22px;
+  border-top: 1px solid var(--color-border);
+}
+
+.plano-dado {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: #f6f8ff;
+}
+
+.plano-dado__icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(45, 108, 247, 0.1);
+  color: var(--color-blue);
+  font-size: 1rem;
+}
+
+.plano-dado__texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.plano-dado__texto small {
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.plano-dado__texto strong {
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* Aviso de cancelamento (CU13 A1) ---------------------------------------- */
+
+.plano-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 20px 0 0;
+  padding: 14px 18px;
+  border-radius: var(--radius-small);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.plano-aviso--cancelado {
+  background: #ececf1;
+  color: #565b6b;
+}
+
+/* Acoes ------------------------------------------------------------------- */
+
+.plano-cartao__acoes {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--color-border);
+}
+
+.plano-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-navy);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease,
+    color 0.18s ease, transform 0.18s ease;
+}
+
+.plano-btn:hover,
+.plano-btn:focus-visible {
+  border-color: var(--color-blue);
+  background: rgba(45, 108, 247, 0.08);
+  color: var(--color-blue-dark);
+  transform: translateY(-1px);
+}
+
+.plano-btn--primary {
+  border-color: transparent;
+  background: var(--color-blue);
+  color: var(--color-surface);
+}
+
+.plano-btn--primary:hover,
+.plano-btn--primary:focus-visible {
+  background: var(--color-blue-dark);
+  color: var(--color-surface);
+}
+
+.plano-btn--danger {
+  border-color: transparent;
+  background: var(--color-danger-background);
+  color: var(--color-danger);
+}
+
+.plano-btn--danger:hover,
+.plano-btn--danger:focus-visible {
+  background: #ffdcd3;
+  color: var(--color-danger);
+}
+
+/* Historico --------------------------------------------------------------- */
+
+.plano-historico {
+  margin-top: 32px;
+}
+
+.plano-historico__titulo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-border);
+  color: var(--color-navy);
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.plano-historico__titulo i {
+  color: var(--color-blue);
+}
+
+.plano-historico__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plano-historico__lista li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: var(--color-surface);
+}
+
+.plano-historico__plano {
+  color: var(--color-text);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.plano-historico__periodo {
+  flex: 1;
+  color: var(--color-text-muted);
+  font-size: 0.84rem;
+}
+
+/* ==========================================================================
+   RESPONSIVO (RNF-001)
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .meu-plano-page {
+    padding: 20px 12px 48px;
+  }
+
+  .plano-cartao {
+    padding: 22px 18px;
+  }
+
+  .plano-cartao::before {
+    margin: -22px -18px 20px;
+  }
+
+  .plano-cartao__titulo {
+    font-size: 1.35rem;
+  }
+
+  .plano-cartao__acoes {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .plano-cartao__acoes .plano-btn {
+    width: 100%;
+  }
+}

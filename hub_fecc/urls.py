@@ -14,6 +14,9 @@ urlpatterns = [
     # (ex: {% url 'login' %}, {% url 'home' %}), então todos vivem no namespace global.
     path("", include("core.urls")),
     path("", include("usuarios.urls")),
+    # Painel da equipe gestora (RF-017 / CU20 a CU24): indicadores (CU24),
+    # log de auditoria (CU21) e fila de avaliações (CU22 A1).
+    path("", include("core.admin_urls")),
     path("", include("portfolio.urls")),
     path("", include("demandas.urls")),
     path("", include("avaliacoes.urls")),

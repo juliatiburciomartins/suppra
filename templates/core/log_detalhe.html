@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+CU21 — Detalhe de um registro do log de auditoria (RF-024).
+
+"O sistema exibe o histórico de alterações registradas, contendo: data e hora,
+usuário responsável, modelo afetado e conteúdo anterior à alteração."
+
+Somente leitura: a pós-condição do CU21 é "nenhuma alteração é realizada no log
+durante a consulta".
+{% endcomment %}
+
+{% block title %}Registro #{{ registro.id_log }} | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/core/painel_admin.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container painel-page">
+
+  <a href="{% url 'log_auditoria' %}" class="log-detalhe__voltar">
+    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+    Voltar ao log
+  </a>
+
+  <article class="log-detalhe">
+
+    <header class="log-detalhe__header">
+      <div>
+        <h1 class="log-detalhe__titulo">Registro #{{ registro.id_log }}</h1>
+        <p class="log-detalhe__subtitulo">
+          {{ registro.data_alteracao|date:"d/m/Y \à\s H:i:s" }}
+        </p>
+      </div>
+
+      <span class="log-acao log-acao--{{ registro.acao|lower }}">
+        {{ registro.get_acao_display }}
+      </span>
+    </header>
+
+    <dl class="log-detalhe__campos">
+      <div>
+        <dt>Usuário responsável</dt>
+        <dd>{{ registro.id_usuario.nome }}</dd>
+      </div>
+
+      <div>
+        <dt>Modelo afetado</dt>
+        <dd>{{ registro.modelo_afetado }}</dd>
+      </div>
+
+      <div>
+        <dt>Registro afetado</dt>
+        <dd>#{{ registro.id_registro_afetado }}</dd>
+      </div>
+
+      <div>
+        <dt>Data e hora da alteração</dt>
+        <dd>{{ registro.data_alteracao|date:"d/m/Y \à\s H:i:s" }}</dd>
+      </div>
+    </dl>
+
+    <h2 class="log-detalhe__secao-titulo">Conteúdo anterior à alteração</h2>
+
+    {% if registro.conteudo_anterior %}
+      <pre class="log-detalhe__conteudo">{{ registro.conteudo_anterior }}</pre>
+    {% else %}
+      <p class="log-detalhe__vazio">
+        Este registro não guarda conteúdo anterior (por exemplo, é uma inclusão,
+        em que não havia valor anterior).
+      </p>
+    {% endif %}
+
+  </article>
+
+</div>
+{% endblock %}

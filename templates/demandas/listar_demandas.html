@@ -1,1 +1,171 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+RF-011 / CU11 — Demandas publicadas por comerciantes, agrupadas por categoria de
+insumo. Também é a listagem pública do CU04 / RF-027.
+
+Cada demanda mostra, conforme o RF-011: nome do comerciante, categoria do
+insumo solicitado, descrição do produto desejado, quantidade demandada e data
+de publicação. O dado de contato do comerciante só aparece para usuário
+autenticado (RF-012) — no detalhe da demanda.
+{% endcomment %}
+
+{% block title %}Demandas | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/portfolio/fornecedores.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/demandas/listar_demandas.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container fornecedores-page">
+
+  <header class="fornecedores-header">
+    <div>
+      <h1 class="fornecedores-title">Demandas</h1>
+      <p class="fornecedores-subtitle">
+        {% if user.is_authenticated and is_fornecedor %}
+          Browse as necessidades de insumos dos comerciantes da sua região.
+        {% elif user.is_authenticated and is_comerciante %}
+          Veja o que os colegas estão procurando e publique as suas demandas.
+        {% else %}
+          Confira as demandas de insumos publicadas pelos comerciantes.
+        {% endif %}
+      </p>
+    </div>
+
+    {% comment %} Ação principal (RNF-010). {% endcomment %}
+    {% if is_comerciante %}
+      <a href="{% url 'publicar_demanda' %}" class="btn-primary">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        Publicar Demanda
+      </a>
+    {% elif not user.is_authenticated %}
+      <a href="{% url 'cadastro' %}" class="btn-primary">Criar Conta</a>
+    {% endif %}
+  </header>
+
+  {% comment %} Busca e filtro por categoria (RF-013 / CU11). {% endcomment %}
+  <form method="GET" class="fornecedores-filters" role="search">
+    <div class="filter-field">
+      <label for="filtro-busca">Buscar produto ou comerciante</label>
+      <input
+        type="search"
+        id="filtro-busca"
+        name="busca"
+        value="{{ busca }}"
+        placeholder="Ex.: cerveja, descartáveis, padaria do Ze"
+      >
+    </div>
+
+    <div class="filter-field">
+      <label for="filtro-categoria">Categoria de insumo</label>
+      <select id="filtro-categoria" name="categoria">
+        <option value="">Todas as categorias</option>
+        {% for categoria in categorias %}
+          <option value="{{ categoria.id_categoria }}"
+                  {% if categoria_selecionada and categoria.id_categoria == categoria_selecionada.id_categoria %}selected{% endif %}>
+            {{ categoria.nome }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="filter-submit">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      Filtrar
+    </button>
+  </form>
+
+  {% if grupos %}
+
+    {% for categoria, demandas_do_grupo in grupos %}
+
+      <section class="demandas-grupo" aria-labelledby="grupo-{{ categoria.id_categoria }}">
+
+        <h2 class="demandas-grupo__titulo" id="grupo-{{ categoria.id_categoria }}">
+          <i class="bi bi-tag" aria-hidden="true"></i>
+          {{ categoria.nome }}
+          <span class="demandas-grupo__contagem">
+            {{ demandas_do_grupo|length }}
+            {% if demandas_do_grupo|length == 1 %}demanda{% else %}demandas{% endif %}
+          </span>
+        </h2>
+
+        <div class="demand-grid">
+          {% for demanda in demandas_do_grupo %}
+
+            <article class="demand-card">
+
+              <div class="demand-card-top">
+                <div class="demand-card-heading">
+                  <h3 class="demand-title">{{ demanda.descricao_produto }}</h3>
+                  <span class="demand-category">
+                    <i class="bi bi-shop" aria-hidden="true"></i>
+                    {{ demanda.id_comerciante.nome }}
+                  </span>
+                </div>
+
+                <span class="demand-status demand-status--publicada">
+                  {{ demanda.get_status_display }}
+                </span>
+              </div>
+
+              <div class="demand-card-meta">
+                <span>
+                  <i class="bi bi-box-seam" aria-hidden="true"></i>
+                  {{ demanda.quantidade_produto }}
+                </span>
+                <span>
+                  <i class="bi bi-calendar3" aria-hidden="true"></i>
+                  {{ demanda.data_publicacao|date:"d/m/Y" }}
+                </span>
+              </div>
+
+              <div class="demand-card-footer">
+                <a href="{% url 'detalhes_demanda' demanda.pk %}" class="demand-action">
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                  Ver Demanda
+                </a>
+              </div>
+
+            </article>
+
+          {% endfor %}
+        </div>
+
+      </section>
+
+    {% endfor %}
+
+  {% else %}
+
+    {% comment %} CU11 E1: nenhuma demanda para o filtro/grupo aplicado. {% endcomment %}
+    <section class="busca-vazia">
+      <span class="busca-vazia__icone" aria-hidden="true">
+        <i class="bi bi-inbox"></i>
+      </span>
+
+      <h2>Nenhuma demanda encontrada</h2>
+
+      <p>
+        Não há resultados para o filtro aplicado. Tente ampliar a busca
+        {% if categoria_selecionada %} removendo o filtro de categoria{% endif %}
+        {% if busca %} ou buscando por outro termo{% endif %}.
+      </p>
+
+      {% if is_comerciante %}
+        <a href="{% url 'publicar_demanda' %}" class="btn-primary">
+          <i class="bi bi-plus-lg" aria-hidden="true"></i>
+          Publicar minha demanda
+        </a>
+      {% else %}
+        <a href="{% url 'listar_demandas' %}" class="btn-primary">Ver todas as demandas</a>
+      {% endif %}
+    </section>
+
+  {% endif %}
+
+</div>
+{% endblock %}

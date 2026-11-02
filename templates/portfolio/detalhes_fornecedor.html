@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+CU05 — portfólio do fornecedor visto por comerciante autenticado (com dados de
+contato, RF-012) e CU04 — mesma página vista por visitante (sem contato, com o
+aviso de cadastro obrigatório, RF-027).
+
+- RF-010: produtos com nome, categoria de insumo e preço unitário + nota média.
+- RF-018: avaliação em estrelas + formulário de avaliação (comerciante).
+- RF-029/RF-030: favoritar / desfavoritar.
+- RF-012: canais de contato direto.
+{% endcomment %}
+
+{% block title %}{{ fornecedor.nome }} | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/componentes/estrelas.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/portfolio/fornecedores.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/demandas/listar_demandas.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container fornecedor-detalhe">
+
+  <a href="{% url 'listar_fornecedores' %}" class="fornecedor-detalhe__voltar">
+    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+    Voltar para fornecedores
+  </a>
+
+  <header class="fornecedor-detalhe__cabecalho">
+
+    <div class="fornecedor-detalhe__titulo">
+      <span class="fornecedor-avatar" aria-hidden="true">
+        <i class="bi bi-shop"></i>
+      </span>
+
+      <div>
+        <h1>{{ fornecedor.nome }}</h1>
+
+        <p class="fornecedor-detalhe__doc">
+          {{ fornecedor.cpf_cnpj }}
+          {% if plano %}
+            &nbsp;&middot;&nbsp;
+            <span class="plan-badge plan-badge--{% if 'gold' in plano.nome_plano|lower %}gold{% else %}silver{% endif %}">
+              <i class="bi bi-award-fill" aria-hidden="true"></i>
+              {{ plano.nome_plano }}
+            </span>
+          {% endif %}
+        </p>
+
+        <div style="margin-top:8px;">
+          {% include "componentes/estrelas.html" with media=media percentagem=percentagem total=total_avaliacoes %}
+        </div>
+      </div>
+    </div>
+
+    {% comment %}
+      Ações interativas (RF-018 / RF-029 / RF-030): só para comerciante
+      autenticado, e nunca para o próprio fornecedor.
+    {% endcomment %}
+    {% if pode_favoritar or pode_avaliar %}
+      <div class="fornecedor-detalhe__acoes">
+
+        {% if pode_favoritar %}
+          <form method="POST" action="{% url 'alternar_favorito' %}">
+            {% csrf_token %}
+            <input type="hidden" name="fornecedor_id" value="{{ fornecedor.pk }}">
+
+            <button
+              type="submit"
+              class="favoritar-btn{% if favoritado %} favoritar-btn--ativo{% endif %}"
+              aria-pressed="{% if favoritado %}true{% else %}false{% endif %}"
+            >
+              <i class="bi bi-star-fill" aria-hidden="true"></i>
+              {% if favoritado %}
+                Favoritado
+              {% else %}
+                Favoritar
+              {% endif %}
+            </button>
+          </form>
+        {% endif %}
+
+        {% if pode_avaliar %}
+          <a href="{% url 'avaliar_fornecedor' fornecedor.pk %}" class="btn-primary">
+            <i class="bi bi-star" aria-hidden="true"></i>
+            {% if minha_avaliacao %}Editar avaliação{% else %}Avaliar fornecedor{% endif %}
+          </a>
+        {% endif %}
+
+      </div>
+    {% endif %}
+
+  </header>
+
+  {% comment %} ---------------- RF-012: canais de contato ---------------- {% endcomment %}
+  {% if pode_ver_contato %}
+
+    {% if canais %}
+      <section class="contato-box" aria-labelledby="contato-titulo">
+        <h2 class="contato-box__titulo" id="contato-titulo">
+          <i class="bi bi-chat-dots-fill" aria-hidden="true"></i>
+          Entrar em Contato
+        </h2>
+
+        <p class="contato-box__nota">
+          Escolha o canal de sua preferência e negocie diretamente com
+          <strong>{{ fornecedor.nome }}</strong>. O suppra não intermediou
+          pagamentos nem contratos (RNF-008).
+        </p>
+
+        <div class="contato-canais">
+          {% for canal in canais %}
+            <a href="{{ canal.url }}" class="contato-canal">
+              <span class="contato-canal__icone" aria-hidden="true">
+                <i class="bi {{ canal.icone }}"></i>
+              </span>
+
+              <span class="contato-canal__texto">
+                <span class="contato-canal__rotulo">{{ canal.rotulo }}</span>
+                <span class="contato-canal__valor">{{ canal.valor }}</span>
+              </span>
+            </a>
+          {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+
+  {% else %}
+
+    {% comment %} RF-027 / CU04 passo 5: dados de contato só para autenticados. {% endcomment %}
+    <p class="acesso-requerido" style="margin-bottom:24px;">
+      <i class="bi bi-lock-fill" aria-hidden="true"></i>
+      <span>
+        Os dados de contato e as funcionalidades interativas estão disponíveis
+        apenas para usuários autenticados.
+        <a href="{% url 'login' %}?next={{ request.path|urlencode }}">Entrar</a>
+        ou
+        <a href="{% url 'cadastro' %}">criar conta</a>.
+      </span>
+    </p>
+
+  {% endif %}
+
+  {% comment %} ---------------- Produtos ofertados (RF-010) ---------------- {% endcomment %}
+  <table class="produtos-tabela">
+    <caption>
+      Produtos e serviços ofertados
+      {% if total_produtos == 1 %}(1 item){% else %}({{ total_produtos }} itens){% endif %}
+    </caption>
+
+    <thead>
+      <tr>
+        <th scope="col">Produto / Serviço</th>
+        <th scope="col" class="produtos-tabela__col-categoria">Categoria de insumo</th>
+        <th scope="col">Preço unitário</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for produto in produtos %}
+        <tr>
+          <td class="produtos-tabela__nome">{{ produto.nome }}</td>
+          <td class="produtos-tabela__categoria">{{ produto.id_categoria.nome }}</td>
+          <td class="produtos-tabela__preco">R$ {{ produto.preco }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">
+            Este fornecedor ainda não cadastrou produtos ativos.
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% comment %} ---------------- Avaliações recebidas (RF-018) ---------------- {% endcomment %}
+  <section class="avaliacoes-box" aria-labelledby="avaliacoes-titulo">
+
+    <div class="avaliacoes-box__cabecalho">
+      <h2 class="avaliacoes-box__titulo" id="avaliacoes-titulo">
+        Avaliações de comerciantes
+      </h2>
+
+      {% if media %}
+        {% include "componentes/estrelas.html" with media=media percentagem=percentagem total=total_avaliacoes %}
+      {% endif %}
+    </div>
+
+    {% for avaliacao in avaliacoes %}
+      {% if avaliacao.status_moderacao == "ativa" or avaliacao.id_comerciante_id == user.pk %}
+
+        <div class="avaliacao-item{% if avaliacao.status_moderacao == "removida" %} avaliacao-item--removida{% endif %}">
+
+          <div class="avaliacao-item__topo">
+            <span>
+              <span class="avaliacao-item__autor">{{ avaliacao.id_comerciante.nome }}</span>
+
+              {% if avaliacao.status_moderacao == "removida" %}
+                <span class="avaliacao-item__removida-tag">
+                  <i class="bi bi-eye-slash-fill" aria-hidden="true"></i>
+                  Removida pela moderação
+                </span>
+              {% endif %}
+            </span>
+
+            <span>
+              {% include "componentes/estrelas.html" with media=avaliacao.nota percentagem=avaliacao.nota_percent total=1 %}
+            </span>
+          </div>
+
+          {% if avaliacao.comentario %}
+            <p class="avaliacao-item__comentario">{{ avaliacao.comentario }}</p>
+          {% endif %}
+
+          <span class="avaliacao-item__data">
+            {{ avaliacao.data_avaliacao|date:"d/m/Y" }}
+          </span>
+
+        </div>
+
+      {% endif %}
+    {% empty %}
+      <p class="contato-box__nota" style="margin:0;">
+        Este fornecedor ainda não recebeu avaliações.
+      </p>
+    {% endfor %}
+
+  </section>
+
+{% comment %}
+    RF-025 / CU14 (CU05 fluxo alternativo A1): botão de denúncia em CADA
+    portfólio. Não aparece para o próprio fornecedor nem para visitantes.
+  {% endcomment %}
+  {% if user.is_authenticated and user.pk != fornecedor.pk %}
+    <form method="POST" action="{% url 'denunciar' %}">
+      {% csrf_token %}
+      <input type="hidden" name="tipo_conteudo" value="portfolio">
+      <input type="hidden" name="id_fornecedor" value="{{ fornecedor.pk }}">
+      <input type="hidden" name="next" value="{{ request.path }}">
+
+      <button type="submit" class="denunciar-btn">
+        <i class="bi bi-flag-fill" aria-hidden="true"></i>
+        Denunciar Conteúdo
+      </button>
+    </form>
+  {% endif %}
+
+</div>
+{% endblock %}

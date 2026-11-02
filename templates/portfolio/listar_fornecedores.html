@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+CU04 (visitante) / CU05 (comerciante) / CU06 (busca e filtro por categoria).
+- RF-010: nome do fornecedor, lista de produtos com nome, categoria e preço, e
+  a avaliação média em estrelas.
+- RF-013: busca textual + filtro por categoria de insumo.
+- RF-027: público sem cadastro; o aviso de acesso aparece no card.
+{% endcomment %}
+
+{% block title %}Fornecedores | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/componentes/estrelas.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/portfolio/fornecedores.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container fornecedores-page">
+
+  <header class="fornecedores-header">
+    <div>
+      <h1 class="fornecedores-title">Fornecedores</h1>
+      <p class="fornecedores-subtitle">
+        {% if user.is_authenticated %}
+          Compare ofertas, Avalie e entre em contato direto com o fornecedor.
+        {% else %}
+          Veja produtos e preços ofertados pelos fornecedores da plataforma.
+        {% endif %}
+      </p>
+    </div>
+
+    {% if not user.is_authenticated %}
+      <a href="{% url 'cadastro' %}" class="btn-primary">Criar Conta</a>
+    {% endif %}
+  </header>
+
+  {% comment %} Busca e filtro (RF-013 / CU06). Method GET para o filtro sobreviver ao F5. {% endcomment %}
+  <form method="GET" class="fornecedores-filters" role="search">
+    <div class="filter-field">
+      <label for="filtro-busca">Buscar produto ou fornecedor</label>
+      <input
+        type="search"
+        id="filtro-busca"
+        name="busca"
+        value="{{ busca }}"
+        placeholder="Ex.: refrigerante, laticínios, distribuidora"
+      >
+    </div>
+
+    <div class="filter-field">
+      <label for="filtro-categoria">Categoria de insumo</label>
+      <select id="filtro-categoria" name="categoria">
+        <option value="">Todas as categorias</option>
+        {% for categoria in categorias %}
+          <option value="{{ categoria.id_categoria }}"
+                  {% if categoria_selecionada and categoria.id_categoria == categoria_selecionada.id_categoria %}selected{% endif %}>
+            {{ categoria.nome }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="filter-submit">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      Filtrar
+    </button>
+  </form>
+
+  {% if categorias %}
+    <nav class="categoria-chips" aria-label="Filtrar por categoria de insumo">
+      <a
+        href="{% url 'listar_fornecedores' %}{% if busca %}?busca={{ busca|urlencode }}{% endif %}"
+        class="categoria-chip{% if not categoria_selecionada %} categoria-chip--ativa{% endif %}"
+      >
+        Todas
+      </a>
+
+      {% for categoria in categorias %}
+        <a
+          href="?categoria={{ categoria.id_categoria }}{% if busca %}&amp;busca={{ busca|urlencode }}{% endif %}"
+          class="categoria-chip{% if categoria_selecionada and categoria.id_categoria == categoria_selecionada.id_categoria %} categoria-chip--ativa{% endif %}"
+          {% if categoria_selecionada and categoria.id_categoria == categoria_selecionada.id_categoria %}aria-current="true"{% endif %}
+        >
+          <i class="bi bi-tag" aria-hidden="true"></i>
+          {{ categoria.nome }}
+        </a>
+      {% endfor %}
+    </nav>
+  {% endif %}
+
+  {% if fornecedores %}
+
+    <div class="fornecedores-grid">
+      {% for fornecedor in fornecedores %}
+
+        <article class="fornecedor-card">
+
+          <div class="fornecedor-card__top">
+            <div class="fornecedor-card__identidade">
+              <span class="fornecedor-avatar" aria-hidden="true">
+                <i class="bi bi-shop"></i>
+              </span>
+
+              <div>
+                <h2 class="fornecedor-card__nome">{{ fornecedor.nome }}</h2>
+                <p class="fornecedor-card__doc">{{ fornecedor.cpf_cnpj }}</p>
+              </div>
+            </div>
+
+            <span class="fornecedor-avatar" style="width:34px;height:34px;font-size:1rem;"
+                  title="Nota média das avaliações">
+              <i class="bi bi-shop-window" aria-hidden="true"></i>
+            </span>
+          </div>
+
+          <div class="fornecedor-card__stats">
+            {% include "componentes/estrelas.html" with media=fornecedor.nota_media percentagem=fornecedor.nota_percent total=fornecedor.total_avaliacoes %}
+
+            <span class="fornecedor-card__produtos-count">
+              <i class="bi bi-box-seam" aria-hidden="true"></i>
+              {{ fornecedor.total_produtos }}
+              {% if fornecedor.total_produtos == 1 %}produto{% else %}produtos{% endif %}
+            </span>
+          </div>
+
+          {% comment %} Amostra dos produtos ativos: nome, categoria e preço (RF-010). {% endcomment %}
+          <ul class="fornecedor-card__amostra">
+            {% for produto in fornecedor.produtos_ativos_cache|slice:":3" %}
+              <li>
+                <span class="fornecedor-card__amostra-nome">{{ produto.nome }}</span>
+                <span class="fornecedor-card__amostra-preco">R$ {{ produto.preco }}</span>
+              </li>
+            {% empty %}
+              <li>
+                <span class="fornecedor-card__mais">Nenhum produto ativo no momento.</span>
+              </li>
+            {% endfor %}
+          </ul>
+
+          {% if fornecedor.total_produtos > 3 %}
+            <p class="fornecedor-card__mais">
+              + {{ fornecedor.total_produtos|add:"-3" }}
+              {% if fornecedor.total_produtos > 4 %}outros produtos{% else %}outro produto{% endif %}
+            </p>
+          {% endif %}
+
+          {% comment %}
+            RF-027 / CU04: o visitante vê o aviso de que contato e funções
+            interativas exigem cadastro. Autenticado não vê nada aqui — tem os
+            canais de contato na página do fornecedor (RF-012).
+          {% endcomment %}
+          {% if not user.is_authenticated %}
+            <p class="acesso-requerido">
+              <i class="bi bi-lock-fill" aria-hidden="true"></i>
+              <span>
+                Dados de contato disponíveis para usuários cadastrados.
+                <a href="{% url 'login' %}?next={{ request.path|urlencode }}">Entrar</a>
+                ou
+                <a href="{% url 'cadastro' %}">criar conta</a>.
+              </span>
+            </p>
+          {% endif %}
+
+          <div class="fornecedor-card__footer">
+            <a href="{% url 'detalhes_fornecedor' fornecedor.pk %}" class="btn-primary">
+              Ver Portfólio
+            </a>
+          </div>
+
+        </article>
+
+      {% endfor %}
+    </div>
+
+  {% else %}
+
+    {% comment %} CU06 E1: nenhum fornecedor casou com o filtro. {% endcomment %}
+    <section class="busca-vazia">
+      <span class="busca-vazia__icone" aria-hidden="true">
+        <i class="bi bi-search"></i>
+      </span>
+
+      <h2>Nenhum fornecedor encontrado</h2>
+
+      <p>
+        Não há resultados para o filtro aplicado. Tente ampliar a busca
+        {% if categoria_selecionada %} removendo o filtro de categoria{% endif %}
+        {% if busca %} ou buscando por outro termo{% endif %}.
+      </p>
+
+      <a href="{% url 'listar_fornecedores' %}" class="btn-primary">
+        Ver todos os fornecedores
+      </a>
+    </section>
+
+  {% endif %}
+
+</div>
+{% endblock %}

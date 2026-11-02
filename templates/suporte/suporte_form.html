@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+RF-019 / CU19 — Canal de suporte interno.
+
+Campos: assunto, descrição do problema ou dúvida e anexo opcional de evidência.
+A solicitação é vinculada ao perfil do usuário e encaminhada à equipe gestora.
+{% endcomment %}
+
+{% block title %}Suporte | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/supporte/suporte.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container suporte-page">
+
+  <div class="suporte-grid">
+
+    <section class="suporte-form-card" aria-labelledby="suporte-title">
+
+      <header class="suporte-card__header">
+        <span class="suporte-card__icone" aria-hidden="true">
+          <i class="bi bi-headset"></i>
+        </span>
+
+        <div>
+          <h1 class="suporte-card__titulo" id="suporte-title">Falar com a equipe</h1>
+          <p class="suporte-card__subtitulo">
+            Descreva o problema ou a dúvida e a equipe entrará em contato.
+          </p>
+        </div>
+      </header>
+
+      <form method="POST" enctype="multipart/form-data" class="suporte-form">
+        {% csrf_token %}
+
+        <div class="form-field{% if form.assunto.errors %} has-error{% endif %}">
+          <label for="{{ form.assunto.id_for_label }}">
+            {{ form.assunto.label }} <span class="suporte-obrigatorio">*</span>
+          </label>
+
+          {{ form.assunto }}
+
+          {% for erro in form.assunto.errors %}
+            <p class="suporte-erro" role="alert">
+              <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+              {{ erro }}
+            </p>
+          {% endfor %}
+        </div>
+
+        <div class="form-field{% if form.descricao.errors %} has-error{% endif %}">
+          <label for="{{ form.descricao.id_for_label }}">
+            {{ form.descricao.label }} <span class="suporte-obrigatorio">*</span>
+          </label>
+
+          {{ form.descricao }}
+
+          {% for erro in form.descricao.errors %}
+            <p class="suporte-erro" role="alert">
+              <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+              {{ erro }}
+            </p>
+          {% endfor %}
+        </div>
+
+        <div class="form-field{% if form.img.errors %} has-error{% endif %}">
+          <label for="{{ form.img.id_for_label }}">{{ form.img.label }}</label>
+
+          {{ form.img }}
+
+          <p class="suporte-ajuda">{{ form.img.help_text }}</p>
+
+          {% for erro in form.img.errors %}
+            <p class="suporte-erro" role="alert">
+              <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+              {{ erro }}
+            </p>
+          {% endfor %}
+        </div>
+
+        <div class="suporte-form__acoes">
+          <a href="{% url 'meus_chamados' %}" class="btn-ghost">Meus chamados</a>
+
+          <button type="submit" class="btn-primary">
+            <i class="bi bi-send-fill" aria-hidden="true"></i>
+            Enviar solicitação
+          </button>
+        </div>
+
+      </form>
+
+    </section>
+
+    {% comment %} Orientações colaterais: contexto e prazos do canal. {% endcomment %}
+    <aside class="suporte-aside">
+
+      <div class="suporte-aside__card">
+        <h2 class="suporte-aside__titulo">
+          <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+          Antes de escrever
+        </h2>
+
+        <ul class="suporte-aside__lista">
+          <li>Confira a <a href="{% url 'faq' %}">FAQ</a>: muitas dúvidas já estão respondidas.</li>
+          <li>Se é problema com um produto ou uma demanda, use o botão
+            <strong>Denunciar Conteúdo</strong> na página dele.</li>
+          <li>Se a conta está suspensa, o chamado é o canal para falar com a equipe.</li>
+        </ul>
+      </div>
+
+      <div class="suporte-aside__card suporte-aside__card--destaque">
+        <h2 class="suporte-aside__titulo">
+          <i class="bi bi-shield-check" aria-hidden="true"></i>
+          Privacidade
+        </h2>
+
+        <p class="suporte-aside__texto">
+          Anexar uma evidência ajuda a equipe a entender o problema. O arquivo é
+          tratado como dado pessoal, conforme a nossa
+          <a href="{% url 'politica_privacidade' %}">Política de Privacidade</a>.
+        </p>
+      </div>
+
+    </aside>
+
+  </div>
+
+</div>
+{% endblock %}

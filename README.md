@@ -10,6 +10,13 @@ Este é o **novo escopo base** do projeto, já com:
 - Painel `/admin/` já com todos os models registrados (exceto `Avaliacao`/`Favorito`, que usam chave composta — ver observação no final).
 - Versões de biblioteca **travadas** no `requirements.txt` (testadas e validadas de ponta a ponta nesta máquina).
 
+Além da base, **todas as telas e casos de uso dos 34 requisitos funcionais estão
+implementados**: acesso público, listagem e detalhe de fornecedores e demandas,
+busca e filtro por categoria, avaliação em estrelas, favoritos, denúncia e
+moderação, suporte interno, planos/assinaturas, tutorial de onboarding e o painel
+da equipe gestora. O mapa requisito a requisito está na seção
+**"Mapa da documentação"** no fim deste arquivo.
+
 ---
 
 ## Como isso funciona (leiam antes de mexer)
@@ -104,6 +111,12 @@ DB_PORT=3306
 ADMIN_EMAILS=admin@exemplo.com
 ```
 
+O `.env.example` da raiz tem o mesmo conteúdo comentado, incluindo
+`TIME_ZONE_BANCO` (fuso da sessão MySQL, ver observação 7 abaixo) e as opções de
+e-mail. Se você importou o `banco.sql` com outro nome de schema, ajuste o
+`DB_NAME` para o nome que você usou — o Django só precisa apontar para a base que
+tem as tabelas.
+
 ### 7. Sincronizar o Django com o banco já importado
 
 ```bash
@@ -166,9 +179,13 @@ python manage.py migrate
 
 4. **Controle de acesso por perfil (RF-004 / RNF-006)**: em views de função usem `@fornecedor_required`, `@comerciante_required`, `@login_usuario_requerido` ou `@admin_required` (`usuarios/decorators.py`); em views de classe, `FornecedorRequiredMixin`, `ComercianteRequiredMixin`, `AdminRequiredMixin` (`usuarios/mixins.py`). Visitante vai ao login; perfil errado volta ao próprio painel com mensagem; `admin_required` devolve HTTP 403. O context processor `hub_fecc.context_processors.perfil_usuario` expõe `perfil_atual`, `is_fornecedor`, `is_comerciante`, `is_admin` e um `tipo_menu` padrão aos templates.
 
-5. **Testes**: `python manage.py test usuarios` (precisa do MySQL configurado; o Django cria um banco `test_hub_fecc_of` à parte).
+5. **Testes**: `python manage.py test` (precisa do MySQL configurado; o Django cria um banco `test_<DB_NAME>` à parte — o `.env` deste projeto aponta para `hub_fcc`, então o banco de teste é `test_hub_fcc`). Para um app só, `python manage.py test portfolio`. Use `--noinput` se o banco de teste já existir e o Django perguntar se pode apagá-lo.
 
 6. **`django-simple-history==3.13.0`**: essa versão renomeou a middleware de `HistoricalRecordsMiddleware` para `HistoryRequestMiddleware`. Se algum tutorial ou documentação antiga mencionar o nome velho, ignorem — o `settings.py` já está com o nome certo para a versão travada no `requirements.txt`.
+
+7. **Fuso horário do MySQL**: o `settings.py` fixa `SET time_zone = '+00:00'` na conexão (`TIME_ZONE_BANCO`, ajustável pelo `.env`). Sem isso, as colunas com `DEFAULT CURRENT_TIMESTAMP` do `banco.sql` saem com o fuso do servidor e as telas que filtram por período leem datas incoerentes. Se o seu MySQL tiver a tabela de fusos carregada, troque o offset por `America/Sao_Paulo` no `.env` (acompanha horário de verão). Detalhes na seção "Fuso horário" do `settings.py`.
+
+8. **`Avaliacao` e `Favorito` não entram no Django Admin**: usam chave primária composta e o Admin recusa o registro (`ImproperlyConfigured`). A fila de avaliações do CU22 é uma tela própria em `/painel/avaliacoes/`, protegida por `admin_required`. Ver `moderacao/admin.py`.
 
 ---
 
@@ -176,20 +193,102 @@ python manage.py migrate
 
 ```
 hub_fecc/
-├── hub_fecc/          # configurações do projeto (settings, urls, wsgi)
-├── usuarios/          # Usuario (RF-001 a RF-004, RF-014, RF-023, RF-026)
+├── hub_fecc/          # configurações do projeto (settings, urls, wsgi, context_processors)
+├── usuarios/          # Usuario (RF-001 a RF-004, RF-014, RF-016, RF-023, RF-026)
 ├── core/              # CategoriaInsumo, TermoUso, TermoAceite, LogAlteracao
-├── portfolio/         # Produto (RF-005 a RF-008, RF-010, RF-013)
-├── demandas/          # Demanda (RF-009, RF-011)
+│                      # + indicadores do painel (CU24) e telas de admin (CU21)
+├── portfolio/         # Produto (RF-005 a RF-008, RF-010, RF-012, RF-013, RF-027)
+├── demandas/          # Demanda (RF-009, RF-011, RF-012, RF-013, RF-027)
 ├── avaliacoes/        # Avaliacao, Favorito (RF-018, RF-028 a RF-030)
 ├── assinaturas/       # PlanoAssinatura, Assinatura (RF-020 a RF-022)
-├── moderacao/         # Denuncia (RF-025)
+├── moderacao/         # Denuncia (RF-025, CU14, CU22)
 ├── suporte/           # Suporte (RF-019)
-├── static/            # arquivos estáticos (CSS, JS, imagens do site) — vazio, aguardando RNF-001/010
-├── media/             # uploads (evidências de denúncia/suporte, fotos)
-├── templates/          # templates HTML globais — AINDA VAZIO, próxima tarefa
+├── static/            # CSS, JS, logo e vídeo
+├── media/             # uploads (evidências de denúncia/suporte)
+├── templates/         # templates HTML (base, menus, componentes e um por app)
+├── banco.sql          # SCHEMA: fonte da verdade. NÃO alterar.
 ├── manage.py
 ├── requirements.txt
 ├── .env.example
 └── .gitignore
 ```
+
+---
+
+## Mapa da documentação
+
+Onde cada requisito e caso de uso da documentação está implementado.
+
+### Requisitos funcionais
+
+| RF | Onde |
+|---|---|
+| RF-001 / RF-002 Cadastrar fornecedor / comerciante | `usuarios/forms.py::CadastroForm`, `usuarios/views.py::cadastro_view` |
+| RF-003 Autenticar usuários | `usuarios/views.py::login_view` |
+| RF-004 Controle de acesso por perfil | `usuarios/decorators.py`, `usuarios/mixins.py`, `hub_fecc/context_processors.py` |
+| RF-005 Cadastrar portfólio | `portfolio/views.py::cadastrar_produto` |
+| RF-006 Editar produto | `portfolio/views.py::editar_produto` |
+| RF-007 Atualizar disponibilidade | `portfolio/views.py::alternar_status_produto` |
+| RF-008 Remover produto | `portfolio/views.py::remover_produto` |
+| RF-009 Publicar demanda | `demandas/views.py::publicar_demanda_view` |
+| RF-010 Visualizar portfólios | `portfolio/views.py::listar_fornecedores`, `detalhes_fornecedor` |
+| RF-011 Visualizar demandas (por fornecedor) | `demandas/views.py::listar_demandas`, `detalhes_demanda` |
+| RF-012 Canal de contato direto | `core/contato.py` (canais de telefone, WhatsApp e e-mail) |
+| RF-013 Buscar e filtrar categorias | `portfolio/views.py`, `demandas/views.py` (parâmetros `?categoria=` e `?busca=`) |
+| RF-014 Tutorial de onboarding | `usuarios/views.py::tutorial_view`, `usuarios/onboarding.py` |
+| RF-015 FAQ | `core/views.py::faq_view` |
+| RF-016 Excluir conta | `usuarios/views.py::excluir_conta_view`, `usuarios/services.py::anonimizar_usuario` |
+| RF-017 Painel administrativo | `core/admin_views.py` (indicadores CU24) + Django Admin |
+| RF-018 Avaliar fornecedores | `avaliacoes/views.py::avaliar_fornecedor` |
+| RF-019 Canal de suporte interno | `suporte/views.py::suporte_view`, `meus_chamados_view` |
+| RF-020 Visualizar planos | `assinaturas/views.py::planos_assinatura` |
+| RF-021 Contratar plano | `assinaturas/views.py::contratar_plano` |
+| RF-022 Gerenciar assinatura ativa | `assinaturas/views.py::meu_plano`, `cancelar_assinatura` |
+| RF-023 Recuperar senha | `usuarios/password_reset.py`, `usuarios/views.py` |
+| RF-024 Log de alterações | `django-simple-history` em `Produto`/`Demanda` + `core/services.py::registrar_log` |
+| RF-025 Denúncia de conteúdo | `moderacao/views.py::denunciar_view`, `moderacao/services.py` |
+| RF-026 Editar dados cadastrais | `usuarios/views.py::editar_perfil_view` |
+| RF-027 Acesso público | `listar_fornecedores`, `detalhes_fornecedor`, `listar_demandas`, `detalhes_demanda` |
+| RF-028 / RF-029 / RF-030 Favoritos | `avaliacoes/views.py::lista_favoritos`, `alternar_favorito`, `remover_favorito` |
+| RF-031 a RF-034 Categorias de insumo | `core/admin.py::CategoriaInsumoAdmin` |
+
+### Casos de uso
+
+| CU | Onde |
+|---|---|
+| CU01 Cadastrar usuário | `usuarios/views.py::cadastro_view` (+ aceite gravado em `TermoAceite`) |
+| CU02 / CU03 Login e recuperação de senha | `usuarios/views.py` + `usuarios/password_reset.py` |
+| CU04 Visualizar publicamente | Telas públicas (sem decorator de perfil) |
+| CU05 / CU06 Portfólio, busca e filtro | `portfolio/views.py` |
+| CU07 Publicar / editar / encerrar / remover demanda | `demandas/views.py` |
+| CU08 Favoritar fornecedor | `avaliacoes/views.py` |
+| CU09 Avaliar fornecedor | `avaliacoes/views.py::avaliar_fornecedor` |
+| CU10 Gerenciar portfólio | `portfolio/views.py` |
+| CU11 Visualizar demandas do comerciante | `demandas/views.py` |
+| CU12 / CU13 Planos e contratação | `assinaturas/views.py`, `assinaturas/services.py` |
+| CU14 Denunciar conteúdo | `moderacao/views.py::denunciar_view` |
+| CU15 Excluir conta | `usuarios/views.py::excluir_conta_view` |
+| CU16 Editar dados cadastrais | `usuarios/views.py::editar_perfil_view` |
+| CU17 Tutorial e onboarding | `usuarios/views.py::tutorial_view`, `pular_tutorial_view` |
+| CU18 FAQ | `core/views.py::faq_view` |
+| CU19 Suporte interno | `suporte/views.py` |
+| CU20 Categorias (admin) | `core/admin.py::CategoriaInsumoAdmin` |
+| CU21 Log de auditoria | `core/admin_views.py::log_auditoria_view` |
+| CU22 Moderação de denúncias e avaliações | `moderacao/admin.py` + `core/admin_views.py::fila_avaliacoes_view` |
+| CU23 Planos e assinaturas (admin) | `assinaturas/admin.py` |
+| CU24 Indicadores do painel | `core/admin_views.py::painel_admin_view`, `core/indicadores.py` |
+
+### Limites conhecidos (decididos pelo schema do `banco.sql`)
+
+- **Tutorial (CU17)**: a pós-condição pede registrar que o usuário concluiu ou
+  ignorou o tutorial. A tabela `usuario` não tem coluna livre e o `banco.sql` não
+  pode ser alterado, então o estado é guardado **na sessão**. Se o usuário limpar
+  o navegador ou trocar de aparelho, o tutorial aparece de novo. Se um dia o
+  schema ganhar uma coluna, basta trocar as quatro funções de
+  `usuarios/onboarding.py` — nenhuma view muda.
+- **Denúncia e `tipo_conteudo`**: o `banco.sql` não tem CHECK amarrando
+  `tipo_conteudo` ao `id_produto`/`id_demanda`. A coerência é validada na view
+  (`moderacao/views.py::_resolver_alvo`).
+- **Exclusão de conta (RF-016)**: soft delete por anonimização + `status_conta`,
+  porque as FKs de produto/demanda/avaliação/assinatura impedem um DELETE real.
+  Ver `usuarios/services.py`.

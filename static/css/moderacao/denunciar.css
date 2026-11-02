@@ -1,0 +1,247 @@
+/* ==========================================================================
+   DENUNCIAR CONTEUDO (RF-025 / CU-14)
+   ========================================================================== */
+
+.denunciar-page {
+  max-width: 720px;
+  padding: 32px 16px 64px;
+}
+
+.denunciar-page__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  color: var(--color-blue);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.denunciar-page__voltar:hover,
+.denunciar-page__voltar:focus-visible {
+  color: var(--color-blue-dark);
+  text-decoration: underline;
+}
+
+.denunciar-card {
+  padding: 30px 32px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.denunciar-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.denunciar-card__icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--color-danger-background);
+  color: var(--color-danger);
+  font-size: 1.3rem;
+}
+
+.denunciar-card__titulo {
+  margin: 0 0 4px;
+  color: var(--color-navy);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.denunciar-card__subtitulo {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+/* Resumo do conteudo denunciado ------------------------------------------ */
+
+.denunciar-alvo {
+  margin-bottom: 22px;
+  padding: 14px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: #f6f8ff;
+}
+
+.denunciar-alvo__rotulo {
+  margin: 0 0 6px;
+  color: var(--color-text-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.denunciar-alvo__valor {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.denunciar-alvo__valor i {
+  color: var(--color-blue);
+}
+
+.denunciar-alvo__meta {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Formulario ------------------------------------------------------------- */
+
+.denunciar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.denunciar-form .form-field label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-navy);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.denunciar-obrigatorio {
+  color: var(--color-danger);
+}
+
+.denunciar-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.denunciar-form textarea:focus {
+  border-color: var(--color-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 108, 247, 0.15);
+}
+
+.denunciar-form input[type="file"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-small);
+  background: #f6f8ff;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.denunciar-form input[type="file"]:hover,
+.denunciar-form input[type="file"]:focus {
+  border-color: var(--color-blue);
+  background: rgba(45, 108, 247, 0.06);
+}
+
+.denunciar-ajuda {
+  margin: 8px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.denunciar-erro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0;
+  color: var(--color-danger);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* Botao enviar ----------------------------------------------------------- */
+
+.denunciar-form__acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.denunciar-enviar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-danger);
+  color: var(--color-surface);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.denunciar-enviar:hover,
+.denunciar-enviar:focus-visible {
+  background: #8f3225;
+  transform: translateY(-1px);
+}
+
+.denunciar-card__nota {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .denunciar-page {
+    padding: 20px 12px 48px;
+  }
+
+  .denunciar-card {
+    padding: 22px 18px;
+  }
+
+  .denunciar-card__titulo {
+    font-size: 1.2rem;
+  }
+
+  .denunciar-form__acoes {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .denunciar-form__acoes .btn-ghost,
+  .denunciar-form__acoes .denunciar-enviar {
+    width: 100%;
+  }
+}

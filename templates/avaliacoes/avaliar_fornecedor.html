@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+CU09 — Avaliar fornecedor (RF-018).
+
+Escala de 0 a 5 estrelas, onde 0 é a pior nota e 5 a melhor (RF-018).
+O comentário é opcional. Se o comerciante já avaliou este fornecedor, o mesmo
+formulário edita a avaliação existente (pós-condição do CU09: não se submete uma
+nova avaliação para o mesmo fornecedor sem editar a existente).
+{% endcomment %}
+
+{% block title %}Avaliar {{ fornecedor.nome }} | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/componentes/estrelas.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/portfolio/fornecedores.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/avaliacoes/avaliacao.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container avaliacao-page">
+
+  <a href="{% url 'detalhes_fornecedor' fornecedor.pk %}" class="fornecedor-detalhe__voltar">
+    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+    Voltar para o portfólio
+  </a>
+
+  <section class="avaliacao-card">
+
+    <header class="avaliacao-card__header">
+      <span class="fornecedor-avatar" aria-hidden="true">
+        <i class="bi bi-shop"></i>
+      </span>
+
+      <div>
+        <h1 class="avaliacao-card__titulo">
+          {% if editando %}Editar avaliação{% else %}Avaliar fornecedor{% endif %}
+        </h1>
+        <p class="avaliacao-card__subtitulo">
+          {{ fornecedor.nome }} &middot; {{ fornecedor.cpf_cnpj }}
+        </p>
+      </div>
+    </header>
+
+    <form method="POST" class="avaliacao-form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        {% for erro in form.non_field_errors %}
+          <p class="acesso-requerido" role="alert">{{ erro }}</p>
+        {% endfor %}
+      {% endif %}
+
+      {% comment %} Campo de nota de 0 a 5 estrelas (RF-018). {% endcomment %}
+      <div class="form-field{% if form.nota.errors %} has-error{% endif %}">
+        <label for="nota_0">Como foi sua experiência?</label>
+
+        {% include "componentes/estrelas.html" with campo="nota" selecionada=form.nota.value erro=form.nota.errors.0 %}
+      </div>
+
+      {% comment %} Comentário opcional (RF-018). {% endcomment %}
+      <div class="form-field{% if form.comentario.errors %} has-error{% endif %}">
+        <label for="{{ form.comentario.id_for_label }}">{{ form.comentario.label }}</label>
+        {{ form.comentario }}
+
+        {% for erro in form.comentario.errors %}
+          <div class="field-error-msg" role="alert">{{ erro }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="avaliacao-form__acoes">
+        <a href="{% url 'detalhes_fornecedor' fornecedor.pk %}" class="btn-ghost">Cancelar</a>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          data-confirmar="{% if editando %}Atualizar sua avaliação de {{ fornecedor.nome }}?{% else %}Confirmar a avaliação de {{ fornecedor.nome }}?{% endif %}"
+          data-confirmar-sim="Confirmar avaliação"
+        >
+          <i class="bi bi-check-lg" aria-hidden="true"></i>
+          Confirmar avaliação
+        </button>
+      </div>
+
+    </form>
+
+    {% comment %} Contexto: o RF-008 Marco Civil / RNF-008 deixa claro o que a avaliação é e não é. {% endcomment %}
+    <p class="avaliacao-card__nota">
+      Sua avaliação é pública e ajuda outros comerciantes a escolher com mais
+      segurança. O suppra não participa das negociações entre as partes.
+    </p>
+
+  </section>
+
+</div>
+{% endblock %}

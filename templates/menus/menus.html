@@ -27,6 +27,11 @@
             {% url 'listar_fornecedores' as url_fornecedores %}
             {% url 'listar_demandas' as url_demandas %}
             {% url 'faq' as url_faq %}
+            {% url 'painel_admin' as url_painel_admin %}
+            {% url 'log_auditoria' as url_log_auditoria %}
+            {% url 'fila_avaliacoes' as url_fila_avaliacoes %}
+            {% url 'suporte' as url_suporte %}
+            {% url 'meus_chamados' as url_meus_chamados %}
 
             {% if tipo_menu == "admin" %}
 
@@ -49,22 +54,30 @@
                     </a>
                 </li>
 
-                <li class="navigation-item {% if request.resolver_match.namespace == 'admin' and current_url == 'index' %}is-active{% endif %}">
-                    <a href="{% url 'admin:index' %}" data-nav-link>
+                <li class="navigation-item {% if current_url == 'painel_admin' %}is-active{% endif %}">
+                    <a href="{{ url_painel_admin|default:'#' }}" data-nav-link>
                         Meu Painel
                     </a>
                 </li>
 
-                <li class="navigation-item {% if request.resolver_match.namespace == 'admin' and current_url == 'assinaturas_assinatura_changelist' %}is-active{% endif %}">
-                    <a href="{% url 'admin:assinaturas_assinatura_changelist' %}" data-nav-link>
-                        Assinaturas
-                    </a>
-                </li>
-
-                <li class="navigation-item {% if request.resolver_match.namespace == 'admin' and current_url == 'core_denuncia_changelist' %}is-active{% endif %}">
-                    <a href="{% url 'admin:core_denuncia_changelist' %}" data-nav-link>
-                        Denúncias
-                    </a>
+                {% comment %}
+                    Gestão da equipe (CU20 a CU24). Dropdown porque são seis telas;
+                    o menu fixo não caberia sem virar uma faixa de links.
+                {% endcomment %}
+                <li class="navigation-item nav-dropdown-item {% if current_url == 'painel_admin' or current_url == 'log_auditoria' or current_url == 'fila_avaliacoes' or request.resolver_match.namespace == 'admin' %}is-active{% endif %}">
+                    <details class="nav-dropdown">
+                        <summary data-nav-link> Gestão <i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
+                        <div class="nav-dropdown__menu">
+                            <a href="{% url 'painel_admin' %}">Indicadores</a>
+                            <a href="{% url 'log_auditoria' %}">Log de auditoria</a>
+                            <a href="{% url 'fila_avaliacoes' %}">Fila de avaliações</a>
+                            <a href="{% url 'admin:moderacao_denuncia_changelist' %}">Denúncias</a>
+                            <a href="{% url 'admin:core_categoriainsumo_changelist' %}">Categorias de insumo</a>
+                            <a href="{% url 'admin:assinaturas_planoassinatura_changelist' %}">Planos</a>
+                            <a href="{% url 'admin:assinaturas_assinatura_changelist' %}">Assinaturas</a>
+                            <a href="{% url 'admin:index' %}">Django Admin</a>
+                        </div>
+                    </details>
                 </li>
 
                 <li class="navigation-item {% if current_url == 'editar_perfil' %}is-active{% endif %}">
@@ -87,8 +100,9 @@
                         <summary data-nav-link> Painel <i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
                         <div class="nav-dropdown__menu">
                             <a href="{% url 'dashboard_comerciante' %}">Meu Painel</a>
-                            <a href="#">Minhas Demandas</a>
-                            <a href="#">Favoritos</a>
+                            <a href="{% url 'minhas_demandas' %}">Minhas Demandas</a>
+                            <a href="{% url 'publicar_demanda' %}">Publicar Demanda</a>
+                            <a href="{% url 'lista_favoritos' %}">Favoritos</a>
                         </div>
                     </details>
                 </li>
@@ -125,8 +139,9 @@
                         <summary data-nav-link> Painel <i class="bi bi-chevron-down" aria-hidden="true"></i></summary>
                         <div class="nav-dropdown__menu">
                             <a href="{% url 'dashboard_fornecedor' %}">Meu Painel</a>
-                            <a href="#">Meu Portfólio</a>
-                            <a href="#">Planos</a>
+                            <a href="{% url 'gerenciar_portfolio' %}">Meu Portfólio</a>
+                            <a href="{% url 'planos_assinatura' %}">Planos</a>
+                            <a href="{% url 'meu_plano' %}">Meu plano</a>
                         </div>
                     </details>
                 </li>
@@ -240,6 +255,16 @@
                     <a href="{% url 'editar_perfil' %}" class="profile-dropdown-item">
                         <i class="bi bi-person" aria-hidden="true"></i>
                         <span>Meu Perfil</span>
+                    </a>
+
+                    {% comment %}
+                        O suporte interno (RF-019) existe para qualquer perfil
+                        autenticado; a equipe gestora acompanha os chamados pela
+                        mesma tela.
+                    {% endcomment %}
+                    <a href="{{ url_suporte|default:'#' }}" class="profile-dropdown-item">
+                        <i class="bi bi-headset" aria-hidden="true"></i>
+                        <span>Suporte</span>
                     </a>
 
                     <a href="{% url 'logout' %}" class="profile-dropdown-item profile-dropdown-danger">

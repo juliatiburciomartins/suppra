@@ -5,12 +5,13 @@ Por que uma migration de dados: o CU01 exige que o aceite aos Termos de Uso seja
 gravado em `termo_aceite`, e essa tabela tem FK para `termo_uso`. Se nenhuma
 versão do termo existisse, o aceite não teria onde ser registrado. Pelo mesmo
 motivo, o RF-020/CU12 descreve **dois** planos (Fornecedor Silver e Fornecedor
-Gold) — sem essas linhas a tela de planos nasceria vazia.
+Gold) e o RF-013 cita as categorias "bebidas, laticínios, descartáveis" — sem
+essas linhas a tela de planos e o filtro de categoria nasceriam vazios.
 
 Nenhuma tabela é criada ou alterada aqui: é `RunPython` sobre tabelas que já
 existem no `banco.sql`. Tudo é idempotente (`get_or_create`), então rodar de
 novo não duplica nada, e a equipe pode editar os textos e os valores pelo painel
-(CU23) sem que o seed sobrescreva nada.
+(CU20/CU23) sem que o seed sobrescreva nada.
 
 Os benefícios dos planos são os descritos no RF-020 e no CU12; os valores mensais
 (R$ 29,90 Silver / R$ 59,90 Gold) são os que o projeto já usava na tela de
@@ -79,6 +80,10 @@ PLANOS = [
     },
 ]
 
+# --- Categorias de insumo (RF-013 / RF-032) --------------------------------
+
+CATEGORIAS = ["Bebidas", "Laticínios", "Descartáveis"]
+
 
 def semear(apps, schema_editor):
     """
@@ -90,6 +95,7 @@ def semear(apps, schema_editor):
     """
     TermoUso = apps.get_model("core", "TermoUso")
     PlanoAssinatura = apps.get_model("assinaturas", "PlanoAssinatura")
+    CategoriaInsumo = apps.get_model("core", "CategoriaInsumo")
 
     # Termo de Uso vigente (RNF-015): alvo dos registros de `termo_aceite`.
     if not TermoUso.objects.filter(versao=VERSAO_TERMOS).exists():
@@ -109,12 +115,18 @@ def semear(apps, schema_editor):
             },
         )
 
+    # Categorias citadas no RF-013 como exemplos de filtro.
+    for nome in CATEGORIAS:
+        CategoriaInsumo.objects.get_or_create(
+            nome=nome,
+            defaults={"status": "ativa"},
+        )
 
 
 def nao_fazer_nada(apps, schema_editor):
     """
     Reverse: apagar o seed apagaria dados que a equipe pode ter editado no
-    painel (CU23). A reversão é mantida como no-op de propósito.
+    painel (CU20/CU23). A reversão é mantida como no-op de propósito.
     """
     return None
 

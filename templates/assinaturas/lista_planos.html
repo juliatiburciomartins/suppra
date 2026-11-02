@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Planos{% endblock %}
+{% comment %}
+CU12 / RF-020 — Planos de assinatura do fornecedor.
+
+O CU12 pede, para cada plano: nome, descrição dos benefícios e valor mensal. Tudo
+aqui vem de `plano_assinatura` (o que a equipe cadastrou no painel, CU23) — não
+há valor fixo no template. O plano "Gratuito" é o estado sem assinatura, que
+existe no fluxo (CU13 A1 fala em "reverter o status do fornecedor ao plano
+gratuito") e por isso não tem linha na tabela.
+{% endcomment %}
+
+{% block title %}Planos | suppra{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/assinaturas/lista_planos.css' %}">
+  <link rel="stylesheet" href="{% static 'css/assinaturas/lista_planos.css' %}" />
 {% endblock %}
 
 {% block content %}
@@ -12,411 +22,190 @@
 <main class="plans-page">
 
     <div class="page-title">
-
         <h1>Escolha o plano ideal para o seu negócio</h1>
-
-        <p>
-            Mais visibilidade, mais oportunidades e todo o suporte que você precisa.
-        </p>
-
+        <p>Mais visibilidade, mais oportunidades e todo o suporte que você precisa.</p>
     </div>
 
+    {% if assinatura %}
+        <p class="plans-aviso">
+            <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+            Seu plano <strong>{{ assinatura.id_plano.nome_plano }}</strong> está em vigor até
+            {{ assinatura.data_vencimento|date:"d/m/Y" }}.
+            <a href="{% url 'meu_plano' %}">Gerenciar minha assinatura</a>
+        </p>
+    {% endif %}
 
     <section class="plans-container">
 
-        <!-- PLANO GRATUITO -->
-
+        {# ---------------- Plano gratuito (sem assinatura) ---------------- #}
         <div class="plan-card free-plan">
-
             <h2>Gratuito</h2>
 
             <div class="plan-badge-slot">
-            {% if plano_atual == "gratuito" %}
-                <span class="current-plan">
-                    Plano atual
-                </span>
-            {% endif %}
+                {% if not assinatura %}
+                    <span class="current-plan">Plano atual</span>
+                {% endif %}
             </div>
 
             <div class="price">
-
                 <strong>R$ 0,00</strong>
-
                 <span>/mês</span>
-
             </div>
 
             <div class="line"></div>
 
             <div class="features">
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Cadastro de perfil de fornecedor
-                </p>
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Visualização de demandas
-                </p>
-
+                <p><i class="bi bi-check-circle-fill check"></i> Cadastro de perfil de fornecedor</p>
+                <p><i class="bi bi-check-circle-fill check"></i> Visualização de demandas</p>
+                <p><i class="bi bi-dash-lg check-empty"></i> Selo de verificado ou premium</p>
             </div>
 
-            {% if plano_atual == "gratuito" %}
-                <button
-                    class="plan-button current-button"
-                    type="button"
-                    disabled
-                >
-                    Plano atual
-                </button>
-            {% else %}
-                <button
-                    class="plan-button current-button"
-                    type="button"
-                >
-                    Plano atual
-                </button>
-            {% endif %}
-
-        </div>
-
-
-        <!-- PLANO SILVER -->
-
-        <div class="plan-card silver-plan">
-
-            <h2>Fornecedor Silver</h2>
-
-            <div class="plan-badge-slot">
-            {% if plano_atual == "silver" %}
-                <span class="current-plan">
-                    Plano atual
-                </span>
-            {% endif %}
-            </div>
-
-            <div class="price">
-
-                <strong>R$ 29,90</strong>
-
-                <span>/mês</span>
-
-            </div>
-
-            <div class="line"></div>
-
-            <div class="features">
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Cadastro de perfil de fornecedor
-                </p>
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Visualização de demandas
-                </p>
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Relatórios básicos de visualizações
-                </p>
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Selo de verificado
-                </p>
-
-            </div>
-
-            {% if plano_atual == "silver" %}
-                <button
-                    class="plan-button current-button"
-                    type="button"
-                    disabled
-                >
-                    Plano atual
-                </button>
-            {% else %}
-                <a
-                    href="{% url 'confirmar_contratacao' 'silver' %}"
-                    class="plan-button silver-button"
-                >
-                    Contratar
+            {% if assinatura %}
+                <a href="{% url 'meu_plano' %}" class="plan-button current-button">
+                    Ver meu plano
                 </a>
-            {% endif %}
-
-        </div>
-
-
-        <!-- PLANO GOLD -->
-
-        <div class="plan-card gold-plan">
-
-            <h2>Fornecedor Gold</h2>
-
-            <div class="plan-badge-slot">
-            {% if plano_atual == "gold" %}
-                <span class="current-plan">
-                    Plano atual
-                </span>
-            {% endif %}
-            </div>
-
-            <div class="price">
-
-                <strong>R$ 59,90</strong>
-
-                <span>/mês</span>
-
-            </div>
-
-            <div class="line"></div>
-
-            <div class="features">
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Cadastro de perfil de fornecedor
-                </p>
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Visualização de demandas
-                </p>
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Relatórios completos
-                </p>
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Selo premium
-                </p>
-
-                <p>
-                    <i class="bi bi-check-circle-fill check"></i>
-                    Suporte dedicado
-                </p>
-
-            </div>
-
-            {% if plano_atual == "gold" %}
-                <button
-                    class="plan-button current-button"
-                    type="button"
-                    disabled
-                >
+            {% else %}
+                <button class="plan-button current-button" type="button" disabled>
                     Plano atual
                 </button>
+            {% endif %}
+        </div>
+
+        {# ---------------- Planos cadastrados pela equipe (CU23) ---------------- #}
+        {% for plano in planos %}
+
+            {% if plano.nivel == "gold" %}
+                <div class="plan-card gold-plan">
             {% else %}
-                <a
-                    href="{% url 'confirmar_contratacao' 'gold' %}"
-                    class="plan-button gold-button"
-                >
-                    Contratar
-                </a>
+                <div class="plan-card silver-plan">
             {% endif %}
 
-        </div>
+                <h2>{{ plano.nome_plano }}</h2>
+
+                <div class="plan-badge-slot">
+                    {% if assinatura and assinatura.id_plano_id == plano.id_plano %}
+                        <span class="current-plan">Plano atual</span>
+                    {% endif %}
+                </div>
+
+                <div class="price">
+                    {# valor vem de `valor DECIMAL(10,2)`; o filtro garante a vírgula decimal (pt-BR) #}
+                    <strong>R$ {{ plano.valor|floatformat:2 }}</strong>
+                    <span>/mês</span>
+                </div>
+
+                <div class="line"></div>
+
+                <div class="features">
+                    <p><i class="bi bi-check-circle-fill check"></i> Cadastro de perfil de fornecedor</p>
+                    <p><i class="bi bi-check-circle-fill check"></i> Visualização de demandas</p>
+                    <p><i class="bi bi-check-circle-fill check"></i> {{ plano.descricao }}</p>
+                </div>
+
+                {% if assinatura and assinatura.id_plano_id == plano.id_plano %}
+                    <a href="{% url 'meu_plano' %}" class="plan-button current-button">
+                        Ver meu plano
+                    </a>
+                {% else %}
+                    <a href="{% url 'confirmar_contratacao' plano.id_plano %}" class="plan-button gold-button">
+                        Contratar
+                    </a>
+                {% endif %}
+
+            </div>
+
+        {% empty %}
+            {# A equipe ainda não cadastrou plano no painel (CU23). #}
+            <div class="plan-card silver-plan">
+                <h2>Nenhum plano disponível</h2>
+                <div class="price"><strong>—</strong></div>
+                <div class="features">
+                    <p>Os planos ainda não foram cadastrados pela equipe gestora.</p>
+                </div>
+            </div>
+        {% endfor %}
 
     </section>
 
-
     <div class="compare-area">
-
-        <a
-            href="#comparacao"
-            class="compare-link"
-        >
-            Comparar planos
-        </a>
-
+        <a href="#comparacao" class="compare-link">Comparar planos</a>
     </div>
 
-
-    <section
-        class="comparison"
-        id="comparacao"
-    >
-
+    <section class="comparison" id="comparacao">
         <h2>Planos Comparados</h2>
 
         <div class="comparison-table-wrapper">
-
             <table>
-
                 <thead>
-
                     <tr>
-
                         <th>Recurso</th>
                         <th>Gratuito</th>
-                        <th>Silver</th>
-                        <th>Gold</th>
-
+                        {% for plano in planos %}
+                            <th>{{ plano.nome_plano }}</th>
+                        {% endfor %}
                     </tr>
-
                 </thead>
 
-
                 <tbody>
-
                     <tr>
-
-                        <td>
-                            Cadastro de perfil de fornecedor
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
+                        <td>Cadastro de perfil de fornecedor</td>
+                        <td><i class="bi bi-check-circle-fill table-check"></i></td>
+                        {% for plano in planos %}
+                            <td><i class="bi bi-check-circle-fill table-check"></i></td>
+                        {% endfor %}
                     </tr>
 
-
                     <tr>
-
-                        <td>
-                            Visualização de demandas
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
+                        <td>Visualização de demandas</td>
+                        <td><i class="bi bi-check-circle-fill table-check"></i></td>
+                        {% for plano in planos %}
+                            <td><i class="bi bi-check-circle-fill table-check"></i></td>
+                        {% endfor %}
                     </tr>
 
-
                     <tr>
-
-                        <td>
-                            Relatórios básicos de visualizações
-                        </td>
-
-                        <td>
-                            <i class="bi bi-dash-lg table-empty"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
+                        <td>Selo de fornecedor</td>
+                        <td><i class="bi bi-dash-lg table-empty"></i></td>
+                        {% for plano in planos %}
+                            <td><i class="bi bi-check-circle-fill table-check"></i></td>
+                        {% endfor %}
                     </tr>
 
-
                     <tr>
-
-                        <td>
-                            Relatórios completos
-                        </td>
-
-                        <td>
-                            <i class="bi bi-dash-lg table-empty"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-dash-lg table-empty"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
+                        <td>Relatórios de visualizações</td>
+                        <td><i class="bi bi-dash-lg table-empty"></i></td>
+                        {% for plano in planos %}
+                            <td><i class="bi bi-check-circle-fill table-check"></i></td>
+                        {% endfor %}
                     </tr>
 
-
                     <tr>
-
-                        <td>
-                            Selo de verificado
-                        </td>
-
-                        <td>
-                            <i class="bi bi-dash-lg table-empty"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
+                        <td>Contatos recebidos e suporte dedicado</td>
+                        <td><i class="bi bi-dash-lg table-empty"></i></td>
+                        {% for plano in planos %}
+                            <td>
+                                {% if plano.eh_gold %}
+                                    <i class="bi bi-check-circle-fill table-check"></i>
+                                {% else %}
+                                    <i class="bi bi-dash-lg table-empty"></i>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
                     </tr>
-
-
-                    <tr>
-
-                        <td>
-                            Selo premium
-                        </td>
-
-                        <td>
-                            <i class="bi bi-dash-lg table-empty"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-dash-lg table-empty"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
-                    </tr>
-
-
-                    <tr>
-
-                        <td>
-                            Suporte dedicado
-                        </td>
-
-                        <td>
-                            <i class="bi bi-dash-lg table-empty"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-dash-lg table-empty"></i>
-                        </td>
-
-                        <td>
-                            <i class="bi bi-check-circle-fill table-check"></i>
-                        </td>
-
-                    </tr>
-
                 </tbody>
-
             </table>
-
         </div>
-
     </section>
+
+    {% comment %}
+        RNF-008 (Marco Civil da Internet): a plataforma não processa pagamentos.
+        O plano é contratado aqui, mas a cobrança é combinada com a equipe.
+    {% endcomment %}
+    <p class="plans-rodape">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        O suppra não processa pagamentos. A contratação registra seu interesse no
+        plano e a equipe entrará em contato pelos canais do seu cadastro.
+    </p>
 
 </main>
 

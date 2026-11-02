@@ -1,1 +1,141 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+CU14 — Denunciar conteúdo (RF-025).
+
+Formulário com campo de texto descritivo obrigatório e campo opcional para anexo
+de imagem como evidência. O relato é encaminhado ao painel administrativo para
+revisão pela equipe gestora.
+
+Pós-condição do CU14: o conteúdo denunciado permanece visível até a conclusão da
+análise — por isso esta tela não altera produto nem demanda.
+{% endcomment %}
+
+{% block title %}Denunciar Conteúdo | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/moderacao/denunciar.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container denunciar-page">
+
+  <a href="{{ next|default:'/' }}" class="denunciar-page__voltar">
+    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+    Voltar
+  </a>
+
+  <section class="denunciar-card" aria-labelledby="denunciar-title">
+
+    <header class="denunciar-card__header">
+      <span class="denunciar-card__icone" aria-hidden="true">
+        <i class="bi bi-flag-fill"></i>
+      </span>
+
+      <div>
+        <h1 class="denunciar-card__titulo" id="denunciar-title">Denunciar Conteúdo</h1>
+        <p class="denunciar-card__subtitulo">
+          Conte-nos o que aconteceu. Sua denúncia é analisada pela equipe
+          gestora.
+        </p>
+      </div>
+    </header>
+
+    {% if produto or demanda %}
+
+      <div class="denunciar-alvo">
+        <p class="denunciar-alvo__rotulo">Conteúdo denunciado</p>
+
+        {% if produto %}
+          <p class="denunciar-alvo__valor">
+            <i class="bi bi-box-seam" aria-hidden="true"></i>
+            {{ produto.nome }}
+            <span class="denunciar-alvo__meta">
+              portfólio de {{ produto.id_fornecedor.nome }}
+            </span>
+          </p>
+        {% else %}
+          <p class="denunciar-alvo__valor">
+            <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+            {{ demanda.descricao_produto|truncatechars:70 }}
+            <span class="denunciar-alvo__meta">
+              demanda de {{ demanda.id_comerciante.nome }}
+            </span>
+          </p>
+        {% endif %}
+      </div>
+
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" class="denunciar-form">
+      {% csrf_token %}
+
+      <input type="hidden" name="tipo_conteudo" value="{{ tipo_conteudo }}">
+      {% if produto %}
+        <input type="hidden" name="id_produto" value="{{ produto.pk }}">
+      {% endif %}
+      {% if demanda %}
+        <input type="hidden" name="id_demanda" value="{{ demanda.pk }}">
+      {% endif %}
+      {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+      {% endif %}
+
+      {% comment %}
+        CU14 E1: descrição vazia não permite envio — o campo é obrigatório e a
+        mensagem diz o que fazer.
+      {% endcomment %}
+      <div class="form-field{% if form.descricao.errors %} has-error{% endif %}">
+        <label for="{{ form.descricao.id_for_label }}">
+          {{ form.descricao.label }} <span class="denunciar-obrigatorio">*</span>
+        </label>
+
+        {{ form.descricao }}
+
+        {% for erro in form.descricao.errors %}
+          <p class="denunciar-erro" role="alert">
+            <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+            {{ erro }}
+          </p>
+        {% endfor %}
+      </div>
+
+      <div class="form-field{% if form.evidencia.errors %} has-error{% endif %}">
+        <label for="{{ form.evidencia.id_for_label }}">
+          {{ form.evidencia.label }}
+        </label>
+
+        {{ form.evidencia }}
+
+        <p class="denunciar-ajuda">{{ form.evidencia.help_text }}</p>
+
+        {% for erro in form.evidencia.errors %}
+          <p class="denunciar-erro" role="alert">
+            <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+            {{ erro }}
+          </p>
+        {% endfor %}
+      </div>
+
+      <div class="denunciar-form__acoes">
+        <a href="{{ next|default:'/' }}" class="btn-ghost">Cancelar</a>
+
+        <button type="submit" class="denunciar-enviar">
+          <i class="bi bi-send-fill" aria-hidden="true"></i>
+          Enviar denúncia
+        </button>
+      </div>
+
+    </form>
+
+    <p class="denunciar-card__nota">
+      Em casos confirmados de informação enganosa ou descumprimento dos Termos de
+      Uso, a conta do autor do conteúdo. O conteúdo continuará visível até a
+      conclusão da análise.
+    </p>
+
+  </section>
+
+</div>
+{% endblock %}

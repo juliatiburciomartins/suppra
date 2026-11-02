@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+RF-022 / CU13 A1 — Gerenciar a assinatura ativa.
+
+O RF-022 pede exibir: plano contratado, data de vencimento e status atual. O
+CU13 A1 acrescenta a opção de cancelar, avisando que os benefícios permanecem
+até o fim do período vigente.
+{% endcomment %}
+
+{% block title %}Meu plano | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/assinaturas/meu_plano.css' %}" />
+{% endblock %}
+
+{% block content %}
+
+<div class="container meu-plano-page">
+
+  <a href="{% url 'planos_assinatura' %}" class="meu-plano__voltar">
+    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+    Ver todos os planos
+  </a>
+
+  {% if assinatura %}
+
+    {% if assinatura.id_plano.nivel == "gold" %}
+      <section class="plano-cartao plano-cartao--gold">
+    {% else %}
+      <section class="plano-cartao plano-cartao--silver">
+    {% endif %}
+
+      <header class="plano-cartao__header">
+        <div>
+          <p class="plano-cartao__rotulo">Seu plano atual</p>
+          <h1 class="plano-cartao__titulo">{{ assinatura.id_plano.nome_plano }}</h1>
+        </div>
+
+        <span class="plano-status plano-status--{{ assinatura.status }}">
+          {{ assinatura.get_status_exibicao }}
+        </span>
+      </header>
+
+      <p class="plano-cartao__descricao">{{ assinatura.id_plano.descricao }}</p>
+
+      {# ---------------- RF-022: plano, vencimento e status ---------------- #}
+      <div class="plano-dados">
+        <div class="plano-dado">
+          <span class="plano-dado__icone" aria-hidden="true"><i class="bi bi-calendar-check"></i></span>
+          <span class="plano-dado__texto">
+            <small>Assinado em</small>
+            <strong>{{ assinatura.data_inicio|date:"d/m/Y" }}</strong>
+          </span>
+        </div>
+
+        <div class="plano-dado">
+          <span class="plano-dado__icone" aria-hidden="true"><i class="bi bi-calendar-event"></i></span>
+          <span class="plano-dado__texto">
+            <small>Vence em</small>
+            <strong>{{ assinatura.data_vencimento|date:"d/m/Y" }}</strong>
+          </span>
+        </div>
+
+        <div class="plano-dado">
+          <span class="plano-dado__icone" aria-hidden="true"><i class="bi bi-clock-history"></i></span>
+          <span class="plano-dado__texto">
+            <small>Tempo restante</small>
+            <strong>
+              {% if assinatura.dias_restantes > 0 %}
+                {{ assinatura.dias_restantes }} dias
+              {% else %}
+                Encerrado
+              {% endif %}
+            </strong>
+          </span>
+        </div>
+
+        <div class="plano-dado">
+          <span class="plano-dado__icone" aria-hidden="true"><i class="bi bi-cash-coin"></i></span>
+          <span class="plano-dado__texto">
+            <small>Valor mensal</small>
+            <strong>R$ {{ assinatura.id_plano.valor|floatformat:2 }}</strong>
+          </span>
+        </div>
+      </div>
+
+      {% if assinatura.status == "cancelada" %}
+        <p class="plano-aviso plano-aviso--cancelado">
+          <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+          Sua assinatura foi cancelada. Os benefícios permanecem ativos até
+          {{ assinatura.data_vencimento|date:"d/m/Y" }}.
+        </p>
+      {% endif %}
+
+      {# ---------------- CU13 A1: cancelar ---------------- #}
+      <div class="plano-cartao__acoes">
+        {% if assinatura.status == "ativa" %}
+          <form method="POST" action="{% url 'cancelar_assinatura' %}">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="plano-btn plano-btn--danger"
+              data-confirmar="Cancelar sua assinatura do plano {{ assinatura.id_plano.nome_plano }}? Seus benefícios permanecem ativos até {{ assinatura.data_vencimento|date:'d/m/Y' }}."
+              data-confirmar-sim="Cancelar assinatura"
+            >
+              <i class="bi bi-x-circle" aria-hidden="true"></i>
+              Cancelar assinatura
+            </button>
+          </form>
+        {% endif %}
+
+        <a href="{% url 'planos_assinatura' %}" class="plano-btn">
+          <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+          Trocar de plano
+        </a>
+      </div>
+
+    </section>
+
+  {% else %}
+
+    {# ---------------- Sem assinatura em vigor ---------------- #}
+    <section class="plano-cartao plano-cartao--free">
+      <header class="plano-cartao__header">
+        <div>
+          <p class="plano-cartao__rotulo">Seu plano atual</p>
+          <h1 class="plano-cartao__titulo">Gratuito</h1>
+        </div>
+
+        <span class="plano-status plano-status--ativa">Ativo</span>
+      </header>
+
+      <p class="plano-cartao__descricao">
+        Você está no plano gratuito: seu portfólio aparece na listagem, mas sem
+        selo de verificado e sem relatórios.
+      </p>
+
+      <div class="plano-cartao__acoes">
+        <a href="{% url 'planos_assinatura' %}" class="plano-btn plano-btn--primary">
+          <i class="bi bi-stars" aria-hidden="true"></i>
+          Ver planos disponíveis
+        </a>
+      </div>
+    </section>
+
+  {% endif %}
+
+  {# ---------------- Histórico de assinaturas ---------------- #}
+  {% if historico %}
+    <section class="plano-historico" aria-labelledby="historico-titulo">
+      <h2 class="plano-historico__titulo" id="historico-titulo">
+        <i class="bi bi-clock-history" aria-hidden="true"></i>
+        Histórico
+      </h2>
+
+      <ul class="plano-historico__lista">
+        {% for antiga in historico %}
+          <li>
+            <span class="plano-historico__plano">{{ antiga.id_plano.nome_plano }}</span>
+            <span class="plano-historico__periodo">
+              {{ antiga.data_inicio|date:"d/m/Y" }} &rarr; {{ antiga.data_vencimento|date:"d/m/Y" }}
+            </span>
+            <span class="plano-status plano-status--{{ antiga.status }}">
+              {{ antiga.get_status_exibicao }}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+
+</div>
+
+{% endblock %}

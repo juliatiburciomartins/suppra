@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+CU21 — Consultar log de auditoria (RF-024).
+
+Filtros: por usuário, por modelo ou por período — os três que o CU21 lista.
+A tabela mostra data e hora, usuário responsável, modelo afetado e conteúdo
+anterior (truncado); a página de detalhe mostra o conteúdo inteiro.
+
+Pós-condição do CU21: "Nenhuma alteração é realizada no log durante a consulta" —
+esta tela é somente leitura.
+{% endcomment %}
+
+{% block title %}Log de auditoria | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/core/painel_admin.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container painel-page">
+
+  <header class="painel-header">
+    <div>
+      <h1 class="painel-title">Log de auditoria</h1>
+      <p class="painel-subtitle">
+        Histórico auditável das alterações em portfólios, demandas e contas
+        (RF-024).
+      </p>
+    </div>
+
+    <a href="{% url 'painel_admin' %}" class="btn-primary">
+      <i class="bi bi-arrow-left" aria-hidden="true"></i>
+      Voltar ao painel
+    </a>
+  </header>
+
+  {% comment %} ---------------- Filtros (CU21, passo 3) ---------------- {% endcomment %}
+  <form method="GET" class="log-filters" role="search">
+    <div class="log-filters__campo">
+      <label for="filtro-modelo">Modelo afetado</label>
+      <select id="filtro-modelo" name="modelo">
+        <option value="">Todos</option>
+        {% for modelo in opcoes_modelo %}
+          <option value="{{ modelo }}" {% if filtros.modelo == modelo %}selected{% endif %}>
+            {{ modelo }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="log-filters__campo">
+      <label for="filtro-acao">Ação</label>
+      <select id="filtro-acao" name="acao">
+        <option value="">Todas</option>
+        {% for valor, rotulo in opcoes_acao %}
+          <option value="{{ valor }}" {% if filtros.acao == valor %}selected{% endif %}>
+            {{ rotulo }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="log-filters__campo">
+      <label for="filtro-usuario">Usuário responsável</label>
+      <select id="filtro-usuario" name="usuario">
+        <option value="">Todos</option>
+        {% for usuario in usuarios %}
+          <option value="{{ usuario.pk }}" {% if filtros.usuario == usuario.pk|stringformat:"s" %}selected{% endif %}>
+            {{ usuario.nome }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="log-filters__campo">
+      <label for="filtro-periodo">Período</label>
+      <select id="filtro-periodo" name="periodo">
+        <option value="">Qualquer data</option>
+        <option value="hoje" {% if filtros.periodo == "hoje" %}selected{% endif %}>Hoje</option>
+        <option value="7dias" {% if filtros.periodo == "7dias" %}selected{% endif %}>Últimos 7 dias</option>
+        <option value="30dias" {% if filtros.periodo == "30dias" %}selected{% endif %}>Últimos 30 dias</option>
+      </select>
+    </div>
+
+    <button type="submit" class="log-filters__submit">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      Filtrar
+    </button>
+
+    {% if filtros.modelo or filtros.acao or filtros.usuario or filtros.periodo %}
+      <a href="{% url 'log_auditoria' %}" class="log-filters__limpar">
+        <i class="bi bi-x-circle" aria-hidden="true"></i>
+        Limpar filtros
+      </a>
+    {% endif %}
+  </form>
+
+  {% if registros %}
+
+    <p class="log-total">
+      {{ total }}
+      {% if total == 1 %}registro encontrado{% else %}registros encontrados{% endif %}
+    </p>
+
+    <div class="log-tabela-wrapper">
+      <table class="log-tabela">
+        <thead>
+          <tr>
+            <th scope="col">Data e hora</th>
+            <th scope="col">Usuário responsável</th>
+            <th scope="col">Ação</th>
+            <th scope="col">Modelo</th>
+            <th scope="col">Registro</th>
+            <th scope="col">Conteúdo anterior</th>
+            <th scope="col"><span class="visually-hidden">Detalhes</span></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for registro in registros %}
+            <tr>
+              <td class="log-tabela__data">
+                {{ registro.data_alteracao|date:"d/m/Y" }}
+                <small>{{ registro.data_alteracao|time:"H:i:s" }}</small>
+              </td>
+
+              <td>{{ registro.id_usuario.nome }}</td>
+
+              <td>
+                <span class="log-acao log-acao--{{ registro.acao|lower }}">
+                  {{ registro.get_acao_display }}
+                </span>
+              </td>
+
+              <td>{{ registro.modelo_afetado }}</td>
+
+              <td>#{{ registro.id_registro_afetado }}</td>
+
+              <td class="log-tabela__conteudo">
+                {{ registro.conteudo_anterior|default:"—"|truncatechars:70 }}
+              </td>
+
+              <td>
+                <a href="{% url 'detalhe_log' registro.pk %}" class="log-ver">
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                  <span class="visually-hidden">Ver registro {{ registro.id_log }}</span>
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% else %}
+
+    {% comment %} CU21, fluxo de exceção E1: nenhum registro casa com os filtros. {% endcomment %}
+    <section class="log-vazio">
+      <span class="log-vazio__icone" aria-hidden="true">
+        <i class="bi bi-journal-x"></i>
+      </span>
+
+      <h2>Nenhum registro encontrado</h2>
+
+      <p>
+        {% if sem_resultados %}
+          Não há resultados para os filtros selecionados. Ajuste o período ou
+          limpe os filtros para ver todo o histórico.
+        {% else %}
+          Ainda não há alterações registradas na plataforma.
+        {% endif %}
+      </p>
+
+      {% if sem_resultados %}
+        <a href="{% url 'log_auditoria' %}" class="btn-primary">Limpar filtros</a>
+      {% endif %}
+    </section>
+
+  {% endif %}
+
+</div>
+{% endblock %}

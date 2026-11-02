@@ -10,12 +10,19 @@
 {% block content %}
 <div class="onboarding-overlay">
     <div class="onboarding-modal-card">
-        <!-- Botão X para fechar / pular o tutorial -->
-        {% if user.tipo_perfil == "fornecedor" %}
-        <a href="{% url 'dashboard_fornecedor' %}" class="onboarding-close-btn" title="Pular tutorial">&times;</a>
-        {% else %}
-        <a href="{% url 'dashboard_comerciante' %}" class="onboarding-close-btn" title="Pular tutorial">&times;</a>
-        {% endif %}
+        <!--
+            Pular o tutorial (CU17 A1).
+
+            Precisa ser POST, não link GET: é este envio que registra a decisão
+            de ignorar o onboarding na sessão, para o tutorial não ser reexibido
+            automaticamente nas visitas seguintes (pós-condição do CU17).
+        -->
+        <form method="POST" action="{% url 'pular_tutorial' %}" class="onboarding-skip-form">
+            {% csrf_token %}
+            <button type="submit" class="onboarding-close-btn" title="Pular tutorial" aria-label="Pular tutorial">
+                &times;
+            </button>
+        </form>
 
         <div>
             <!-- Passo 1 -->

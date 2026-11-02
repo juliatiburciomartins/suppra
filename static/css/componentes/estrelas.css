@@ -1,0 +1,185 @@
+/* ==========================================================================
+   ESTRELAS - avaliacao de fornecedores (0 a 5 estrelas)
+   Usado por: portfolio/listar_fornecedores.html, portfolio/detalhes_fornecedor.html,
+   avaliacoes/lista_favoritos.html e avaliacoes/avaliar_fornecedor.html
+   ========================================================================== */
+
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stars__icons {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+}
+
+/* Trilho: as 5 estrelas vazias ao fundo */
+.stars__track {
+  display: flex;
+  gap: 2px;
+  color: var(--color-border);
+}
+
+.stars__track .bi {
+  font-size: 1rem;
+}
+
+/* Preenchimento: porcao pintada de cima, largura em % */
+.stars__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--color-gold);
+}
+
+.stars--interativo .stars__icons {
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   MODO LEITURA - exibe a media ao lado das estrelas
+   ========================================================================== */
+
+.stars-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stars-read__valor {
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.stars-read__total {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.stars-read--vazio .stars-read__valor {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   MODO INTERATIVO - campo de nota do formulario de avaliacao (RF-018)
+   ========================================================================== */
+
+.stars-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stars-field__opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.stars-option {
+  position: relative;
+}
+
+.stars-option input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.stars-option__label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 54px;
+  padding: 8px 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.stars-option__label:hover,
+.stars-option__label:focus-within {
+  border-color: var(--color-blue);
+  background: rgba(45, 108, 247, 0.06);
+  color: var(--color-blue-dark);
+}
+
+.stars-option input:checked + .stars-option__label {
+  border-color: var(--color-blue);
+  background: rgba(45, 108, 247, 0.12);
+  color: var(--color-navy);
+}
+
+.stars-option input:focus-visible + .stars-option__label {
+  outline: 3px solid rgba(45, 108, 247, 0.18);
+  outline-offset: 2px;
+}
+
+.stars-option__star {
+  color: var(--color-border);
+  font-size: 1.15rem;
+  transition: color 0.18s ease;
+}
+
+.stars-option input:checked + .stars-option__label .stars-option__star {
+  color: var(--color-gold);
+}
+
+.stars-field__erro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+/* Selo de plano (RF-020 / CU12) reaproveitando a cor do ouro ---------- */
+
+.plan-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.plan-badge--silver {
+  background: #ececf1;
+  color: #565b6b;
+}
+
+.plan-badge--gold {
+  background: var(--color-gold);
+  color: #5a4a05;
+}
+
+@media (max-width: 480px) {
+  .stars-option__label {
+    min-width: 46px;
+    padding: 7px 4px;
+    font-size: 0.72rem;
+  }
+}

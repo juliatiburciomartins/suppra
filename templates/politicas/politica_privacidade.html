@@ -1,18 +1,40 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Política de Privacidade | hub_fecc{% endblock %}
+{% comment %}
+RNF-007 / RNF-015 — Política de Privacidade.
+
+Descreve os dados coletados (o mínimo necessário), o uso, os direitos do titular
+e a via de exclusão de conta (RF-016), que fica no painel do próprio usuário.
+{% endcomment %}
+
+{% block title %}Política de Privacidade | suppra{% endblock %}
+
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/politicas/politicas.css' %}" />
 {% endblock %}
+
 {% block content %}
-<section class="login-page" aria-labelledby="privacy-title">
-  <article class="login-card">
-    <a class="form-back-control" href="{% url 'cadastro' %}"><span aria-hidden="true">&lt;</span> Voltar</a>
+<div class="container">
+  <section class="legal-page" aria-labelledby="privacy-title">
+
+    <a class="form-back-control legal-page__back" href="{{ request.META.HTTP_REFERER|default:'/' }}">
+      <span aria-hidden="true">&lt;</span> Voltar
+    </a>
+
     <h1 id="privacy-title">Política de Privacidade</h1>
+
     <div class="legal-content">
-      {% include 'usuario/_politica_privacidade_conteudo.html' %}
+      {% include 'politicas/politica_privacidade_conteudo.html' %}
     </div>
-  </article>
-</section>
+
+    <p class="legal-page__rodape">
+      Para corrigir seus dados, acesse
+      <a href="{% url 'editar_perfil' %}">Editar dados</a> no painel. Para
+      excluir sua conta e os dados associados, use
+      <a href="{% url 'excluir_conta' %}">Excluir minha conta</a>.
+    </p>
+
+  </section>
+</div>
 {% endblock %}

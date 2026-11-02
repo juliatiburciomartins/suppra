@@ -1,23 +1,51 @@
-{% extends 'base/index.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Termos de Uso | hub_fecc{% endblock %}
+{% comment %}
+RNF-015 — Termos de Uso.
 
-{% block navigation %}  {% endblock %}
-{% block footer %}  {% endblock %}
-{% block scripts %} {% endblock %} 
+O conteúdo vem da versão vigente registrada em `termo_uso` (tabela do banco.sql,
+com versão e data de vigência). Enquanto a equipe gestora não tiver cadastrado
+nenhuma versão, mostra o texto estático de `politicas/termos_uso_conteudo.html`,
+que é o mesmo exibido no modal do cadastro — assim o usuário nunca vê uma
+página vazia.
+{% endcomment %}
+
+{% block title %}Termos de Uso | suppra{% endblock %}
+
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/politicas/politicas.css' %}" />
 {% endblock %}
 
 {% block content %}
-<section class="login-page" aria-labelledby="terms-title">
-  <article class="login-card" style="max-width: 800px; width: 100%;">
-    <a class="form-back-control" href="{% url 'cadastro' %}"><span aria-hidden="true">&lt;</span> Voltar</a>
+<div class="container">
+  <section class="legal-page" aria-labelledby="terms-title">
+
+    <a class="form-back-control legal-page__back" href="{{ request.META.HTTP_REFERER|default:'/' }}">
+      <span aria-hidden="true">&lt;</span> Voltar
+    </a>
+
     <h1 id="terms-title">Termos de Uso</h1>
+
+    {% if termo %}
+      <p class="legal-page__versao">
+        Versão {{ termo.versao }} &middot; vigente desde {{ termo.data_vigencia|date:"d/m/Y" }}
+      </p>
+    {% endif %}
+
     <div class="legal-content">
-      {% include 'usuario/_termo_uso_conteudo.html' %}
+      {% if termo %}
+        {% if termo.texto %}{{ termo.texto|linebreaks }}{% else %}{% include 'politicas/termos_uso_conteudo.html' %}{% endif %}
+      {% else %}
+        {% include 'politicas/termos_uso_conteudo.html' %}
+      {% endif %}
     </div>
-  </article>
-</section>
+
+    <p class="legal-page__rodape">
+      Você criou conta ou publicou algum conteúdo na plataforma? O aceite é
+      registrado com data e hora no momento do cadastro, conforme a LGPD.
+    </p>
+
+  </section>
+</div>
 {% endblock %}

@@ -1,0 +1,702 @@
+/* ==========================================================================
+   FORNECEDORES - listagem publica e detalhe (CU04, CU05, CU06 / RF-010 a RF-013)
+   ========================================================================== */
+
+.fornecedores-page {
+  padding: 40px 16px 64px;
+}
+
+/* Cabecalho + acao principal (RNF-010) ----------------------------------- */
+
+.fornecedores-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.fornecedores-title {
+  margin: 0 0 6px;
+  color: var(--color-navy);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.fornecedores-subtitle {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+/* Busca e filtro (RF-013) ------------------------------------------------- */
+
+.fornecedores-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 28px;
+  padding: 18px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.filter-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--color-navy);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.filter-field input,
+.filter-field select {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.filter-field input:focus,
+.filter-field select:focus {
+  border-color: var(--color-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 108, 247, 0.15);
+}
+
+.filter-submit {
+  height: 46px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-blue);
+  color: var(--color-surface);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.18s ease, transform 0.18s ease;
+}
+
+.filter-submit:hover,
+.filter-submit:focus-visible {
+  background: var(--color-blue-dark);
+  transform: translateY(-1px);
+}
+
+/* Categorias ativas (chips) ---------------------------------------------- */
+
+.categoria-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.categoria-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-navy);
+  font-size: 0.84rem;
+  font-weight: 650;
+  transition: border-color 0.18s ease, background-color 0.18s ease,
+    color 0.18s ease, transform 0.18s ease;
+}
+
+.categoria-chip:hover,
+.categoria-chip:focus-visible {
+  border-color: var(--color-blue);
+  background: rgba(45, 108, 247, 0.08);
+  color: var(--color-blue-dark);
+  transform: translateY(-1px);
+}
+
+.categoria-chip--ativa {
+  border-color: transparent;
+  background: var(--color-blue);
+  color: var(--color-surface);
+}
+
+.categoria-chip--ativa:hover,
+.categoria-chip--ativa:focus-visible {
+  background: var(--color-blue-dark);
+  color: var(--color-surface);
+}
+
+/* Grid de fornecedores ---------------------------------------------------- */
+
+.fornecedores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.fornecedor-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.18s ease-out, box-shadow 0.18s ease;
+}
+
+.fornecedor-card:hover {
+  box-shadow: 0 16px 40px rgba(29, 40, 117, 0.12);
+  transform: translateY(-2px);
+}
+
+.fornecedor-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fornecedor-card__identidade {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.fornecedor-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(45, 108, 247, 0.1);
+  color: var(--color-blue);
+  font-size: 1.25rem;
+}
+
+.fornecedor-card__nome {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 1.05rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.fornecedor-card__doc {
+  margin: 2px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.fornecedor-card__stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fornecedor-card__produtos-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+/* Amostra de produtos (RF-010: nome, categoria e preco de cada item) ------- */
+
+.fornecedor-card__amostra {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fornecedor-card__amostra li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.86rem;
+}
+
+.fornecedor-card__amostra-nome {
+  color: var(--color-text);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fornecedor-card__amostra-preco {
+  flex-shrink: 0;
+  color: var(--color-navy);
+  font-weight: 750;
+}
+
+.fornecedor-card__mais {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.fornecedor-card__footer {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Aviso devisitor (CU04, passo 5 / RF-027) --------------------------------- */
+
+.acesso-requerido {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-small);
+  background: var(--color-info-background);
+  color: var(--color-info);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.acesso-requerido a {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   DETALHE DO FORNECEDOR (CU05)
+   ========================================================================== */
+
+.fornecedor-detalhe {
+  padding: 32px 16px 64px;
+}
+
+.fornecedor-detalhe__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  color: var(--color-blue);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.fornecedor-detalhe__voltar:hover,
+.fornecedor-detalhe__voltar:focus-visible {
+  color: var(--color-blue-dark);
+  text-decoration: underline;
+}
+
+.fornecedor-detalhe__cabecalho {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding: 26px 28px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.fornecedor-detalhe__titulo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.fornecedor-detalhe__titulo h1 {
+  margin: 0 0 6px;
+  color: var(--color-navy);
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.fornecedor-detalhe__doc {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.fornecedor-detalhe__acoes {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Botao de favoritar (RF-029 / RF-030) ------------------------------------- */
+
+.favoritar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-navy);
+  font-size: 0.88rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease,
+    color 0.18s ease, transform 0.18s ease;
+}
+
+.favoritar-btn:hover,
+.favoritar-btn:focus-visible {
+  border-color: var(--color-gold);
+  background: rgba(238, 209, 107, 0.14);
+  transform: translateY(-1px);
+}
+
+.favoritar-btn--ativo {
+  border-color: transparent;
+  background: var(--color-gold);
+  color: #5a4a05;
+}
+
+.favoritar-btn--ativo:hover,
+.favoritar-btn--ativo:focus-visible {
+  background: #e5c455;
+  color: #5a4a05;
+}
+
+/* Canais de contato (RF-012) ---------------------------------------------- */
+
+.contato-box {
+  margin-bottom: 24px;
+  padding: 24px 26px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.contato-box__titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  color: var(--color-navy);
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.contato-box__nota {
+  margin: 0 0 18px;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.contato-canais {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.contato-canal {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  background: #f6f8ff;
+  color: var(--color-text);
+  transition: border-color 0.18s ease, background-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.contato-canal:hover,
+.contato-canal:focus-visible {
+  border-color: var(--color-blue);
+  background: rgba(45, 108, 247, 0.07);
+  transform: translateY(-1px);
+}
+
+.contato-canal__icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(45, 108, 247, 0.1);
+  color: var(--color-blue);
+  font-size: 1rem;
+}
+
+.contato-canal__texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.contato-canal__rotulo {
+  color: var(--color-text-muted);
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.contato-canal__valor {
+  overflow: hidden;
+  color: var(--color-text);
+  font-size: 0.92rem;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Tabela de produtos do detalhe -------------------------------------------- */
+
+.produtos-tabela {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.produtos-tabela caption {
+  padding: 22px 26px 0;
+  color: var(--color-navy);
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-align: left;
+}
+
+.produtos-tabela th,
+.produtos-tabela td {
+  padding: 14px 26px;
+  text-align: left;
+  font-size: 0.92rem;
+}
+
+.produtos-tabela thead th {
+  background: #f6f8ff;
+  color: var(--color-navy);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.produtos-tabela tbody tr + tr td {
+  border-top: 1px solid var(--color-border);
+}
+
+.produtos-tabela__nome {
+  font-weight: 650;
+}
+
+.produtos-tabela__categoria {
+  color: var(--color-blue-dark);
+  font-size: 0.84rem;
+  font-weight: 650;
+}
+
+.produtos-tabela__preco {
+  color: var(--color-navy);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* Avaliacoes recebidas (RF-018) -------------------------------------------- */
+
+.avaliacoes-box {
+  margin-top: 24px;
+  padding: 26px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.avaliacoes-box__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.avaliacoes-box__titulo {
+  margin: 0;
+  color: var(--color-navy);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.avaliacao-item {
+  padding: 16px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.avaliacao-item__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.avaliacao-item__autor {
+  color: var(--color-text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.avaliacao-item__data {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.avaliacao-item__comentario {
+  margin: 8px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.avaliacao-item--removida {
+  opacity: 0.6;
+}
+
+.avaliacao-item__removida-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 8px;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-danger-background);
+  color: var(--color-danger);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   ESTADO VAZIO (CU06 E1 / RF-027)
+   ========================================================================== */
+
+.busca-vazia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 520px;
+  margin: 24px auto 64px;
+  padding: 48px 32px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  text-align: center;
+}
+
+.busca-vazia__icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 6px;
+  border-radius: 50%;
+  background: rgba(45, 108, 247, 0.1);
+  color: var(--color-blue);
+  font-size: 1.6rem;
+}
+
+.busca-vazia h2 {
+  margin: 0;
+  color: var(--color-navy);
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.busca-vazia p {
+  margin: 0 0 8px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* ==========================================================================
+   RESPONSIVO (RNF-001)
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .fornecedores-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-submit {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .fornecedores-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fornecedores-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fornecedor-detalhe__cabecalho {
+    padding: 20px;
+  }
+
+  .fornecedor-detalhe__titulo h1 {
+    font-size: 1.35rem;
+  }
+
+  .produtos-tabela th,
+  .produtos-tabela td {
+    padding: 12px 16px;
+  }
+
+  .produtos-tabela__col-categoria {
+    display: none;
+  }
+}

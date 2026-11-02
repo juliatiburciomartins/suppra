@@ -1,2 +1,229 @@
 {% extends 'base.html' %}
-{% block content %}{% endblock %}
+{% load static %}
+
+{% comment %}
+CU10 — Gerenciar portfólio (RF-005 a RF-008).
+
+- Fluxo principal (RF-005): lista os produtos com status e a opção de adicionar.
+- A1 (RF-006): editar — abre o modal com o formulário preenchido.
+- A2 (RF-007): alternar disponibilidade ativo/inativo, imediato.
+- A3 (RF-008): remover, com aviso de que a ação é permanente e irreversível.
+
+O CSS deste template (static/css/portifolio/gerenciar_portfolio.css) já traz as
+classes usadas aqui, incluindo o modal de edição e o estado vazio.
+{% endcomment %}
+
+{% block title %}Meu Portfólio | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/portifolio/gerenciar_portfolio.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/componentes/confirmar.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container portfolio-page">
+
+  <header class="portfolio-header">
+    <div>
+      <h1 class="portfolio-title">Meu Portfólio</h1>
+      <p class="portfolio-subtitle">
+        {{ total_produtos }}
+        {% if total_produtos == 1 %}produto cadastrado{% else %}produtos cadastrados{% endif %}
+        &middot; {{ produtos_ativos }}
+        {% if produtos_ativos == 1 %}ativo{% else %}ativos{% endif %}
+      </p>
+    </div>
+
+    {% comment %} Ação principal destacada (RNF-010): visível sem rolagem. {% endcomment %}
+    <a href="{% url 'cadastrar_produto' %}" class="btn-primary">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      Adicionar Produto
+    </a>
+  </header>
+
+  {% if produtos %}
+
+    <div class="product-grid">
+      {% for produto in produtos %}
+
+        <article class="product-card">
+
+          <div class="product-card-top">
+            <div>
+              <h2 class="product-title">{{ produto.nome }}</h2>
+
+              <span class="product-category">
+                <i class="bi bi-tag" aria-hidden="true"></i>
+                {{ produto.id_categoria.nome }}
+              </span>
+            </div>
+
+            <span class="product-status product-status--{{ produto.status }}">
+              {{ produto.get_status_display }}
+            </span>
+          </div>
+
+          <p class="product-price">R$ {{ produto.preco }}</p>
+
+          <div class="product-card-footer">
+
+            {% comment %} RF-006 — editar {% endcomment %}
+            <form method="POST" action="{% url 'alternar_status_produto' produto.pk %}">
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="product-action product-action--success"
+                data-confirmar="Deseja {% if produto.status == 'ativo' %}marcar “{{ produto.nome }}” como indisponível{% else %}disponibilizar “{{ produto.nome }}”{% endif %}?"
+                data-confirmar-sim="{% if produto.status == 'ativo' %}Marcar inativo{% else %}Marcar ativo{% endif %}"
+                title="{% if produto.status == 'ativo' %}Marcar como inativo{% else %}Marcar como ativo{% endif %}"
+              >
+                <i class="bi bi-{% if produto.status == 'ativo' %}toggle-on{% else %}toggle-off{% endif %}" aria-hidden="true"></i>
+                {% if produto.status == 'ativo' %}Ativo{% else %}Inativo{% endif %}
+              </button>
+            </form>
+
+            {% comment %} RF-006 — editar (abre o modal) {% endcomment %}
+            <a href="{% url 'editar_produto' produto.pk %}" class="product-action">
+              <i class="bi bi-pencil" aria-hidden="true"></i>
+              Editar
+            </a>
+
+            {% comment %}
+              RF-008 — remoção permanente. O botão abre a confirmação do
+              static/js/confirmar.js e só envia o POST se o usuário confirmar
+              (o formulário é POST puro: nada acontece em GET, CU10 A3).
+            {% endcomment %}
+            <form method="POST" action="{% url 'remover_produto' produto.pk %}">
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="product-action product-action--danger"
+                data-confirmar="Remover “{{ produto.nome }}” do portfólio? Esta ação é permanente e irreversível."
+                data-confirmar-sim="Remover"
+                title="Remover produto"
+              >
+                <i class="bi bi-trash" aria-hidden="true"></i>
+                Remover
+              </button>
+            </form>
+
+          </div>
+
+        </article>
+
+      {% endfor %}
+    </div>
+
+  {% else %}
+
+    <section class="portfolio-empty">
+      <span class="portfolio-empty-icon" aria-hidden="true">
+        <i class="bi bi-box-seam"></i>
+      </span>
+
+      <h2>Seu portfólio está vazio</h2>
+
+      <p>
+        Cadastre seus produtos e serviços para que os comerciantes encontrem
+        suas ofertas na plataforma.
+      </p>
+
+      <a href="{% url 'cadastrar_produto' %}" class="btn-primary">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        Cadastrar primeiro produto
+      </a>
+    </section>
+
+  {% endif %}
+
+</div>
+
+{% comment %}
+================ Modal de edição (RF-006) ================
+Abre por cima da listagem quando a view é acessada por
+`editar_produto` (que passa `modal_aberto` e `form`). A classe
+`is-open` é aplicada pelo static/js/portifoliomodal.js.
+{% endcomment %}
+{% if form and modal_aberto %}
+  <div class="modal-overlay is-open" data-modal-overlay>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-editar-titulo">
+
+      <header class="modal-header">
+        <div>
+          <h2 id="modal-editar-titulo">Editar produto</h2>
+          <p>Altere os dados e salve as alterações.</p>
+        </div>
+
+        <a href="{% url 'gerenciar_portfolio' %}" class="modal-close" aria-label="Fechar">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </a>
+      </header>
+
+      <form method="POST" action="{% url 'editar_produto' modal_aberto %}" class="modal-form">
+        {% csrf_token %}
+
+        <div class="form-field form-field--full{% if form.nome.errors %} has-error{% endif %}">
+          <label for="{{ form.nome.id_for_label }}">{{ form.nome.label }}</label>
+          {{ form.nome }}
+
+          {% for erro in form.nome.errors %}
+            <div class="field-error-msg" role="alert">{{ erro }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-field{% if form.id_categoria.errors %} has-error{% endif %}">
+          <label for="{{ form.id_categoria.id_for_label }}">{{ form.id_categoria.label }}</label>
+          {{ form.id_categoria }}
+
+          {% for erro in form.id_categoria.errors %}
+            <div class="field-error-msg" role="alert">{{ erro }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-field{% if form.preco.errors %} has-error{% endif %}">
+          <label for="{{ form.preco.id_for_label }}">{{ form.preco.label }}</label>
+
+          <div class="price-field">
+            <span aria-hidden="true">R$</span>
+            {{ form.preco }}
+          </div>
+
+          {% for erro in form.preco.errors %}
+            <div class="field-error-msg" role="alert">{{ erro }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-field{% if form.telefone_contato.errors %} has-error{% endif %}">
+          <label for="{{ form.telefone_contato.id_for_label }}">{{ form.telefone_contato.label }}</label>
+          {{ form.telefone_contato }}
+
+          {% for erro in form.telefone_contato.errors %}
+            <div class="field-error-msg" role="alert">{{ erro }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-field{% if form.whatsapp_contato.errors %} has-error{% endif %}">
+          <label for="{{ form.whatsapp_contato.id_for_label }}">{{ form.whatsapp_contato.label }}</label>
+          {{ form.whatsapp_contato }}
+
+          {% for erro in form.whatsapp_contato.errors %}
+            <div class="field-error-msg" role="alert">{{ erro }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="modal-actions">
+          <a href="{% url 'gerenciar_portfolio' %}" class="btn-ghost">Cancelar</a>
+          <button type="submit" class="btn-primary">Salvar alterações</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/portifoliomodal.js' %}"></script>
+{% endblock %}

@@ -73,6 +73,20 @@ TEMPLATES = [
 WSGI_APPLICATION = 'hub_fecc.wsgi.application'
 
 
+# Fuso usado na sessão MySQL. Pode ser sobrescrito pelo `.env`.
+#
+# Precisa ser UTC (+00:00) e não o fuso local: com `USE_TZ = True`, o Django
+# grava e lê DATETIME em UTC. As colunas com `DEFAULT CURRENT_TIMESTAMP` do
+# banco.sql são resolvidas pelo MySQL no fuso da sessão, então a sessão precisa
+# concordar com o que o Django assume — caso contrário o valor default sai
+# deslocado em relação aos registros gravados pelo ORM, e telas que filtram por
+# período (o filtro "hoje" do CU21, o `date_hierarchy` do Admin) leem datas
+# incoerentes.
+#
+# Ver a seção "Fuso horário" no fim deste arquivo para o porquê completo.
+TIME_ZONE_BANCO = config('TIME_ZONE_BANCO', default='+00:00')
+
+
 # Database
 DATABASES = {
     'default': {
@@ -84,6 +98,10 @@ DATABASES = {
         'PORT': config('DB_PORT', default='3306'),
         'OPTIONS': {
             'charset': 'utf8mb4',
+            # Fixa o fuso da sessao MySQL (ver secao "Fuso horario" abaixo).
+            # Sem isto, colunas com DEFAULT CURRENT_TIMESTAMP saem com o fuso
+            # do servidor e quebram a leitura por periodo.
+            'init_command': f"SET time_zone = '{TIME_ZONE_BANCO}'",
         },
     }
 }
@@ -161,6 +179,35 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='naoresponda@hubfecc.c
 
 
 
+# --- Fuso horário -----------------------------------------------------------
+#
+# Resumo do problema e da solução (a variável `TIME_ZONE_BANCO` está definida
+# junto de DATABASES, acima, porque é usada no `init_command` da conexão):
+#
+# 1. `USE_TZ = True` faz o Django gravar e ler DATETIME em UTC, convertendo
+#    para `TIME_ZONE` ("America/Sao_Paulo") só na apresentação.
+# 2. O `banco.sql` define `DEFAULT CURRENT_TIMESTAMP` em várias colunas de data.
+#    Esse default é resolvido pelo MySQL no fuso **da sessão**.
+# 3. Se a sessão estiver em `SYSTEM` e o servidor rodar em UTC (padrão de
+#    contêiner/imagem), o default sai em UTC — que é o que o Django espera. Mas
+#    se o servidor rodar no fuso local, o default sai em hora local e o Django
+#    passa a interpretá-la como UTC: as datas ficam 3 horas adiantadas e as telas
+#    que filtram por período leem valores incoerentes (o filtro "hoje" do CU21 no
+#    log de auditoria, o `date_hierarchy` do Django Admin).
+# 4. Como o `banco.sql` não pode ser alterado, a correção é por sessão:
+#    `SET time_zone = '+00:00'` (ou o nome da região, se a tabela de fusos existir
+#    no servidor). Isso garante que CURRENT_TIMESTAMP e o ORM concordem.
+#
+# ATENÇÃO (RNF-012 / plano de contingência): se um dia o servidor MySQL tiver a
+# tabela `mysql.time_zone_data` carregada, prefira o nome da região
+# ('America/Sao_Paulo') ao offset fixo, porque ele acompanha as regras de horário
+# de verão. Basta mudar `TIME_ZONE_BANCO` no `.env`.
+
+# --- Checks do MySQL silenciados -------------------------------------------
+#
+# `mysql.W002` = "Your database server isn't set to UTC"; `mysql.E001` = driver
+# desatualizado. Ambos sao informativos neste projeto: o fuso e tratado acima e o
+# driver e o mysqlclient do requirements.txt (testado nesta maquina).
 SILENCED_SYSTEM_CHECKS = ['mysql.W002', 'mysql.E001']
 
 from django.db.backends.base.base import BaseDatabaseWrapper

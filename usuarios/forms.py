@@ -112,9 +112,32 @@ class CadastroForm(forms.ModelForm):
         # RNF-002: a senha nunca é gravada em texto puro.
         usuario = super().save(commit=False)
         usuario.set_password(self.cleaned_data["senha"])
+
         if commit:
             usuario.save()
+            self._registrar_aceite(usuario)
+
         return usuario
+
+    def _registrar_aceite(self, usuario):
+        """
+        CU01 (pós-condição) / RF-001 / RF-002: o aceite explícito aos Termos de
+        Uso e à Política de Privacidade é gravado com data e hora em
+        `termo_aceite` — é a evidência de consentimento exigida pela LGPD
+        (RNF-007), e `data_aceite` fica com o auto_now_add do model.
+
+        O vínculo é sempre com a versão mais recente do termo vigente. Se ainda
+        não houver nenhum TermoUso cadastrado (primeiro boot antes da equipe
+        gestora cadastrar a versão), o cadastro segue — só não há o que registrar
+        ainda — e a tela de políticas avisa que o documento está em elaboração.
+        """
+        from core.models import TermoAceite, TermoUso
+
+        termo = TermoUso.objects.order_by("-data_vigencia", "-id_termo_uso").first()
+        if termo is None:
+            return None
+
+        return TermoAceite.objects.create(id_usuario=usuario, id_termo_uso=termo)
 
 
 class EditarPerfilForm(forms.ModelForm):

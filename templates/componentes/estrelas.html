@@ -1,0 +1,82 @@
+{% comment %}
+Componente de estrelas (RF-010, RF-018, RF-028).
+
+MODO LEITURA — mostra a nota média de um fornecedor (aceita decimal).
+  A porcentagem de preenchimento é calculada na view
+  (`portfolio.services.percentual_avaliacao`) e chega em `percentagem`:
+  {% include "componentes/estrelas.html" with media=fornecedor.nota_media percentagem=forn.nota_percent total=forn.total_avaliacoes %}
+
+MODO INTERATIVO — campo de nota de 0 a 5 do formulário de avaliação:
+  {% include "componentes/estrelas.html" with campo="nota" %}
+  (não usar `media` junto; o valor vem do POST/initial do form)
+
+Requisitos: carregar static/css/componentes/estrelas.css no `extra_css`.
+
+O RF-018 define a escala de 0 a 5, onde 0 é a pior nota e 5 a melhor. Por isso
+o modo interativo tem 6 opções (0..5) e não 5.
+{% endcomment %}
+
+{% if campo %}
+  {# ---------- MODO INTERATIVO: escolher a nota (RF-018) ---------- #}
+  <div class="stars-field{% if erro %} has-error{% endif %}">
+    <div class="stars-field__opcoes" role="radiogroup" aria-label="Nota de 0 a 5 estrelas">
+      {% for valor in "012345"|make_list %}
+        <span class="stars-option">
+          <input
+            type="radio"
+            name="{{ campo }}"
+            id="{{ campo }}_{{ valor }}"
+            value="{{ valor }}"
+            {% if valor == selecionada %}checked{% endif %}
+          >
+          <label class="stars-option__label" for="{{ campo }}_{{ valor }}">
+            <i class="bi bi-star-fill stars-option__star" aria-hidden="true"></i>
+            <span>{{ valor }}</span>
+            <span class="visually-hidden">{{ valor }} estrelas</span>
+          </label>
+        </span>
+      {% endfor %}
+    </div>
+
+    {% if erro %}
+      <p class="stars-field__erro" role="alert">
+        <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+        {{ erro }}
+      </p>
+    {% endif %}
+  </div>
+
+{% else %}
+  {# ---------- MODO LEITURA: exibir a média (RF-010 / RF-028) ---------- #}
+  {% if media %}
+    <span class="stars-read" role="img" aria-label="Nota média {{ media }} de 5 estrelas">
+      <span class="stars__icons" aria-hidden="true">
+        <span class="stars__track">
+          <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+        </span>
+        <span class="stars__fill" style="width: {{ percentagem|default:0 }}%">
+          <span class="stars__track">
+            <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+          </span>
+        </span>
+      </span>
+
+      <span class="stars-read__valor">{{ media|floatformat:1 }}</span>
+
+      {% if total is not None %}
+        <span class="stars-read__total">
+          {% if total == 1 %}1 avaliação{% else %}{{ total }} avaliações{% endif %}
+        </span>
+      {% endif %}
+    </span>
+  {% else %}
+    <span class="stars-read stars-read--vazio">
+      <span class="stars__icons" aria-hidden="true">
+        <span class="stars__track">
+          <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+        </span>
+      </span>
+      <span class="stars-read__total">{% if total is not None %}{{ total }} {% if total == 1 %}avaliação{% else %}avaliações{% endif %}{% else %}sem avaliações{% endif %}</span>
+    </span>
+  {% endif %}
+{% endif %}

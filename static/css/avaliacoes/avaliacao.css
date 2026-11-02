@@ -1,0 +1,123 @@
+/* ==========================================================================
+   AVALIACAO DE FORNECEDOR (RF-018 / CU09)
+   ========================================================================== */
+
+.avaliacao-page {
+  padding: 32px 16px 64px;
+  max-width: 720px;
+}
+
+.avaliacao-card {
+  padding: 30px 32px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.avaliacao-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.avaliacao-card__titulo {
+  margin: 0 0 4px;
+  color: var(--color-navy);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.avaliacao-card__subtitulo {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+}
+
+.avaliacao-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.avaliacao-form .form-field label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--color-navy);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.avaliacao-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.avaliacao-form textarea:focus {
+  border-color: var(--color-blue);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 108, 247, 0.15);
+}
+
+.avaliacao-form .field-error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.avaliacao-form__acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 6px;
+}
+
+.avaliacao-card__nota {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .avaliacao-page {
+    padding: 20px 12px 48px;
+  }
+
+  .avaliacao-card {
+    padding: 22px 18px;
+  }
+
+  .avaliacao-card__titulo {
+    font-size: 1.2rem;
+  }
+
+  .avaliacao-form__acoes {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .avaliacao-form__acoes .btn-ghost,
+  .avaliacao-form__acoes .btn-primary {
+    width: 100%;
+  }
+}

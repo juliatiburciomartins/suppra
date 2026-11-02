@@ -5,7 +5,7 @@
   --color-blue-dark: #1e5ae8;
   --color-cerulean: #2795c4;
   --color-green: #80cb60;
-  --color-coral: j;
+  --color-coral: #e8734a;
   --color-gold: #eed16b;
 
   --color-background: #eaf2ff;
@@ -205,6 +205,13 @@ button,
   grid-template-columns: 1.6fr 1fr 1fr;
   gap: 40px;
   padding-bottom: 32px;
+}
+
+/* Três colunas de links (Navegação, Suporte, Legal) + marca */
+@media (min-width: 992px) {
+  .footer-main {
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  }
 }
 
 .footer-brand {

@@ -92,6 +92,24 @@
     text-decoration: underline;
 }
 
+/* Reabre o tutorial de onboarding (CU17: acesso voluntário pelo painel). */
+.perfil-tutorial-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    margin-top: 20px;
+
+    color: var(--color-blue);
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.perfil-tutorial-link:hover {
+    text-decoration: underline;
+}
+
 
 /* Tela de exclusão de conta */
 

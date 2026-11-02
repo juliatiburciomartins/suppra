@@ -51,6 +51,18 @@
   color: var(--color-navy);
 }
 
+/* O botão de pular virou <form> (POST registra a decisão — ver CU17 A1). */
+.onboarding-skip-form {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  margin: 0;
+}
+
+.onboarding-skip-form .onboarding-close-btn {
+  position: static;
+}
+
 .onboarding-step {
   display: none;
 }

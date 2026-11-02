@@ -73,6 +73,76 @@
   text-decoration: underline;
 }
 
+/* ==========================================================================
+   PAGINA LEGAL AVULSA (Termos de Uso / Politica de Privacidade)
+   Mesmo visual do modal, em pagina cheia.
+   ========================================================================== */
+
+.legal-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 16px 72px;
+}
+
+.legal-page__back {
+  margin-bottom: 24px;
+}
+
+.legal-page h1 {
+  margin: 0 0 6px;
+  color: var(--color-navy);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.legal-page__versao {
+  margin: 0 0 20px;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.legal-page .legal-content {
+  max-height: none;
+  padding: 28px 30px;
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-soft);
+}
+
+.legal-page__rodape {
+  margin: 20px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+
+.legal-page__rodape a {
+  color: var(--color-blue);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .legal-page {
+    padding: 24px 12px 48px;
+  }
+
+  .legal-page h1 {
+    font-size: 1.5rem;
+  }
+
+  .legal-page .legal-content {
+    padding: 20px 16px;
+  }
+
+  .legal-page__back {
+    min-width: 130px;
+    min-height: 56px;
+    font-size: 1.2rem;
+  }
+}
+
 @media (max-width: 600px) {
     .legal-modal {
       padding: 12px;

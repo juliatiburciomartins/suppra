@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+RF-011 / CU11 — Detalhe da demanda.
+
+Exibe o que o RF-011 pede: nome do comerciante, categoria do insumo solicitado,
+descrição do produto desejado, quantidade demandada e data de publicação.
+
+O contato do comerciante (RF-012) só aparece para usuário autenticado. Para
+visitante, o aviso do CU04 passo 5 é exibido.
+
+O botão "Denunciar Conteúdo" (RF-025 / CU14) fica disponível para qualquer
+usuário autenticado que não seja o autor da demanda.
+{% endcomment %}
+
+{% block title %}{{ demanda.descricao_produto|truncatechars:60 }} | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/portfolio/fornecedores.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/demandas/minhas_demandas.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/demandas/listar_demandas.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <div class="demanda-detalhe">
+
+    <a href="{% url 'listar_demandas' %}" class="demanda-detalhe__voltar">
+      <i class="bi bi-arrow-left" aria-hidden="true"></i>
+      Voltar para demandas
+    </a>
+
+    {% comment %} CU07 A2: encerrada continua no histórico, mas avisa que saiu do ar. {% endcomment %}
+    {% if demanda.status == "encerrada" %}
+      <p class="demanda-encerrada-aviso">
+        <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+        Esta demanda foi encerrada pelo comerciante e não está mais ativa na
+        plataforma.
+      </p>
+    {% endif %}
+
+    <article class="demanda-detalhe__card">
+
+      <header class="demanda-detalhe__cabecalho">
+        <div>
+          <h1 class="demanda-detalhe__titulo">{{ demanda.descricao_produto }}</h1>
+
+          <span class="demanda-detalhe__comerciante">
+            <i class="bi bi-shop" aria-hidden="true"></i>
+            {{ comerciante.nome }}
+          </span>
+        </div>
+
+        <span class="demand-status demand-status--{{ demanda.status }}">
+          {{ demanda.get_status_display }}
+        </span>
+      </header>
+
+      <p class="demanda-detalhe__rotulo">Produto desejado</p>
+      <p class="demanda-detalhe__texto">{{ demanda.descricao_produto }}</p>
+
+      <div class="demanda-detalhe__fatos">
+        <div class="demanda-fato">
+          <span class="demanda-fato__icone" aria-hidden="true">
+            <i class="bi bi-tag"></i>
+          </span>
+          <span class="demanda-fato__texto">
+            <span class="demanda-fato__rotulo">Categoria</span>
+            <span class="demanda-fato__valor">{{ demanda.id_categoria.nome }}</span>
+          </span>
+        </div>
+
+        <div class="demanda-fato">
+          <span class="demanda-fato__icone" aria-hidden="true">
+            <i class="bi bi-box-seam"></i>
+          </span>
+          <span class="demanda-fato__texto">
+            <span class="demanda-fato__rotulo">Quantidade</span>
+            <span class="demanda-fato__valor">{{ demanda.quantidade_produto }}</span>
+          </span>
+        </div>
+
+        <div class="demanda-fato">
+          <span class="demanda-fato__icone" aria-hidden="true">
+            <i class="bi bi-calendar3"></i>
+          </span>
+          <span class="demanda-fato__texto">
+            <span class="demanda-fato__rotulo">Publicada em</span>
+            <span class="demanda-fato__valor">
+              {{ demanda.data_publicacao|date:"d/m/Y" }}
+            </span>
+          </span>
+        </div>
+      </div>
+
+    </article>
+
+    {% comment %} ---------------- RF-012: contato do comerciante ---------------- {% endcomment %}
+    {% if pode_ver_contato %}
+
+      {% if canais %}
+        <section class="contato-box" aria-labelledby="contato-demanda-titulo"
+                 style="margin-top:24px;">
+          <h2 class="contato-box__titulo" id="contato-demanda-titulo">
+            <i class="bi bi-chat-dots-fill" aria-hidden="true"></i>
+            Entrar em Contato
+          </h2>
+
+          <p class="contato-box__nota">
+            Entre em contato com <strong>{{ comerciante.nome }}</strong> pelo canal
+            de sua preferência e negocie diretamente. O suppra não intermediou
+            pagamentos nem contratos (RNF-008).
+          </p>
+
+          <div class="contato-canais">
+            {% for canal in canais %}
+              <a href="{{ canal.url }}" class="contato-canal">
+                <span class="contato-canal__icone" aria-hidden="true">
+                  <i class="bi {{ canal.icone }}"></i>
+                </span>
+
+                <span class="contato-canal__texto">
+                  <span class="contato-canal__rotulo">{{ canal.rotulo }}</span>
+                  <span class="contato-canal__valor">{{ canal.valor }}</span>
+                </span>
+              </a>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+    {% else %}
+
+      {% comment %} RF-027 / CU04 passo 5. {% endcomment %}
+      <p class="acesso-requerido" style="margin-top:24px;">
+        <i class="bi bi-lock-fill" aria-hidden="true"></i>
+        <span>
+          Os dados de contato e as funcionalidades interativas estão disponíveis
+          apenas para usuários autenticados.
+          <a href="{% url 'login' %}?next={{ request.path|urlencode }}">Entrar</a>
+          ou
+          <a href="{% url 'cadastro' %}">criar conta</a>.
+        </span>
+      </p>
+
+    {% endif %}
+
+    {% comment %}
+      RF-025 / CU14: botão de denúncia em cada demanda publicada. Não aparece
+      para o próprio comerciante (autor) nem para visitantes.
+    {% endcomment %}
+    {% if user.is_authenticated and user.pk != comerciante.pk %}
+      <form method="POST" action="{% url 'denunciar' %}">
+        {% csrf_token %}
+        <input type="hidden" name="tipo_conteudo" value="demanda">
+        <input type="hidden" name="id_demanda" value="{{ demanda.pk }}">
+        <input type="hidden" name="next" value="{{ request.path }}">
+
+        <button type="submit" class="denunciar-btn">
+          <i class="bi bi-flag-fill" aria-hidden="true"></i>
+          Denunciar Conteúdo
+        </button>
+      </form>
+    {% endif %}
+
+  </div>
+
+</div>
+{% endblock %}

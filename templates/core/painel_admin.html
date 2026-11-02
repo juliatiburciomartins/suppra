@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+CU24 — Indicadores do painel administrativo (RF-017).
+
+"O sistema exibe os indicadores gerais atualizados: número de fornecedores
+cadastrados, número de produtos ativos, número de comerciantes ativos e número
+de demandas publicadas."
+
+A pós-condição do CU24 é "nenhuma alteração é realizada nos dados durante a
+consulta" — esta tela é só leitura. Os atalhos levam às demais telas de gestão
+(CU20 a CU23).
+{% endcomment %}
+
+{% block title %}Painel da equipe | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/componentes/estrelas.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/core/painel_admin.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container painel-page">
+
+  <header class="painel-header">
+    <div>
+      <h1 class="painel-title">Painel da equipe gestora</h1>
+      <p class="painel-subtitle">
+        Indicadores da plataforma e atalhos de gestão.
+      </p>
+    </div>
+
+    <a href="{% url 'admin:index' %}" class="btn-primary">
+      <i class="bi bi-sliders" aria-hidden="true"></i>
+      Abrir painel de gestão
+    </a>
+  </header>
+
+  {% comment %} ---------------- CU24: os quatro indicadores ---------------- {% endcomment %}
+  <section class="indicadores" aria-labelledby="indicadores-title">
+    <h2 class="painel-secao" id="indicadores-title">
+      <i class="bi bi-graph-up-arrow" aria-hidden="true"></i>
+      Indicadores gerais
+    </h2>
+
+    <div class="indicadores__grid">
+
+      <article class="indicador indicador--blue">
+        <span class="indicador__icone" aria-hidden="true">
+          <i class="bi bi-truck"></i>
+        </span>
+        <div class="indicador__texto">
+          <small>Fornecedores cadastrados</small>
+          <strong>{{ indicadores.fornecedores }}</strong>
+          <em>Contas de fornecedor ativas.</em>
+        </div>
+      </article>
+
+      <article class="indicador indicador--green">
+        <span class="indicador__icone" aria-hidden="true">
+          <i class="bi bi-box-seam"></i>
+        </span>
+        <div class="indicador__texto">
+          <small>Produtos ativos</small>
+          <strong>{{ indicadores.produtos_ativos }}</strong>
+          <em>Visíveis na listagem pública.</em>
+        </div>
+      </article>
+
+      <article class="indicador indicador--purple">
+        <span class="indicador__icone" aria-hidden="true">
+          <i class="bi bi-shop"></i>
+        </span>
+        <div class="indicador__texto">
+          <small>Comerciantes ativos</small>
+          <strong>{{ indicadores.comerciantes }}</strong>
+          <em>Contas de comerciante ativas.</em>
+        </div>
+      </article>
+
+      <article class="indicador indicador--teal">
+        <span class="indicador__icone" aria-hidden="true">
+          <i class="bi bi-file-earmark-text"></i>
+        </span>
+        <div class="indicador__texto">
+          <small>Demandas publicadas</small>
+          <strong>{{ indicadores.demandas_publicadas }}</strong>
+          <em>Encerradas não entram na conta.</em>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  {% comment %} ---------------- Operação: CU19, CU22, CU23 ---------------- {% endcomment %}
+  <section class="painel-secao-bloco" aria-labelledby="operacao-title">
+    <h2 class="painel-secao" id="operacao-title">
+      <i class="bi bi-activity" aria-hidden="true"></i>
+      Operação
+    </h2>
+
+    <div class="atalhos__grid">
+
+      <a href="{% url 'admin:moderacao_denuncia_changelist' %}?status__exact=pendente" class="atalho">
+        <span class="atalho__icone atalho__icone--danger" aria-hidden="true">
+          <i class="bi bi-flag-fill"></i>
+        </span>
+        <span class="atalho__texto">
+          <strong>Denúncias pendentes</strong>
+          <small>
+            {% if indicadores.denuncias_pendentes %}
+              {{ indicadores.denuncias_pendentes }} aguardando revisão
+            {% else %}
+              Nenhuma pendente
+            {% endif %}
+          </small>
+        </span>
+        <i class="bi bi-arrow-right atalho__seta" aria-hidden="true"></i>
+      </a>
+
+      <a href="{% url 'fila_avaliacoes' %}" class="atalho">
+        <span class="atalho__icone atalho__icone--gold" aria-hidden="true">
+          <i class="bi bi-star-fill"></i>
+        </span>
+        <span class="atalho__texto">
+          <strong>Fila de avaliações</strong>
+          <small>Manter ou remover avaliações</small>
+        </span>
+        <i class="bi bi-arrow-right atalho__seta" aria-hidden="true"></i>
+      </a>
+
+      <a href="{% url 'admin:suporte_suporte_changelist' %}?status__exact=aberto" class="atalho">
+        <span class="atalho__icone" aria-hidden="true">
+          <i class="bi bi-headset"></i>
+        </span>
+        <span class="atalho__texto">
+          <strong>Chamados de suporte</strong>
+          <small>
+            {% if indicadores.chamados_abertos %}
+              {{ indicadores.chamados_abertos }} em aberto
+            {% else %}
+              Nenhum em aberto
+            {% endif %}
+          </small>
+        </span>
+        <i class="bi bi-arrow-right atalho__seta" aria-hidden="true"></i>
+      </a>
+
+      <a href="{% url 'log_auditoria' %}" class="atalho">
+        <span class="atalho__icone" aria-hidden="true">
+          <i class="bi bi-journal-text"></i>
+        </span>
+        <span class="atalho__texto">
+          <strong>Log de auditoria</strong>
+          <small>Histórico de alterações</small>
+        </span>
+        <i class="bi bi-arrow-right atalho__seta" aria-hidden="true"></i>
+      </a>
+
+    </div>
+  </section>
+
+  {% comment %} ---------------- Gestão: CU20, CU21, CU23 ---------------- {% endcomment %}
+  <section class="painel-secao-bloco" aria-labelledby="gestao-title">
+    <h2 class="painel-secao" id="gestao-title">
+      <i class="bi bi-gear-fill" aria-hidden="true"></i>
+      Gestão
+    </h2>
+
+    <div class="atalhos__grid">
+
+      <a href="{% url 'admin:core_categoriainsumo_changelist' %}" class="atalho">
+        <span class="atalho__icone" aria-hidden="true">
+          <i class="bi bi-tags-fill"></i>
+        </span>
+        <span class="atalho__texto">
+          <strong>Categorias de insumo</strong>
+          <small>Cadastrar, editar e excluir (RF-031 a RF-034)</small>
+        </span>
+        <i class="bi bi-arrow-right atalho__seta" aria-hidden="true"></i>
+      </a>
+
+      <a href="{% url 'admin:assinaturas_planoassinatura_changelist' %}" class="atalho">
+        <span class="atalho__icone atalho__icone--gold" aria-hidden="true">
+          <i class="bi bi-award-fill"></i>
+        </span>
+        <span class="atalho__texto">
+          <strong>Planos de assinatura</strong>
+          <small>Nome, valor mensal e benefícios</small>
+        </span>
+        <i class="bi bi-arrow-right atalho__seta" aria-hidden="true"></i>
+      </a>
+
+      <a href="{% url 'admin:assinaturas_assinatura_changelist' %}" class="atalho">
+        <span class="atalho__icone" aria-hidden="true">
+          <i class="bi bi-credit-card-2-front"></i>
+        </span>
+        <span class="atalho__texto">
+          <strong>Assinaturas</strong>
+          <small>
+            {% if indicadores.assinaturas_ativas %}
+              {{ indicadores.assinaturas_ativas }} em vigor
+            {% else %}
+              Nenhuma em vigor
+            {% endif %}
+          </small>
+        </span>
+        <i class="bi bi-arrow-right atalho__seta" aria-hidden="true"></i>
+      </a>
+
+      <a href="{% url 'admin:core_termouso_changelist' %}" class="atalho">
+        <span class="atalho__icone" aria-hidden="true">
+          <i class="bi bi-file-earmark-check-fill"></i>
+        </span>
+        <span class="atalho__texto">
+          <strong>Termos de Uso</strong>
+          <small>Versões vigentes e registro de aceites</small>
+        </span>
+        <i class="bi bi-arrow-right atalho__seta" aria-hidden="true"></i>
+      </a>
+
+    </div>
+  </section>
+
+  {% comment %} ---------------- Qualidade das avaliações ---------------- {% endcomment %}
+  {% if qualidade.total %}
+
+    <section class="painel-secao-bloco" aria-labelledby="qualidade-title">
+      <h2 class="painel-secao" id="qualidade-title">
+        <i class="bi bi-star-half" aria-hidden="true"></i>
+        Avaliações recebidas
+      </h2>
+
+      <div class="qualidade">
+        <p class="qualidade__media">
+          <strong>{{ qualidade.media|floatformat:1 }}</strong>
+          <span>média geral</span>
+        </p>
+
+        <ul class="qualidade__distribuicao">
+          {% for linha in qualidade.distribuicao %}
+            <li>
+              <span class="qualidade__nota">{{ linha.nota }}<i class="bi bi-star-fill" aria-hidden="true"></i></span>
+              <span class="qualidade__barra">
+                <span
+                  class="qualidade__barra-preenchida"
+                  style="width: {% widthratio linha.total qualidade.total 100 %}%"
+                ></span>
+              </span>
+              <span class="qualidade__total">{{ linha.total }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+
+  {% endif %}
+
+</div>
+{% endblock %}

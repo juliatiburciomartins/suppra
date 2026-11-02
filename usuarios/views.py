@@ -1,17 +1,22 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.encoding import force_bytes
-from django.utils.http import url_has_allowed_host_and_scheme, urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.http import url_has_allowed_host_and_scheme
 from portfolio.models import Produto
-from django.core.exceptions import ValidationError
-from django.core.validators import validate_email
 
 from core.services import registrar_log
+from usuarios.onboarding import (
+    ja_visualizou,
+    registrar_conclusao,
+    registrar_ignoracao,
+    situacao,
+)
 from usuarios.decorators import (
     comerciante_required,
     fornecedor_required,
@@ -20,6 +25,13 @@ from usuarios.decorators import (
 )
 from usuarios.forms import CadastroForm, EditarPerfilForm
 from usuarios.models import Usuario
+from usuarios.password_reset import (
+    MENSAGEM_NEUTRA,
+    conta_pode_receber_link,
+    enviar_link_recuperacao,
+    token_valido,
+    usuario_por_uid,
+)
 from usuarios.services import anonimizar_usuario
 
 AUTH_BACKEND = "django.contrib.auth.backends.ModelBackend"
@@ -27,9 +39,6 @@ AUTH_BACKEND = "django.contrib.auth.backends.ModelBackend"
 
 def _url_dashboard(usuario):
     return url_painel(usuario)
-
-
-password_reset_token_generator = default_token_generator
 
 
 # --------------------------------------------------------------------------
@@ -79,7 +88,11 @@ def cadastro_view(request):
             usuario = form.save()
             login(request, usuario, backend=AUTH_BACKEND)
             messages.success(request, "Conta criada com sucesso! Bem-vindo(a) ao suppra.")
-            return redirect(_url_dashboard(usuario))
+
+            # CU01, pós-condição: "o usuário é redirecionado para o tutorial de
+            # onboarding e, em seguida, para o painel correspondente ao seu perfil".
+            if not ja_visualizou(request, usuario):
+                return redirect("tutorial")
     else:
         form = CadastroForm()
 
@@ -101,14 +114,12 @@ def recuperar_senha_view(request):
         email = request.POST.get("email", "").strip()
         usuario = Usuario.objects.filter(email__iexact=email).first()
 
-        if usuario and usuario.is_active:
-            uid = urlsafe_base64_encode(force_bytes(usuario.pk))
-            token = password_reset_token_generator.make_token(usuario)
-            link = request.build_absolute_uri(reverse("redefinir_senha", kwargs={"uidb64": uid, "token": token}))
-            mensagem = f"Olá, {usuario.nome}.\n\nRecebemos uma solicitação para redefinir sua senha no hub_fecc.\n\nAcesse o link abaixo para criar uma nova senha:\n{link}\n\nSe você não solicitou a recuperação, ignore este e-mail."
-            send_mail("Recuperação de senha - hub_fecc", mensagem, settings.DEFAULT_FROM_EMAIL, [usuario.email], fail_silently=True)
+        # Resposta sempre neutra (CU03, passo 7): não revelamos se o e-mail
+        # existe. Só conta ativa e não anonimizada recebe link.
+        if conta_pode_receber_link(usuario):
+            enviar_link_recuperacao(request, usuario)
 
-        messages.info(request, "Se o e-mail estiver cadastrado, um link foi enviado.")
+        messages.info(request, MENSAGEM_NEUTRA)
         return redirect("recuperar_senha_enviado")
 
     return render(request, "registration/password_reset_form.html")
@@ -119,12 +130,10 @@ def redefinicao_senha_enviado_view(request):
 
 
 def redefinir_senha_view(request, uidb64, token):
-    try:
-        usuario = Usuario.objects.get(pk=urlsafe_base64_decode(uidb64).decode())
-    except (TypeError, ValueError, OverflowError, Usuario.DoesNotExist):
-        usuario = None
+    usuario = usuario_por_uid(uidb64)
 
-    if not usuario or not usuario.is_active or not password_reset_token_generator.check_token(usuario, token):
+    # CU03 E1 (token já usado) e E2 (expirado): mesma tela, sem dizer qual foi.
+    if not token_valido(usuario, token):
         return render(request, "registration/password_reset_confirm.html", {"validlink": False})
 
     if request.method == "POST":
@@ -132,12 +141,29 @@ def redefinir_senha_view(request, uidb64, token):
         senha2 = request.POST.get("new_password2", "")
 
         if not senha1 or not senha2:
-            return render(request, "registration/password_reset_confirm.html", {"validlink": True, "erro_senha": "Preencha os dois campos de senha."})
+            return render(request, "registration/password_reset_confirm.html", {
+                "validlink": True,
+                "erro_senha": "Preencha os dois campos de senha.",
+            })
 
+        # CU03 E3: as senhas não coincidem -> destaca o erro e pede de novo.
         if senha1 != senha2:
-            return render(request, "registration/password_reset_confirm.html", {"validlink": True, "erro_senha": "As novas senhas não coincidem. Preencha os campos novamente."})
+            return render(request, "registration/password_reset_confirm.html", {
+                "validlink": True,
+                "erro_senha": "As novas senhas não coincidem. Preencha os campos novamente.",
+            })
+
+        try:
+            validate_password(senha1, user=usuario)
+        except ValidationError as erro:
+            return render(request, "registration/password_reset_confirm.html", {
+                "validlink": True,
+                "erro_senha": " ".join(erro.messages),
+            })
 
         usuario.set_password(senha1)  # RNF-002
+        # Grava `senha` (coluna do banco.sql) e invalida o token usado, porque
+        # o hash da senha entra no cálculo do token.
         usuario.save(update_fields=["password"])
         messages.success(request, "Sua senha foi redefinida com sucesso.")
         return redirect("password_reset_complete")
@@ -163,13 +189,23 @@ def link_expirado_view(request):
 
 @fornecedor_required
 def dashboard_fornecedor_view(request):
+    from assinaturas.services import assinatura_em_vigor, expirar_vencidas
+
+    expirar_vencidas()
+
     produtos = Produto.objects.filter(id_fornecedor=request.user).select_related("id_categoria")
+    assinatura = assinatura_em_vigor(request.user)
+
     return render(request, "usuarios/dashboard_fornecedor.html", {
         "tipo_menu": "fornecedor",
         "produtos": produtos,
         "total_produtos": produtos.count(),
         "produtos_ativos": produtos.filter(status="ativo").count(),
-        "plano_nome": "Grátis",
+        # RF-020/RF-022: o selo mostra o plano contratado; sem assinatura em
+        # vigor o fornecedor está no plano gratuito.
+        "assinatura": assinatura,
+        "plano_nome": assinatura.id_plano.nome_plano if assinatura else "Grátis",
+        "plano_nivel": assinatura.id_plano.nivel if assinatura else None,
     })
 
 
@@ -183,10 +219,62 @@ def dashboard_comerciante_view(request):
     return render(request, "usuarios/dashboard_comerciante.html", {
         "tipo_menu": "comerciante",
         "total_demandas": demandas_qs.count(),
+        "demandas_publicadas": demandas_qs.filter(status="publicada").count(),
         "demandas_recentes": demandas_qs.order_by("-data_publicacao")[:5],
         "total_favoritos": Favorito.objects.filter(id_comerciante=request.user).count(),
-        "total_fornecedores": Usuario.objects.filter(tipo_perfil="fornecedor").count(),
+        "total_fornecedores": Usuario.objects.filter(
+            tipo_perfil="fornecedor", status_conta="ativa"
+        ).count(),
     })
+
+
+# --------------------------------------------------------------------------
+# RF-014 / CU17 — Tutorial de onboarding
+# --------------------------------------------------------------------------
+
+@login_usuario_requerido
+def tutorial_view(request):
+    """
+    Tutorial interativo de onboarding (RF-014 / CU17).
+
+    Fica acessível por dois caminhos, como o CU17 descreve na pré-condição:
+
+    1. **automático**, logo após o cadastro (`cadastro_view` redireciona aqui);
+    2. **voluntário**, quando o usuário acessa o endereço de novo a partir do
+       painel.
+
+    No POST (botão "Concluir"), registra a conclusão e vai para o painel do
+    perfil. O botão de pular registra a *ignição* (CU17 A1) — por isso ele também
+    precisa ser POST; se fosse um link GET, o estado nunca seria gravado.
+    """
+    if request.method == "POST":
+        registrar_conclusao(request, request.user)
+        messages.success(request, "Tutorial concluído. Bons negócios!")
+        return redirect(_url_dashboard(request.user))
+
+    return render(
+        request,
+        "usuarios/tutorial.html",
+        {"tipo_menu": request.user.tipo_perfil},
+    )
+
+
+@login_usuario_requerido
+def pular_tutorial_view(request):
+    """
+    CU17, fluxo alternativo A1 — "Em qualquer etapa do tutorial, o usuário opta
+    por pular o onboarding": registra a ignição e redireciona para o painel.
+
+    Só por POST. A decisão precisa ser explícita e com token CSRF; aceitar GET
+    permitiria que um link colado no chat de alguém pulasse o tutorial dele sem
+    ele ter clicado em nada.
+    """
+    if request.method != "POST":
+        return redirect("tutorial")
+
+    registrar_ignoracao(request, request.user)
+    messages.info(request, "Tutorial pulado. Você pode vê-lo de novo quando quiser.")
+    return redirect(_url_dashboard(request.user))
 
 
 # --------------------------------------------------------------------------
@@ -214,7 +302,16 @@ def editar_perfil_view(request):
     else:
         form = EditarPerfilForm(instance=usuario)
 
-    return render(request, "usuarios/editar_perfil.html", {"form": form, "tipo_menu": tipo_menu})
+    return render(
+        request,
+        "usuarios/editar_perfil.html",
+        {
+            "form": form,
+            "tipo_menu": tipo_menu,
+            # CU17: a pré-condição permite acessar o tutorial voluntariamente.
+            "situacao_tutorial": situacao(request, usuario),
+        },
+    )
 
 
 @login_usuario_requerido

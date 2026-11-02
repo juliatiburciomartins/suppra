@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+Pós-condição do CU19 — "O usuário recebe confirmação do recebimento e pode
+acompanhar o andamento pelo canal indicado".
+
+Lista somente os chamados do próprio usuário. O `status` muda no painel
+administrativo ('aberto' -> 'em_atendimento' -> 'encerrado').
+{% endcomment %}
+
+{% block title %}Meus Chamados | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/supporte/suporte.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container suporte-page">
+
+  <header class="suporte-header">
+    <div>
+      <h1 class="suporte-title">Meus chamados</h1>
+      <p class="suporte-subtitle">
+        {% if total == 0 %}
+          Você ainda não abriu nenhuma solicitação.
+        {% else %}
+          {{ total }}
+          {% if total == 1 %}chamado{% else %}chamados{% endif %}
+          {% if abertos %}&middot; {{ abertos }} em andamento{% endif %}
+        {% endif %}
+      </p>
+    </div>
+
+    {% comment %} Ação principal (RNF-010). {% endcomment %}
+    <a href="{% url 'suporte' %}" class="btn-primary">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      Abrir chamado
+    </a>
+  </header>
+
+  {% if chamados %}
+
+    <ul class="chamado-list">
+      {% for chamado in chamados %}
+
+        <li class="chamado-item chamado-item--{{ chamado.status }}">
+
+          <div class="chamado-item__topo">
+            <h2 class="chamado-item__assunto">{{ chamado.assunto }}</h2>
+
+            <span class="chamado-status chamado-status--{{ chamado.status }}">
+              {{ chamado.get_status_display }}
+            </span>
+          </div>
+
+          <p class="chamado-item__meta">
+            <span>
+              <i class="bi bi-hash" aria-hidden="true"></i>
+              Chamado #{{ chamado.id_suporte }}
+            </span>
+            <span>
+              <i class="bi bi-calendar3" aria-hidden="true"></i>
+              {{ chamado.data_abertura|date:"d/m/Y \à\s H:i" }}
+            </span>
+          </p>
+
+          <p class="chamado-item__descricao">{{ chamado.descricao }}</p>
+
+          {% if chamado.img %}
+            <a href="{{ chamado.img }}" target="_blank" rel="noopener"
+               class="chamado-item__evidencia">
+              <i class="bi bi-paperclip" aria-hidden="true"></i>
+              Ver evidência anexada
+            </a>
+          {% endif %}
+
+          {% if chamado.status == "encerrado" %}
+            <p class="chamado-item__nota">
+              <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+              Este chamado foi encerrado. Se o problema persistir, abra um novo.
+            </p>
+          {% endif %}
+
+        </li>
+
+      {% endfor %}
+    </ul>
+
+  {% else %}
+
+    <section class="suporte-vazio">
+      <span class="suporte-vazio__icone" aria-hidden="true">
+        <i class="bi bi-chat-square-dots"></i>
+      </span>
+
+      <h2>Nenhum chamado aberto</h2>
+
+      <p>
+        Está com um problema ou dúvida? Abra um chamado e a equipe entra em
+        contato pelo canal do seu cadastro.
+      </p>
+
+      <a href="{% url 'suporte' %}" class="btn-primary">
+        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+        Abrir chamado
+      </a>
+    </section>
+
+  {% endif %}
+
+</div>
+{% endblock %}

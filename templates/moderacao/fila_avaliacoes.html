@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+CU22, fluxo alternativo A1 — fila de avaliações para moderação.
+
+" O sistema exibe a avaliação, o comentário e os dados das partes envolvidas
+(comerciante avaliador e fornecedor avaliado). O administrador analisa o
+conteúdo e decide manter ou remover a avaliação. "
+
+Existe como view (e não no Django Admin) porque `Avaliacao` usa chave primária
+composta, que o Admin recusa registrar. O acesso é o mesmo da equipe gestora
+(`admin_required`).
+{% endcomment %}
+
+{% block title %}Fila de Avaliações | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/componentes/estrelas.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/moderacao/fila_avaliacoes.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container fila-page">
+
+  <header class="fila-header">
+    <div>
+      <h1 class="fila-title">Fila de avaliações</h1>
+      <p class="fila-subtitle">
+        {{ total }}
+        {% if total == 1 %}avaliação{% else %}avaliações{% endif %}
+        &middot; analise o conteúdo e decida manter ou remover.
+      </p>
+    </div>
+
+    <a href="{% url 'admin:index' %}" class="btn-primary">
+      <i class="bi bi-speedometer2" aria-hidden="true"></i>
+      Voltar ao Painel
+    </a>
+  </header>
+
+  <form method="GET" class="fila-filters">
+    <div class="fila-filters__campo">
+      <label for="filtro-status">Status</label>
+      <select id="filtro-status" name="status">
+        <option value="ativa" {% if status_filtro == "ativa" %}selected{% endif %}>Ativas</option>
+        <option value="removida" {% if status_filtro == "removida" %}selected{% endif %}>Removidas</option>
+        <option value="todas" {% if status_filtro == "todas" %}selected{% endif %}>Todas</option>
+      </select>
+    </div>
+
+    <div class="fila-filters__campo">
+      <label for="filtro-nota">Nota</label>
+      <select id="filtro-nota" name="nota">
+        <option value="">Todas</option>
+        {% for n in "012345"|make_list %}
+          <option value="{{ n }}" {% if nota_filtro == n %}selected{% endif %}>{{ n }} estrelas</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="fila-filters__submit">Filtrar</button>
+  </form>
+
+  {% if avaliacoes %}
+
+    <ul class="fila-list">
+      {% for avaliacao in avaliacoes %}
+
+        <li class="fila-item{% if avaliacao.status_moderacao == 'removida' %} fila-item--removida{% endif %}">
+
+          <div class="fila-item__nota">
+            {% include "componentes/estrelas.html" with media=avaliacao.nota percentagem=avaliacao.nota_percent %}
+          </div>
+
+          <div class="fila-item__corpo">
+            <p class="fila-item__partes">
+              <strong>{{ avaliacao.id_comerciante.nome }}</strong>
+              <span class="fila-item__seta" aria-hidden="true">&rarr;</span>
+              <strong>{{ avaliacao.id_fornecedor.nome }}</strong>
+            </p>
+
+            <p class="fila-item__data">
+              {{ avaliacao.data_avaliacao|date:"d/m/Y \à\s H:i" }}
+              {% if avaliacao.status_moderacao == "removida" %}
+                <span class="fila-item__tag">Removida</span>
+              {% endif %}
+            </p>
+
+            {% if avaliacao.comentario %}
+              <blockquote class="fila-item__comentario">{{ avaliacao.comentario }}</blockquote>
+            {% else %}
+              <p class="fila-item__comentario fila-item__comentario--vazio">
+                Sem comentário.
+              </p>
+            {% endif %}
+          </div>
+
+          <div class="fila-item__acoes">
+            <a
+              href="{% url 'detalhes_fornecedor' avaliacao.id_fornecedor.pk %}"
+              class="fila-btn"
+            >
+              <i class="bi bi-eye" aria-hidden="true"></i>
+              Ver portfólio
+            </a>
+
+            <form method="POST" action="{% url 'decidir_avaliacao' avaliacao.id_comerciante.pk avaliacao.id_fornecedor.pk %}">
+              {% csrf_token %}
+
+              {% if avaliacao.status_moderacao == "removida" %}
+                <button type="submit" name="decisao" value="manter" class="fila-btn fila-btn--primary">
+                  <i class="bi bi-check-lg" aria-hidden="true"></i>
+                  Manter
+                </button>
+              {% else %}
+                <button
+                  type="submit"
+                  name="decisao"
+                  value="remover"
+                  class="fila-btn fila-btn--danger"
+                  data-confirmar="Remover a avaliação de {{ avaliacao.id_comerciante.nome }} sobre {{ avaliacao.id_fornecedor.nome }}? Ela sairá da média e da exibição pública."
+                  data-confirmar-sim="Remover"
+                >
+                  <i class="bi bi-trash" aria-hidden="true"></i>
+                  Remover
+                </button>
+              {% endif %}
+            </form>
+          </div>
+
+        </li>
+
+      {% endfor %}
+    </ul>
+
+  {% else %}
+
+    <section class="fila-vazia">
+      <span class="fila-vazia__icone" aria-hidden="true">
+        <i class="bi bi-star"></i>
+      </span>
+
+      <h2>Nenhuma avaliação para revisar</h2>
+
+      <p>Não há avaliações no filtro selecionado.</p>
+
+      <a href="{% url 'fila_avaliacoes' %}" class="btn-primary">Ver todas</a>
+    </section>
+
+  {% endif %}
+
+</div>
+{% endblock %}

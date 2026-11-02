@@ -1,18 +1,23 @@
 from django.contrib.auth import authenticate
 from django.contrib.messages import get_messages
+from django.core import mail
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from django.views import View
 
-from core.models import CategoriaInsumo, LogAlteracao
+from core.models import CategoriaInsumo, LogAlteracao, TermoAceite, TermoUso
 from demandas.models import Demanda
 from hub_fecc.context_processors import perfil_usuario
 from portfolio.models import Produto
 from usuarios.decorators import admin_required, comerciante_required, fornecedor_required, perfil_required
 from usuarios.mixins import AdminRequiredMixin, ComercianteRequiredMixin, FornecedorRequiredMixin
 from usuarios.models import Usuario
+
+# Este arquivo cobre autenticação, cadastro, perfil, exclusão de conta e o
+# tutorial de onboarding (RF-014 / CU17). Cada `TestCase` cria seus próprios
+# usuários para não depender do estado de outro teste.
 
 SENHA = "SenhaForte#123"
 
@@ -242,17 +247,182 @@ class LoginCadastroTests(TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertFalse(Usuario.objects.filter(email="adm@x.com").exists())
 
-    def test_recuperar_senha_com_token(self):
-        from django.contrib.auth.tokens import default_token_generator
+    def test_cadastro_grava_o_aceite_com_data_e_hora(self):
+        """CU01 pós-condição: "o aceite aos Termos de Uso é armazenado com data e hora"."""
+        TermoUso.objects.all().delete()
+        termo = TermoUso.objects.create(
+            versao="1.0", texto="Termos vigentes.", data_vigencia="2026-01-01"
+        )
+
+        r = self.client.post(reverse("cadastro"), {
+            "nome": "Loja", "email": "loja@exemplo.com", "senha": SENHA,
+            "confirmar_senha": SENHA, "cpf_cnpj": "52998224725",
+            "telefone": "(19) 3333-3333", "whatsapp": "",
+            "tipo_perfil": "comerciante", "aceite_termos": "on",
+        })
+        self.assertEqual(r.status_code, 302)
+
+        usuario = Usuario.objects.get(email="loja@exemplo.com")
+        aceite = TermoAceite.objects.get(id_usuario=usuario)
+        self.assertEqual(aceite.id_termo_uso, termo)
+        self.assertIsNotNone(aceite.data_aceite)
+
+    def test_cadastro_sem_aceite_nao_prossegue(self):
+        """CU01 E4: sem aceite explícito o cadastro não é concluído."""
+        TermoUso.objects.all().delete()
+        r = self.client.post(reverse("cadastro"), {
+            "nome": "Loja", "email": "semaceite@exemplo.com", "senha": SENHA,
+            "confirmar_senha": SENHA, "cpf_cnpj": "52998224725",
+            "telefone": "(19) 3333-3333", "whatsapp": "",
+            "tipo_perfil": "comerciante",
+        })
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("aceite_termos", r.context["form"].errors)
+        self.assertFalse(Usuario.objects.filter(email="semaceite@exemplo.com").exists())
+
+    def test_cadastro_com_e_mais_facil_de_enviar(self):
+        """O mesmo e-mail normalizado bloqueia o cadastro (E1)."""
+        criar_usuario("dup@exemplo.com")
+        r = self.client.post(reverse("cadastro"), {
+            "nome": "Outra", "email": "DUP@exemplo.com", "senha": SENHA,
+            "confirmar_senha": SENHA, "cpf_cnpj": "11122233344",
+            "telefone": "(19) 3333-3333", "whatsapp": "",
+            "tipo_perfil": "comerciante", "aceite_termos": "on",
+        })
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("email", r.context["form"].errors)
+
+
+class RecuperarSenhaTests(TestCase):
+    """RF-023 / CU03 — recuperação por e-mail com token de uso único."""
+
+    def setUp(self):
+        self.u = criar_usuario("r@r.com", "comerciante", "529.982.247-25")
+        self.url = reverse("recuperar_senha")
+
+    def link_do_ultimo_email(self):
+        """Extrai o link de redefinição do corpo do e-mail enviado."""
+        import re
+
+        return re.search(r"(/recuperar-senha/confirmar/\S+)", mail.outbox[0].body).group(1)
+
+    def test_formulario_abre(self):
+        self.assertEqual(self.client.get(self.url).status_code, 200)
+
+    def test_envia_o_email_com_link(self):
+        self.client.post(self.url, {"email": "r@r.com"})
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(self.u.email, mail.outbox[0].to)
+        self.assertIn("/recuperar-senha/confirmar/", self.link_do_ultimo_email())
+
+    def test_resposta_neutra_nao_revela_se_o_email_existe(self):
+        """CU03 passo 7: a mesma mensagem para e-mail cadastrado ou não."""
+        cadastrado = self.client.post(self.url, {"email": "r@r.com"}, follow=True)
+        desconhecido = self.client.post(self.url, {"email": "ninguem@x.com"}, follow=True)
+
+        self.assertEqual(cadastrado.status_code, desconhecido.status_code)
+        self.assertContains(cadastrado, "Se o e-mail estiver cadastrado")
+        self.assertContains(desconhecido, "Se o e-mail estiver cadastrado")
+
+    def test_email_desconhecido_nao_envia_mensagem(self):
+        self.client.post(self.url, {"email": "ninguem@x.com"})
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_conta_suspensa_nao_recebe_link(self):
+        self.u.status_conta = "suspensa"
+        self.u.save()
+
+        self.client.post(self.url, {"email": "r@r.com"})
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_link_redefine_a_senha(self):
+        self.client.post(self.url, {"email": "r@r.com"})
+        caminho = self.link_do_ultimo_email()
+
+        r = self.client.get(caminho)
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue(r.context["validlink"])
+
+        r = self.client.post(
+            caminho, {"new_password1": "OutraSenha#789", "new_password2": "OutraSenha#789"}
+        )
+        self.assertEqual(r.status_code, 302)
+
+        self.u.refresh_from_db()
+        self.assertTrue(self.u.check_password("OutraSenha#789"))
+
+    def test_token_e_de_uso_unico(self):
+        """CU03 E1: o link não funciona uma segunda vez."""
+        self.client.post(self.url, {"email": "r@r.com"})
+        caminho = self.link_do_ultimo_email()
+
+        self.client.post(caminho, {"new_password1": "OutraSenha#789", "new_password2": "OutraSenha#789"})
+
+        r = self.client.post(
+            caminho, {"new_password1": "MaisUma#123", "new_password2": "MaisUma#123"}
+        )
+        self.assertEqual(r.status_code, 200)
+        self.assertFalse(r.context["validlink"])
+
+        self.u.refresh_from_db()
+        self.assertTrue(self.u.check_password("OutraSenha#789"))
+
+    def test_e3_senhas_divergentes(self):
+        self.client.post(self.url, {"email": "r@r.com"})
+        caminho = self.link_do_ultimo_email()
+
+        r = self.client.post(
+            caminho, {"new_password1": "SenhaA#123", "new_password2": "SenhaB#123"}
+        )
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("não coincidem", r.context["erro_senha"])
+
+    def test_campos_vazios(self):
+        self.client.post(self.url, {"email": "r@r.com"})
+        caminho = self.link_do_ultimo_email()
+
+        r = self.client.post(caminho, {"new_password1": "", "new_password2": ""})
+        self.assertIn("Preencha os dois campos", r.context["erro_senha"])
+
+    def test_senha_fraca_e_recusada(self):
+        """O validador do Django vale aqui também (RNF-002)."""
+        self.client.post(self.url, {"email": "r@r.com"})
+        caminho = self.link_do_ultimo_email()
+
+        r = self.client.post(caminho, {"new_password1": "12345678", "new_password2": "12345678"})
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("erro_senha", r.context)
+
+    def test_token_invalido(self):
         from django.utils.encoding import force_bytes
         from django.utils.http import urlsafe_base64_encode
-        u = criar_usuario("r@r.com")
-        uid, token = urlsafe_base64_encode(force_bytes(u.pk)), default_token_generator.make_token(u)
-        url = reverse("redefinir_senha", kwargs={"uidb64": uid, "token": token})
-        self.assertEqual(self.client.post(url, {"new_password1": "NovaSenha#456", "new_password2": "NovaSenha#456"}).status_code, 302)
-        u.refresh_from_db()
-        self.assertTrue(u.check_password("NovaSenha#456"))
-        self.assertFalse(default_token_generator.check_token(u, token))  # uso único
+
+        uid = urlsafe_base64_encode(force_bytes(self.u.pk))
+        caminho = reverse("redefinir_senha", kwargs={"uidb64": uid, "token": "token-falso"})
+
+        r = self.client.get(caminho)
+        self.assertEqual(r.status_code, 200)
+        self.assertFalse(r.context["validlink"])
+
+    def test_uid_corrompido(self):
+        caminho = reverse("redefinir_senha", kwargs={"uidb64": "!!!invalido", "token": "x"})
+
+        r = self.client.get(caminho)
+        self.assertEqual(r.status_code, 200)
+        self.assertFalse(r.context["validlink"])
+
+    def test_senha_antiga_deixa_de_valer(self):
+        self.client.post(self.url, {"email": "r@r.com"})
+        caminho = self.link_do_ultimo_email()
+
+        self.client.post(caminho, {"new_password1": "OutraSenha#789", "new_password2": "OutraSenha#789"})
+
+        r = self.client.post(reverse("login"), {"username": "r@r.com", "password": SENHA})
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+        r = self.client.post(reverse("login"), {"username": "r@r.com", "password": "OutraSenha#789"})
+        self.assertIn("_auth_user_id", self.client.session)
 
 
 class EditarPerfilTests(TestCase):
@@ -405,3 +575,141 @@ class ExcluirContaTests(TestCase):
     def test_visitante_nao_exclui(self):
         self.client.logout()
         self.assertEqual(self.client.post(self.url, {"senha": SENHA}).status_code, 302)
+
+
+class OnboardingTests(TestCase):
+    """
+    RF-014 / CU17 — tutorial de onboarding.
+
+    A pós-condição do CU17 exige que o sistema registre que o usuário concluiu ou
+    ignorou o tutorial, para não reexibi-lo automaticamente depois. Como a tabela
+    `usuario` do `banco.sql` não tem coluna livre e o schema não pode ser
+    alterado, esse estado é guardado na sessão (ver `usuarios/onboarding.py`).
+    """
+
+    def setUp(self):
+        self.fornecedor = Usuario.objects.create_user(
+            email="for@x.com", password=SENHA, nome="Distribuidora",
+            cpf_cnpj="111.111.111-11", tipo_perfil="fornecedor",
+        )
+        self.comerciante = Usuario.objects.create_user(
+            email="com@x.com", password=SENHA, nome="Bar do Zé",
+            cpf_cnpj="222.222.222-22", tipo_perfil="comerciante",
+        )
+        self.url = reverse("tutorial")
+
+    def test_cadastro_redireciona_para_o_tutorial(self):
+        """CU01, pós-condição: "o usuário é redirecionado para o tutorial"."""
+        r = self.client.post(reverse("cadastro"), {
+            "nome": "Loja Nova", "email": "nova@loja.com", "senha": SENHA,
+            "confirmar_senha": SENHA, "cpf_cnpj": "52998224725",
+            "telefone": "(19) 3333-3333", "whatsapp": "",
+            "tipo_perfil": "comerciante", "aceite_termos": "on",
+        })
+        self.assertRedirects(r, self.url)
+
+    def test_tutorial_mostra_o_conteudo_do_perfil(self):
+        self.client.force_login(self.fornecedor)
+        r = self.client.get(self.url)
+
+        self.assertEqual(r.status_code, 200)
+        # Passo do fornecedor
+        self.assertContains(r, "Gerencie seu Portfólio")
+        self.assertContains(r, "Monitore Demandas")
+
+    def test_tutorial_do_comerciante(self):
+        self.client.force_login(self.comerciante)
+        r = self.client.get(self.url)
+
+        self.assertContains(r, "Busque Fornecedores")
+        self.assertContains(r, "Publique Demandas")
+
+    def test_tem_botao_para_pular_e_para_concluir(self):
+        self.client.force_login(self.fornecedor)
+        r = self.client.get(self.url)
+
+        self.assertContains(r, reverse("pular_tutorial"))
+        self.assertContains(r, 'id="prevBtn"')
+        self.assertContains(r, 'id="nextBtn"')
+
+    def test_concluir_registra_e_vai_para_o_painel(self):
+        self.client.force_login(self.fornecedor)
+        r = self.client.post(self.url)
+
+        self.assertRedirects(r, reverse("dashboard_fornecedor"))
+        msgs = [str(m) for m in get_messages(r.wsgi_request)]
+        self.assertTrue(any("Tutorial concluído" in m for m in msgs))
+
+    def test_pular_registra_e_vai_para_o_painel(self):
+        """CU17 A1 — "registra que o tutorial foi ignorado"."""
+        self.client.force_login(self.fornecedor)
+        r = self.client.post(reverse("pular_tutorial"))
+
+        self.assertRedirects(r, reverse("dashboard_fornecedor"))
+        msgs = [str(m) for m in get_messages(r.wsgi_request)]
+        self.assertTrue(any("Tutorial pulado" in m for m in msgs))
+
+    def test_apos_concluir_a_home_nao_redireciona_mais(self):
+        self.client.force_login(self.fornecedor)
+        self.client.post(self.url)
+
+        r = self.client.get(reverse("home"))
+        self.assertEqual(r.status_code, 200)
+
+    def test_apos_ignorar_a_home_nao_redireciona_mais(self):
+        self.client.force_login(self.fornecedor)
+        self.client.post(reverse("pular_tutorial"))
+
+        r = self.client.get(reverse("home"))
+        self.assertEqual(r.status_code, 200)
+
+    def test_sem_concluir_a_home_redireciona(self):
+        self.client.force_login(self.fornecedor)
+
+        r = self.client.get(reverse("home"))
+        self.assertRedirects(r, self.url, fetch_redirect_response=False)
+
+    def test_o_estado_e_por_usuario(self):
+        """
+        A chave da sessão leva o id do usuário: duas contas no mesmo navegador
+        não compartilham o estado.
+        """
+        from usuarios.onboarding import ja_visualizou
+
+        self.client.force_login(self.fornecedor)
+        self.client.post(reverse("pular_tutorial"))
+
+        # O fornecedor ja "viu" o tutorial...
+        request_fornecedor = self.client.get(self.url).wsgi_request
+        self.assertTrue(ja_visualizou(request_fornecedor, self.fornecedor))
+
+        # ...e o comerciante, no mesmo navegador, nao.
+        self.client.force_login(self.comerciante)
+        request_comerciante = self.client.get(self.url).wsgi_request
+        self.assertFalse(ja_visualizou(request_comerciante, self.comerciante))
+
+    def test_acesso_voluntario_pelo_painel(self):
+        """Pré-condição do CU17: também dá para acessar voluntarily."""
+        self.client.force_login(self.fornecedor)
+        self.client.post(self.url)  # conclui
+
+        r = self.client.get(reverse("editar_perfil"))
+        self.assertContains(r, reverse("tutorial"))
+
+    def test_pular_por_get_nao_registra(self):
+        """O botao de pular precisa ser POST; GET nao muda o estado."""
+        from usuarios.onboarding import ja_visualizou
+
+        self.client.force_login(self.fornecedor)
+        self.client.get(reverse("pular_tutorial"))
+
+        request = self.client.get(self.url).wsgi_request
+        self.assertFalse(ja_visualizou(request, self.fornecedor))
+
+    def test_visitante_vai_para_o_login(self):
+        r = self.client.get(self.url)
+        self.assertTrue(r.url.startswith(reverse("login")))
+
+    def test_pular_visitante_vai_para_o_login(self):
+        r = self.client.post(reverse("pular_tutorial"))
+        self.assertTrue(r.url.startswith(reverse("login")))

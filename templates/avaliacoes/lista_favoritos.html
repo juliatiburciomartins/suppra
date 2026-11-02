@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% comment %}
+RF-028 / CU08 A1 — Lista de favoritos do comerciante autenticado.
+
+Para cada fornecedor favoritado: nome, categorias de insumo ofertadas e
+avaliação média em estrelas de 0 a 5. A remoção (RF-030) acontece tanto pelo
+botão da lista quanto pelo portfólio — as duas rotas convergent para a mesma
+ação em avaliacoes/views.py.
+{% endcomment %}
+
+{% block title %}Meus Favoritos | suppra{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/componentes/estrelas.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/portfolio/fornecedores.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/avaliacoes/lista_favoritos.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container fornecedores-page">
+
+  <header class="fornecedores-header">
+    <div>
+      <h1 class="fornecedores-title">Meus Favoritos</h1>
+      <p class="fornecedores-subtitle">
+        {% if total_favoritos == 0 %}
+          Você ainda não favoritou nenhum fornecedor.
+        {% else %}
+          {{ total_favoritos }}
+          {% if total_favoritos == 1 %}fornecedor favoritado{% else %}fornecedores favoritados{% endif %}
+        {% endif %}
+      </p>
+    </div>
+
+    <a href="{% url 'listar_fornecedores' %}" class="btn-primary">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      Buscar fornecedores
+    </a>
+  </header>
+
+  {% if categorias_ofertadas %}
+    <section class="favoritos-categorias" aria-label="Categorias ofertadas pelos favoritos">
+      <span class="favoritos-categorias__rotulo">Categorias ofertadas:</span>
+
+      {% for categoria in categorias_ofertadas %}
+        <span class="categoria-chip categoria-chip--ativa">
+          <i class="bi bi-tag" aria-hidden="true"></i>
+          {{ categoria.nome }}
+        </span>
+      {% endfor %}
+    </section>
+  {% endif %}
+
+  {% if fornecedores %}
+
+    <div class="fornecedores-grid">
+      {% for fornecedor in fornecedores %}
+
+        <article class="fornecedor-card">
+
+          <div class="fornecedor-card__top">
+            <div class="fornecedor-card__identidade">
+              <span class="fornecedor-avatar" aria-hidden="true">
+                <i class="bi bi-shop"></i>
+              </span>
+
+              <div>
+                <h2 class="fornecedor-card__nome">{{ fornecedor.nome }}</h2>
+                <p class="fornecedor-card__doc">{{ fornecedor.cpf_cnpj }}</p>
+              </div>
+            </div>
+
+            {% comment %} RF-030 — remover dos favoritos, a partir da própria lista. {% endcomment %}
+            <form method="POST" action="{% url 'remover_favorito' fornecedor.pk %}">
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="favoritar-btn favoritar-btn--ativo"
+                data-confirmar="Remover {{ fornecedor.nome }} dos seus favoritos?"
+                data-confirmar-sim="Remover"
+                aria-pressed="true"
+              >
+                <i class="bi bi-star-fill" aria-hidden="true"></i>
+                <span class="visually-hidden">Remover dos favoritos</span>
+              </button>
+            </form>
+          </div>
+
+          <div class="fornecedor-card__stats">
+            {% include "componentes/estrelas.html" with media=fornecedor.nota_media percentagem=fornecedor.nota_percent total=fornecedor.total_avaliacoes %}
+
+            <span class="fornecedor-card__produtos-count">
+              <i class="bi bi-box-seam" aria-hidden="true"></i>
+              {{ fornecedor.total_produtos }}
+              {% if fornecedor.total_produtos == 1 %}produto{% else %}produtos{% endif %}
+            </span>
+          </div>
+
+          {% comment %} Categorias de insumo ofertadas (RF-028), sem repetição. {% endcomment %}
+          {% if fornecedor.categorias_ofertadas %}
+            <ul class="favorito-categorias">
+              {% for categoria in fornecedor.categorias_ofertadas %}
+                <li class="categoria-chip">
+                  <i class="bi bi-tag" aria-hidden="true"></i>
+                  {{ categoria.nome }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="fornecedor-card__mais">Nenhum produto ativo no momento.</p>
+          {% endif %}
+
+          <div class="fornecedor-card__footer">
+            <a href="{% url 'detalhes_fornecedor' fornecedor.pk %}" class="btn-primary">
+              Ver Portfólio
+            </a>
+          </div>
+
+        </article>
+
+      {% endfor %}
+    </div>
+
+  {% else %}
+
+    <section class="busca-vazia">
+      <span class="busca-vazia__icone" aria-hidden="true">
+        <i class="bi bi-star"></i>
+      </span>
+
+      <h2>Sua lista de favoritos está vazia</h2>
+
+      <p>
+        Favorite os fornecedores que você acompanha para achá-los mais rápido e
+        comparar as ofertas com facilidade.
+      </p>
+
+      <a href="{% url 'listar_fornecedores' %}" class="btn-primary">
+        Ver fornecedores
+      </a>
+    </section>
+
+  {% endif %}
+
+</div>
+{% endblock %}
